@@ -1,0 +1,12 @@
+Version: 0.5.1.0
+CompanyName: Vermeil
+FileDescription: MSFONT
+InternalName: MSFONT
+LegalCopyright: Apache License 2.0.
+OriginalFilename: MSFONT.exe
+ProductName: MSFONT
+Translation:
+  - langID: 0
+    charsetID: 1200
+  - langID: 1033
+    charsetID: 1252
