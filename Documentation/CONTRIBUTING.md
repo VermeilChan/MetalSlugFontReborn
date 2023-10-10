@@ -22,10 +22,10 @@ There are no specific requirements for development tools, software, or environme
 To set up a development environment:
 1. Fork the project.
 2. Clone the project to your local machine.
-3. Install the required libraries by running `pip install -r req.txt`.
+3. Install the required libraries by running `pip install -r requirements.txt`.
 
 To run the project:
-- You can choose to run the project using either `console.py` or `windowed-version.py`, depending on your preference.
+- You can choose to run the project using either `console-version.py` or `windowed-version.py`, depending on your preference.
 
 ## Bug Reports
 
