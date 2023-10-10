@@ -44,7 +44,7 @@
 ## Features
 - Convert text into images with the iconic Metal Slug font.
   - Support for Uppercase and Lowercase Alphabets (A-Z, a-z), Numbers (0-9), and Symbols.
-  For more information, see [SUPPORTED.md](SUPPORTED.md).
+  For more information, see [SUPPORTED.md](Documentation/SUPPORTED.md).
 
 ## Preview Fonts
 View examples of generated images with the available fonts in [EXAMPLE.md](EXAMPLE.md).
@@ -54,7 +54,7 @@ View examples of generated images with the available fonts in [EXAMPLE.md](EXAMP
 1. When you start the program, you'll be presented with a font selection prompt.
 2. Choose a font by inputting a number ranging from 1 to 5.
 3. Depending on your font selection, the available color options will vary.
-4. To create Metal Slug font images, follow the on-screen instructions or consult the [Setup Guide](GUIDE.md) and [Supported Characters](SUPPORTED.md).
+4. To create Metal Slug font images, follow the on-screen instructions or consult the [Setup Guide](GUIDE.md) and [Supported Characters](Documentation/SUPPORTED.md).
 5. Input one of the following color options that corresponds to your chosen font:
    - For certain fonts, use `Blue` to specify the Blue color.
      - For particular fonts, use `Orange-1` for Orange 1.
