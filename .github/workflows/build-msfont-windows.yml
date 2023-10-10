@@ -29,9 +29,9 @@ jobs:
 
     - name: Move Assets folder and remove 'MARKDOWN' and 'ICON' folders
       run: |
-        mv dist/MSFONT/_internal/Assets dist/MSFONT/
-        rm -r dist/MSFONT/Assets/MARKDOWN
-        rm -r dist/MSFONT/Assets/ICON
+        mv dist/MSFONT-Dev/_internal/Assets dist/MSFONT-Dev/
+        rm -r dist/MSFONT-Dev/Assets/MARKDOWN
+        rm -r dist/MSFONT-Dev/Assets/ICON
       shell: bash      
 
     - name: Upload MSFONT artifacts
