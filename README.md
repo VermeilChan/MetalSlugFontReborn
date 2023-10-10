@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn">
-    <img src="Assets/MARKDOWN/README/Sv-002-Logo.png" width="400" alt="MSFONT logo">
+    <img src="Assets/Markdown/Readme/Metal-Slug-Font-Reborn-Banner.png" width="400" alt="MSFONT logo">
   </a>
 </p>
 
@@ -16,7 +16,7 @@
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/releases" target="_blank">
     <img alt="Downloads" src="https://img.shields.io/github/downloads/VermeilChan/MetalSlugFontReborn/total.svg?color=orange" />
   </a>
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/blob/experimental/LICENSE" target="_blank">
+  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/LICENSE" target="_blank">
     <img alt="License" src="https://img.shields.io/github/license/VermeilChan/MetalSlugFontReborn.svg?color=purple" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/issues" target="_blank">
@@ -25,7 +25,7 @@
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/pulls" target="_blank">
     <img alt="Open Pull Requests" src="https://img.shields.io/github/issues-pr/VermeilChan/MetalSlugFontReborn.svg?color=yellow" />
   </a>
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/commits/experimental" target="_blank">
+  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/commits/Development" target="_blank">
     <img alt="Last Commit" src="https://img.shields.io/github/last-commit/VermeilChan/MetalSlugFontReborn.svg?color=green" />
   </a>
 </p>
@@ -58,7 +58,7 @@ View examples of generated images with the available fonts in [EXAMPLE.md](EXAMP
 5. Input one of the following color options that corresponds to your chosen font:
    - For certain fonts, use `Blue` to specify the Blue color.
      - For particular fonts, use `Orange-1` for Orange 1.
-   - For other fonts, use `Orange-2` for Orange 2.
+       - For other fonts, use `Orange-2` for Orange 2.
 6. The resulting image will be automatically saved to your desktop for easy access. Enjoy using MSFONT!
 
 ## Contributing
