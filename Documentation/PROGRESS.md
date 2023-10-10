@@ -4,10 +4,10 @@ This document tracks the progress and updates for the [Project Name] project. It
 
 ## Current Status
 
-- **Version**: [5.1.0]
-- **Release Date**: [2023-10-15]
+- **Version**: 5.1.0
+- **Release Date**: 2023-10-15
 - **Project Link**: [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn)
-- **Maintainer**: [VermeilChan]
+- **Maintainer**: VermeilChan
 
 ---
 
@@ -32,6 +32,6 @@ This document tracks the progress and updates for the [Project Name] project. It
   - **Description**: Significantly improved symbol support within the project.
     Expanded the range of supported symbols.
 
-- **Milestone 3: Enhanced User Interface**
-  - **Date of Achievement**: 2024-1-15
+- **Milestone 3: Enhanced User Interface (Future)**
+  - **Date of Achievement**: 2023-11-X
   - **Description**: Revamped the user interface with a modern design, making the application more user-friendly.
