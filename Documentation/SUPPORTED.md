@@ -1,4 +1,4 @@
-# Supported Characters in the MetalSlugFont
+# Supported Characters in the MetalSlugFontReborn
 
 Here, you can find all the letters, numbers, and symbols that MetalSlugFontReborn supports.
 
@@ -191,4 +191,3 @@ Font 5 provides support for characters, including:
 ### Symbols
 - Exclamation Mark ( ! )
 - Question Mark ( ? )
-
