@@ -16,7 +16,7 @@
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/releases" target="_blank">
     <img alt="Downloads" src="https://img.shields.io/github/downloads/VermeilChan/MetalSlugFontReborn/total.svg?color=orange" />
   </a>
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/LICENSE" target="_blank">
+  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/blob/Development/LICENSE" target="_blank">
     <img alt="License" src="https://img.shields.io/github/license/VermeilChan/MetalSlugFontReborn.svg?color=purple" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/issues" target="_blank">
