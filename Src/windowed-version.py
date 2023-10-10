@@ -6,6 +6,7 @@ from tkinter import ttk, messagebox
 # Prevent the generation of .pyc (Python bytecode) files
 sys.dont_write_bytecode = True
 
+# Import necessary functions from the main module
 from main import generate_filename, generate_image, get_font_paths
 
 # Define valid color options for each font
@@ -36,9 +37,13 @@ def generate_and_display_image():
             messagebox.showerror("Error", "Input text is empty. Please enter some text.")
             return
 
+        # Generate a filename based on the input text
         filename = generate_filename(text)
+
+        # Get the font paths based on user selections
         font_paths = get_font_paths(font, color)
 
+        # Generate the image and handle any errors
         img_path, error_message_generate = generate_image(text, filename, font_paths)
 
         if error_message_generate:
@@ -68,7 +73,7 @@ frame = ttk.Frame(root, padding=20)
 frame.grid(column=0, row=0, sticky=(tk.W, tk.E, tk.N, tk.S))
 
 # Label for text input
-text_label = ttk.Label(frame, text="Enter the text:")
+text_label = ttk.Label(frame, text="Text to Generate:")
 text_label.grid(column=0, row=0, sticky=tk.W)
 
 # Text input field
@@ -76,7 +81,7 @@ text_entry = ttk.Entry(frame, width=40)
 text_entry.grid(column=1, row=0, columnspan=2)
 
 # Label for font selection
-font_label = ttk.Label(frame, text="Choose a font:")
+font_label = ttk.Label(frame, text="Select Font:")
 font_label.grid(column=0, row=1, sticky=tk.W)
 
 # Font selection dropdown
@@ -86,7 +91,7 @@ font_combobox = ttk.Combobox(frame, textvariable=font_var, values=["1", "2", "3"
 font_combobox.grid(column=1, row=1, columnspan=2)
 
 # Label for color selection
-color_label = ttk.Label(frame, text="Choose a color:")
+color_label = ttk.Label(frame, text="Select Color:")
 color_label.grid(column=0, row=2, sticky=tk.W)
 
 # Color selection dropdown
@@ -99,8 +104,12 @@ color_combobox.grid(column=1, row=2, columnspan=2)
 font_var.trace("w", on_font_change)
 
 # Generate button
-generate_button = ttk.Button(frame, text="Generate Image", command=generate_and_display_image)
+generate_button = ttk.Button(frame, text="Generate and Save Image", command=generate_and_display_image)
 generate_button.grid(column=0, row=3, columnspan=3)
+
+# Clear button
+clear_button = ttk.Button(frame, text="Clear", command=lambda: text_entry.delete(0, tk.END))
+clear_button.grid(column=0, row=4, columnspan=3)
 
 # Add padding and make widgets expand
 for child in frame.winfo_children():
