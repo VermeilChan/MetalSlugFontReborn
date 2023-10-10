@@ -31,7 +31,7 @@ A: To install MetalSlugFontReborn:
 A: To create Metal Slug font images, follow the instructions in the README's [Usage Instructions](README.md#using-msfont) section. You can choose fonts, colors, and generate your images.
 
 **Q: Can I use other colors for the font?**
-A: Yes, you can select and apply other colors when creating Metal Slug font images. Refer to the [Usage Instructions](README.md#using-msfont) for details.
+A: Yes, you can select and other colors when creating Metal Slug font images. Refer to the [Usage Instructions](README.md#using-msfont) for details.
 
 ## Troubleshooting
 
@@ -43,7 +43,7 @@ A: Some antivirus software may mistakenly flag MetalSlugFontReborn. To resolve t
 - Alternatively, use the portable version of MSFONT, which may not trigger antivirus alerts.
 
 **Q: The web app is down. What should I do?**
-A: If the web app is unavailable, consider using the terminal-based version. If that doesn't work, reach out on Discord at `mommy_vermeil` for assistance.
+A: If the web app is unavailable, consider using the console-version or the windowed-version. If that doesn't work, reach out on Discord at `mommy_vermeil` for assistance.
 
 ## Contributing
 
@@ -53,11 +53,11 @@ A: We welcome contributions! You can help by reporting issues, submitting pull r
 ## License
 
 **Q: What is the Apache License 2.0?**
-A: The Apache License 2.0 allows you to freely use, modify, and distribute software. It's permissive and open source, providing flexibility for both commercial and non-commercial use. Please review the [License](README.md#license) section in the README for specific terms and conditions.
+A: The Apache License 2.0 allows you to freely use, modify, and distribute software. It's permissive and open source, providing flexibility for both commercial and non-commercial use.
 
 ## Contact
 
 **Q: How can I get in touch with the project maintainer?**
-A: You can reach out to the maintainer through Discord, Twitter, GitHub Issues, Reddit, or Stack Overflow. Find contact details in the [Contact Information](README.md#contact) section of the README.
+A: You can reach out me through Discord, Twitter, GitHub Issues, Reddit, or Stack Overflow. Find contact details in the [Contact Information](README.md#contact) section of the README.
 
-If you have more questions or face unaddressed issues, feel free to contact us.
+If you have more questions or face unaddressed issues, feel free to contact me.
