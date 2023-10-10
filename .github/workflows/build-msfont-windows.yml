@@ -3,7 +3,7 @@ name: Build MSFONT
 on:
   push:
     branches:
-      - main
+      - Development
 
 jobs:
   build:
@@ -25,7 +25,7 @@ jobs:
 
     - name: Build MSFONT
       run: |
-        pyinstaller --noconfirm --onedir --windowed --icon "Assets/ICON/Sv-003.ico" --name "MSFONT" --version-file "Other/version_msfont.txt" --add-data "C:\Users\$env:USERNAME\AppData\Roaming\Python\Python311\site-packages/customtkinter;customtkinter/" --add-data "src/main.py;." --add-data "Assets:Assets/"  "src/ui.py"
+        pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icon/Grazia.ico" --name "MSFONT-Dev" --version-file "Extra/versionfile.txt" --add-data "Src/main.py;." --add-data "Assets;Assets/"  "Src/windowed-version.py"
 
     - name: Move Assets folder and remove 'MARKDOWN' and 'ICON' folders
       run: |
