@@ -45,6 +45,7 @@
 - Convert text into images with the iconic Metal Slug font.
   - Support for Uppercase and Lowercase Alphabets (A-Z, a-z), Numbers (0-9), and Symbols.
   For more information, see [SUPPORTED.md](Documentation/SUPPORTED.md).
+ - MSFONT barely uses system resources: under 40MB of disk space and RAM
 
 ## Preview Fonts
 View examples of generated images with the available fonts in [EXAMPLE.md](EXAMPLE.md).
