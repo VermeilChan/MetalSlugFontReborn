@@ -28,7 +28,7 @@ jobs:
 
     - name: Build MSFONT
       run: |
-        pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icon/Raven.ico" --name "MSFONT-Dev" --version-file "Extra/versionfile.txt" --add-data "Src/main.py;." --add-data "Assets;Assets/"  "Src/windowed-version.py"
+        pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icon/Raven.ico" --name "MSFONT-Dev" --version-file "Extra/versionfile.txt" --add-data "Src/constants.py;." --add-data "Src/main.py;." --add-data "Assets;Assets/"  "Src/windowed-version.py"
 
     - name: Move Assets folder
       run: |
