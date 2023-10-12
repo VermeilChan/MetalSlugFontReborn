@@ -1,10 +1,10 @@
-# Project Progress
+# Project Progress Report
 
-This document tracks the progress and updates for the [Project Name] project. It provides a summary of recent changes, milestones achieved, and plans for future development.
+Welcome to the progress report for the MetalSlugFontReborn project. This document provides an overview of our latest updates, milestones, and upcoming development plans.
 
 ## Current Status
 
-- **Version**: 5.1.0
+- **Version**: 0.5.1
 - **Release Date**: 2023-10-15
 - **Project Link**: [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn)
 - **Maintainer**: VermeilChan
@@ -15,23 +15,22 @@ This document tracks the progress and updates for the [Project Name] project. It
 
 ### [2023-10-09]
 
-- **Update**: Implemented GUI.
-- **Issues Resolved**: 
+- **Update**: Added GUI (Graphical User Interface).
+- **Resolved Issues**: 
   - Fixed file extensions for certain fonts being in uppercase.
 
 ---
 
-## Milestones Achieved
+## Achieved Milestones
 
-- **Milestone 1: GUI Implementation**
-  - **Date of Achievement**: 2023-10-7
-  - **Description**: Successfully integrated a user-friendly graphical user interface (GUI) into the project.
+- **Milestone 1: GUI Integration**
+  - **Date Achieved**: 2023-10-7
+  - **Description**: Successfully incorporated a user-friendly GUI into the project.
 
-- **Milestone 2: Enhanced Symbol Support (Future)**
-  - **Planned Date of Achievement**: 2023-11-X
-  - **Description**: Significantly improved symbol support within the project.
-    Expanded the range of supported symbols.
+- **Milestone 2: Improved Symbol Support (Upcoming)**
+  - **Planned Achievement Date**: 2023-11-X
+  - **Description**: Expanding symbol support to cover a wider range of characters.
 
-- **Milestone 3: Enhanced User Interface (Future)**
-  - **Date of Achievement**: 2023-11-X
-  - **Description**: Revamped the user interface with a modern design, making the application more user-friendly.
+- **Milestone 3: Enhanced User Interface (Upcoming)**
+  - **Planned Achievement Date**: 2023-11-X
+  - **Description**: Modernizing the user interface for improved user-friendliness.
