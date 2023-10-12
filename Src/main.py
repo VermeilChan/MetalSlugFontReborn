@@ -4,22 +4,7 @@ from datetime import datetime
 
 from PIL import Image, UnidentifiedImageError
 
-# Constants
-SPACE_WIDTH = 30
-MAX_FILENAME_LENGTH = 255
-DESKTOP_PATH = os.path.expanduser("~/Desktop")
-SPECIAL_CHARACTERS = {
-    '!': 'Exclamation', '?': 'Question', "'": 'Apostrophe', '*': 'Asterisk',
-    ')': 'Bracket-Left', '}': 'Bracket-Left-2', ']': 'Bracket-Left-3',
-    '(': 'Bracket-Right', '{': 'Bracket-Right-2', '[': 'Bracket-Right-3',
-    '^': 'Caret', ':': 'Colon', '$': 'Dollar', '=': 'Equals', '>': 'Greater-than',
-    '-': 'Hyphen', '∞': 'Infinity', '<': 'Less-than', '#': 'Number', '%': 'Percent',
-    '.': 'Period', '+': 'Plus', '"': 'Quotation', ';': 'Semicolon', '/': 'Slash',
-    '~': 'Tilde', '_': 'Underscore', '|': 'Vertical-bar', ',': 'Comma', '&': 'Ampersand',
-    '♥': 'Heart', '©': 'Copyright', '⛶': 'Square', 'Ⅰ': 'One', 'Ⅱ': 'Two', 'Ⅲ': 'Three',
-    'Ⅳ': 'Four', 'Ⅴ': 'Five', '◀': 'Left', '▲': 'Up', '▶': 'Right', '▼': 'Down',
-    '★': 'Star', '⋆': 'Mini-Star', '☞': 'Hand', '¥': 'Yen', '♪': 'Musical-Note', '︷': 'Up-Arrow'
-}
+from constants import SPACE_WIDTH, MAX_FILENAME_LENGTH, DESKTOP_PATH, SPECIAL_CHARACTERS
 
 # Function to generate a filename based on user input and timestamp
 def generate_filename(user_input):
