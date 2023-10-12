@@ -34,9 +34,9 @@
 
 ## Table of Contents
 
-- [Features](#features)
+- [Key Features](#key-features)
 - [Previewing Fonts](#previewing-fonts)
-  - [Using MSFONT](#using-msfont)
+  - [MSFONT Usage Guide](#msfont-usage-guide)
 - [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
