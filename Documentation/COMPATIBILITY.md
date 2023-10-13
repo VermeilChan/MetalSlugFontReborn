@@ -53,7 +53,7 @@ Here you can find the tested Operating Systems and Distributions with MSFONT.
 
 #### MacOS Compatibility
 - **Not Yet Tested on MacOS**
-  If you've successfully tested this on MacOS, please provide your MacOS version and Darwin version along with WineHQ version.
+  If you've successfully tested this on MacOS, please provide your MacOS version along with WineHQ version.
 
   **Example:**
   - MacOS 14 Sonoma

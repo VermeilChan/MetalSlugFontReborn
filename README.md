@@ -93,7 +93,7 @@ If you have any questions, suggestions, or need assistance, feel free to reach o
 
 - **Discord:** [mommy_vermeil](https://discord.com/users/857841811736100925) (Most active)
 - **Twitter:** [@VermeilChan2](https://twitter.com/VermeilChan2)
-- **GitHub Issues:** [Project Issues](https://github.com/VermeilChan/MetalSlugFontReborn/issues) (For technical inquiries)
+- **GitHub Issues:** [Project Issues](https://github.com/VermeilChan/MetalSlugFontReborn/issues) (Active)
 - **Reddit:** [_Vermeil_](https://www.reddit.com/user/_Vermeil_)
 - **Stack Overflow:** [Vermeil](https://stackoverflow.com/users/20787000/vermeil)
 
