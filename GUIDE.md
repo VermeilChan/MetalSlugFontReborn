@@ -8,15 +8,15 @@ Begin by downloading the latest stable release of MSFONT from the [Releases Page
 
 ## 2. Installation and Launch
 
-1. Locate the downloaded `MSFONT` folder.
+1. Locate the downloaded `MSFONT-Dev` folder.
 2. Run the `MSFONT-Dev.exe` executable inside the folder.
    - For Windows:
 
-     ![Run MSFONT on Windows](Assets/Markdown/Guide/Program-Windows.png)
+     ![Run MSFONT-Dev on Windows](Assets/Markdown/Guide/Program-Windows.png)
 
    - For Linux:
 
-     ![Run MSFONT on Linux](Assets/Markdown/Guide/Program-Linux.png)
+     ![Run MSFONT-Dev on Linux](Assets/Markdown/Guide/Program-Linux.png)
 
 ## 3. Select a Font
 
