@@ -44,6 +44,7 @@ Here you can find the tested Operating Systems and Distributions with MSFONT.
 
 #### Wine Compatibility
 - **Tested WineHQ Versions:**
+  - 8.18
   - 8.17
   - 8.16
   - 8.15
@@ -57,4 +58,4 @@ Here you can find the tested Operating Systems and Distributions with MSFONT.
 
   **Example:**
   - MacOS 14 Sonoma
-  - WineHQ 8.17
+  - WineHQ 8.18
