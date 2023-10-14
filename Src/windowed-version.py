@@ -55,11 +55,19 @@ def on_font_change(*args):
     color_combobox['values'] = valid_colors
     color_var.set(valid_colors[0] if valid_colors else "")
 
+# Function to toggle dark mode and light mode
+def toggle_theme():
+    current_theme = style.theme_use()
+    if current_theme == "equilux":
+        style.set_theme("elegance")  # Switch to light theme
+    else:
+        style.set_theme("equilux")  # Switch to dark theme
+
 # Create the main window
 root = tk.Tk()
 root.title("Metal Slug Font")
 
-# Apply the dark theme
+# Apply the initial dark theme
 style = ThemedStyle(root)
 style.set_theme("equilux")
 
@@ -105,6 +113,10 @@ generate_button.grid(row=6, column=0, columnspan=3, sticky="ew")
 # Clear button
 clear_button = ttk.Button(frame, text="Clear", command=lambda: text_entry.delete(0, tk.END))
 clear_button.grid(row=7, column=0, columnspan=3, sticky="ew")
+
+# Theme toggle button
+theme_button = ttk.Button(frame, text="Toggle Theme", command=toggle_theme)
+theme_button.grid(row=8, column=0, columnspan=3, sticky="ew")
 
 # Add padding and make widgets expand
 for child in frame.winfo_children():
