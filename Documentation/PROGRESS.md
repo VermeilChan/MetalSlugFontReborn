@@ -16,7 +16,7 @@ Welcome to the progress report for the MetalSlugFontReborn project. This documen
 ### [2023-10-09]
 
 - **Update**: Added GUI (Graphical User Interface).
-- **Resolved Issues**: 
+- **Resolved Issues**:
   - Fixed file extensions for certain fonts being in uppercase.
 
 ---
@@ -27,10 +27,16 @@ Welcome to the progress report for the MetalSlugFontReborn project. This documen
   - **Date Achieved**: 2023-10-7
   - **Description**: Successfully incorporated a user-friendly GUI into the project.
 
-- **Milestone 2: Improved Symbol Support (Upcoming)**
-  - **Planned Achievement Date**: 2023-11-X
-  - **Description**: Expanding symbol support to cover a wider range of characters.
-
-- **Milestone 3: Enhanced User Interface (Upcoming)**
-  - **Planned Achievement Date**: 2023-11-X
+- **Milestone 2: Enhanced User Interface**
+  - **Date Achieved**: 2023-10-15
   - **Description**: Modernizing the user interface for improved user-friendliness.
+
+---
+
+## Future Milestones
+
+- **Milestone 1: Font Size Fixes (No Due Date)**
+  - **Description**:  working on resolving font size issues for Orange 1 & 2.
+
+- **Milestone 2: Improved Symbol Support (No due Date)**
+  - **Description**: Expanding symbol support to cover a wider range of characters.
