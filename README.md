@@ -59,7 +59,7 @@ Explore visual samples of fonts in action by checking out [EXAMPLE.md](EXAMPLE.m
 1. Open MSFONT, and you'll be greeted with a font selection prompt.
 2. Select a font by typing a number from 1 to 5.
 3. The available color options will adjust based on your font choice.
-4. To create Metal Slug font images, follow on-screen instructions or refer to the [Setup Guide](GUIDE.md) and [Supported Characters](Documentation/SUPPORTED.md).
+4. To create Metal Slug font images, follow on-screen instructions or refer to the [Setup Guide](INSTALL.md) and [Supported Characters](Documentation/SUPPORTED.md).
 5. Specify the color for your chosen font:
    - For some fonts, use `Blue`.
    - For specific fonts, select `Orange-1`.
