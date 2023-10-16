@@ -8,25 +8,19 @@ from constants import SPACE_WIDTH, MAX_FILENAME_LENGTH, DESKTOP_PATH, SPECIAL_CH
 
 # Function to generate a filename based on user input and timestamp
 def generate_filename(user_input):
-    try:
-        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        sanitized_input = '-'.join(filter(str.isalnum, user_input.split()))
-        filename = f"{sanitized_input}-{timestamp}.png"
-        return filename if len(filename) <= MAX_FILENAME_LENGTH else f"{timestamp}.png"
-    except Exception as e:
-        raise RuntimeError(f"Error generating filename: {str(e)}")
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    sanitized_input = '-'.join(filter(str.isalnum, user_input.split()))
+    filename = f"{sanitized_input}-{timestamp}.png"
+    return filename if len(filename) <= MAX_FILENAME_LENGTH else f"{timestamp}.png"
 
 # Function to get paths to font assets based on font and color.
 def get_font_paths(font, color):
-    try:
-        base_path = os.path.join('Assets', 'Fonts', f'Font-{font}', f'Font-{font}-{color}')
-        return (
-            os.path.join(base_path, 'Letters'),
-            os.path.join(base_path, 'Numbers'),
-            os.path.join(base_path, 'Symbols')
-        )
-    except Exception as e:
-        raise RuntimeError(f"Error getting font paths: {str(e)}")
+    base_path = os.path.join('Assets', 'Fonts', f'Font-{font}', f'Font-{font}-{color}')
+    return (
+        os.path.join(base_path, 'Letters'),
+        os.path.join(base_path, 'Numbers'),
+        os.path.join(base_path, 'Symbols')
+    )
 
 # Function to get the image path for a specific character based on its type
 def get_character_image_path(char, font_paths):
@@ -60,12 +54,10 @@ def generate_image(text, filename, font_paths):
             if char == ' ':
                 # Create an empty space character image
                 char_img = Image.new("RGBA", (SPACE_WIDTH, img_height or 1), (0, 0, 0, 0))
-
             else:
                 # Get the path to the character image based on the font
                 char_img_path = get_character_image_path(char, font_paths)
                 if not char_img_path:
-
                     raise FileNotFoundError(f"Image not found for character '{char}'")
 
                 char_img = Image.open(char_img_path).convert("RGBA")
