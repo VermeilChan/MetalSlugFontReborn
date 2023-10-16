@@ -1,6 +1,4 @@
-# MSFONT: Creating Metal Slug-Style Text
-
-Easily transform your text into Metal Slug-style graphics with MSFONT. Follow these straightforward steps to get started:
+# Windows
 
 ## 1. Download MSFONT
 
@@ -13,10 +11,6 @@ Begin by downloading the latest stable release of MSFONT from the [Releases Page
    - For Windows:
 
      ![Run MSFONT-Dev on Windows](Assets/Markdown/Guide/Program-Windows.png)
-
-   - For Linux:
-
-     ![Run MSFONT-Dev on Linux](Assets/Markdown/Guide/Program-Linux.png)
 
 ## 3. Select a Font
 
@@ -41,3 +35,38 @@ Simply input your desired text and press 'Enter.'
 ## Viewing the Result
 
 Once you press 'Enter,' the program will generate the stylized text image, which will be saved to your desktop.
+
+---
+
+# Linux
+
+## 1. Download MSFONT
+
+Begin by downloading the latest stable release of MSFONT from the [Releases Page](https://github.com/VermeilChan/MetalSlugFontReborn/releases).
+
+## 2. Installation and Launch
+
+1. Extract the contents of the downloaded `MSFONT-Linux.tar.gz`.
+2. Make the `start-msfont.sh`, `download-dependencies.sh` scripts executable by running the command: 
+
+```bash
+chmod +x start-msfont.sh download-dependencies.sh
+```
+
+3. Install the python and pip and required python packages by running the `download-dependencies.sh` script.
+
+```bash
+./download-dependencies.sh
+```
+
+4. To run the program, execute the `start-msfont.sh` script.
+
+```bash
+./start-msfont.sh
+```
+
+If you have Python 3.8+ and Pip installed, you can skip the steps 2-3 you only need to install the packages listed in `requirements.txt` by running the command:
+
+```bash
+pip install -r requirements.txt
+```
