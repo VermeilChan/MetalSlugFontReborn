@@ -1,72 +1,79 @@
-# Windows
+Here's a simplified version of the provided instructions:
 
-## 1. Download MSFONT
+**Windows:**
 
-Begin by downloading the latest stable release of MSFONT from the [Releases Page](https://github.com/VermeilChan/MetalSlugFontReborn/releases).
+1. **Download MSFONT:**
+   - Get the latest stable release of MSFONT from the [Releases Page](https://github.com/VermeilChan/MetalSlugFontReborn/releases).
 
-## 2. Installation and Launch
+2. **Installation and Launch:**
+   - Find and run the `MSFONT.exe` inside the downloaded `MSFONT` folder.
 
-1. Locate the downloaded `MSFONT-Dev` folder.
-2. Run the `MSFONT-Dev.exe` executable inside the folder.
-   - For Windows:
+3. **Select a Font:**
+   - When MSFONT opens, choose a font by entering a number from 1 to 5. You can preview them in [EXAMPLE.md](EXAMPLE.md).
 
-     ![Run MSFONT-Dev on Windows](Assets/Markdown/Guide/Program-Windows.png)
+4. **Choose a Color:**
+   - Depending on your font choice, you'll have specific color options.
 
-## 3. Select a Font
+5. **Input Your Text:**
+   - Enter the text you want to transform into Metal Slug style.
 
-Upon launching MSFONT, you will be asked to choose a font. Pick a font by entering a number from 1 to 5. To see how they look, check out the examples in [EXAMPLE.md](EXAMPLE.md).
+6. **Generate the Image:**
+   - Input your text and press 'Enter' to create the stylized image.
 
-## 4. Choose a Color
-
-Depending on your selected font, you will have different color options:
-
-- For some fonts, type `Blue` for the color Blue.
-- For specific fonts, type `Orange-1` for Orange 1.
-- For other fonts, type `Orange-2` for Orange 2.
-
-## 5. Input Your Text
-
-After choosing the font and color, the program will prompt you to enter the text you want to transform into Metal Slug style.
-
-## 6. Generate the Image
-
-Simply input your desired text and press 'Enter.'
-
-## Viewing the Result
-
-Once you press 'Enter,' the program will generate the stylized text image, which will be saved to your desktop.
+7. **View the Result:**
+   - After pressing 'Enter,' the program will save the stylized text image on your desktop.
 
 ---
 
-# Linux
+**Linux:**
 
-## 1. Download MSFONT
+1. **Download MSFONT:**
+   - Download the latest stable release of MSFONT from the [Releases Page](https://github.com/VermeilChan/MetalSlugFontReborn/releases).
 
-Begin by downloading the latest stable release of MSFONT from the [Releases Page](https://github.com/VermeilChan/MetalSlugFontReborn/releases).
+2. **Installation and Launch:**
+   1. **Extract the Archive:**
+      - After downloading, extract the `MSFONT-Linux.tar.gz` file to a directory of your choice:
+        ```bash
+        tar -xzvf MSFONT-Linux.tar.gz
+        ```
 
-## 2. Installation and Launch
+   2. **Navigate to the 'Scripts' Folder:**
+      - Change your working directory to the 'Scripts' folder:
+        ```bash
+        cd MetalSlugFontRebornLinux/Scripts
+        ```
 
-1. Extract the contents of the downloaded `MSFONT-Linux.tar.gz`.
-2. Make the `start-msfont.sh`, `download-dependencies.sh` scripts executable by running the command: 
+   3. **Choose Your Linux Distribution:**
+      - Depending on your Linux distribution, select the appropriate installation script:
 
-```bash
-chmod +x start-msfont.sh download-dependencies.sh
-```
+        - For Ubuntu:
+          ```bash
+          bash install-msfont-ubuntu.sh
+          ```
+        - For Debian:
+          ```bash
+          bash install-msfont-debian.sh
+          ```
+        - For Fedora:
+          ```bash
+          bash install-msfont-fedora.sh
+          ```
+        - For OpenSUSE Tumbleweed:
+          ```bash
+          bash install-msfont-opensuse.sh
+          ```
+        - For Arch:
+          ```bash
+          bash install-msfont-arch.sh
+          ```
 
-3. Install the python and pip and required python packages by running the `download-dependencies.sh` script.
+   4. **Run MSFONT:**
+      - After the installation script finishes, you can launch MSFONT:
+        ```bash
+        bash start-msfont.sh
+        ```
 
-```bash
-./download-dependencies.sh
-```
-
-4. To run the program, execute the `start-msfont.sh` script.
-
-```bash
-./start-msfont.sh
-```
-
-If you have Python 3.8+ and Pip installed, you can skip the steps 2-3 you only need to install the packages listed in `requirements.txt` by running the command:
-
-```bash
-pip install -r requirements.txt
-```
+   - If you have Python 3.8+, Pip, venv, and tkinter installed, you can skip steps 2-3 and install the necessary packages by running:
+     ```bash
+     pip install -r requirements.txt
+     ```
