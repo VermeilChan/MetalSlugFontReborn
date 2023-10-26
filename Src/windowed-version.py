@@ -80,38 +80,37 @@ frame = ttk.Frame(root, padding=20)
 frame.pack(expand=True, fill="both")
 
 # Label for text input
-text_label = ttk.Label(frame, text="Text to Generate:", font=("Ubuntu", 14))
+text_label = ttk.Label(frame, text="Text to Generate:")
 text_label.grid(row=0, column=0, columnspan=3, sticky="w")
 
 # Text input field
-text_entry = ttk.Entry(frame, font=("Ubuntu", 14))
+text_entry = ttk.Entry(frame)
 text_entry.grid(row=1, column=0, columnspan=3, sticky="ew")
 
 # Label for font selection
-font_label = ttk.Label(frame, text="Select Font:", font=("Ubuntu", 14))
+font_label = ttk.Label(frame, text="Select Font:")
 font_label.grid(row=2, column=0, columnspan=3, sticky="w")
 
 # Font selection dropdown
 font_var = tk.StringVar()
 font_var.set("1")  # Default font selection
-font_combobox = ttk.Combobox(frame, textvariable=font_var, values=["1", "2", "3", "4", "5"], font=("Ubuntu", 14))
+font_combobox = ttk.Combobox(frame, textvariable=font_var, values=["1", "2", "3", "4", "5"])
 font_combobox.grid(row=3, column=0, columnspan=3, sticky="ew")
 
 # Label for color selection
-color_label = ttk.Label(frame, text="Select Color:", font=("Ubuntu", 14))
+color_label = ttk.Label(frame, text="Select Color:")
 color_label.grid(row=4, column=0, columnspan=3, sticky="w")
 
 # Color selection dropdown
 color_var = tk.StringVar()
 color_var.set("Blue")  # Default color selection
-color_combobox = ttk.Combobox(frame, textvariable=color_var, values=[], font=("Ubuntu", 14))
+color_combobox = ttk.Combobox(frame, textvariable=color_var, values=[])
 color_combobox.grid(row=5, column=0, columnspan=3, sticky="ew")
 
 # Bind the font selection change event
 font_var.trace_add("write", on_font_change)
 
 # Generate button
-style.configure("TButton", font=("Ubuntu", 14))
 generate_button = ttk.Button(frame, text="Generate and Save Image", command=generate_and_display_image)
 generate_button.grid(row=6, column=0, columnspan=3, sticky="ew")
 
