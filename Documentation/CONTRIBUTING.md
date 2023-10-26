@@ -46,7 +46,7 @@ Contributors are encouraged to update and create documentation as needed. If you
 
 ## License
 
-Metal Slug Font Reborn is licensed under the Apache License 2.0. All contributions to the project are also subject to this license.
+MetalSlugFontReborn is licensed under the Apache License 2.0. All contributions to the project are also subject to this license.
 
 ## Contact Information
 
