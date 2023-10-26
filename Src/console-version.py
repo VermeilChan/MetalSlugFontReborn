@@ -5,19 +5,10 @@ import sys
 # Prevent the generation of .pyc (Python bytecode) files
 sys.dont_write_bytecode = True
 
+# Import necessary functions from the main module
 from main import generate_filename, generate_image, get_font_paths
-
-# Define valid color options for each font
-VALID_COLORS_BY_FONT = {
-    1: ["Blue", "Orange-1", "Orange-2"],
-    2: ["Blue", "Orange-1", "Orange-2"],
-    3: ["Blue", "Orange-1"],
-    4: ["Blue", "Orange-1"],
-    5: ["Orange-1"]
-}
-
-# Define a constant for the closing message
-CLOSING_MESSAGE = "Closing..."
+# Import necessary functions from the constants module
+from constants import CLOSING_MESSAGE, VALID_COLORS_BY_FONT
 
 # Function to display an introductory message
 def display_intro_message():
