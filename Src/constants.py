@@ -79,8 +79,8 @@ SPECIAL_CHARACTERS = {
 VALID_COLORS_BY_FONT = {
     1: ["Blue", "Orange-1", "Orange-2"],
     2: ["Blue", "Orange-1", "Orange-2"],
-    3: ["Blue", "Orange-1"],
-    4: ["Blue", "Orange-1"],
+    3: ["Blue", "Orange-1", "Yellow"],
+    4: ["Blue", "Orange-1", "Yellow"],
     5: ["Orange-1"]
 }
 CLOSING_MESSAGE = "Closing..."
