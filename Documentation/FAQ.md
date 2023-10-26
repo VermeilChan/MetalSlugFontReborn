@@ -22,8 +22,8 @@ A: Yes, MetalSlugFontReborn is available for both personal and commercial use un
 **Q: How do I install MetalSlugFontReborn?**
 A: To install MetalSlugFontReborn:
 
-- For Windows, download it from the [Releases page](https://github.com/VermeilChan/MetalSlugFontReborn/releases) and follow the README instructions.
-- For Linux or macOS, use compatibility layers like WineHQ (Linux and macOS) or Lutris (Linux only) or PlayOnMac (macOS). Download it from the [Releases page](https://github.com/VermeilChan/MetalSlugFontReborn/releases).
+Download it from the [Releases page](https://github.com/VermeilChan/MetalSlugFontReborn/releases) and follow the README instructions.
+- For MacOS, use compatibility layer like WineHQ.
 
 ## Usage
 
