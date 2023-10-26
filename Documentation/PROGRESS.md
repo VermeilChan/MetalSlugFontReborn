@@ -1,10 +1,10 @@
 # Project Progress Report
 
-Welcome to the progress report for the MetalSlugFontReborn project. This document provides an overview of our latest updates, milestones, and upcoming development plans.
+Welcome to the progress report for the MetalSlugFontReborn project. This document provides an overview of the latest updates, milestones, and upcoming development plans.
 
 ## Current Status
 
-- **Version**: 0.5.1
+- **Version**: 0.4.9 (Pre-release)
 - **Release Date**: 2023-10-15
 - **Project Link**: [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn)
 - **Maintainer**: VermeilChan
@@ -31,12 +31,16 @@ Welcome to the progress report for the MetalSlugFontReborn project. This documen
   - **Date Achieved**: 2023-10-15
   - **Description**: Modernizing the user interface for improved user-friendliness.
 
+- **Milestone 3: Native Support For Linux**
+  - **Date Achieved**: 2023-10-16
+  - **Description**: Added native support for Linux distributions including Debian, Ubuntu, Arch, Fedora, and OpenSUSE.
+
 ---
 
-## Future Milestones
+## Future Milestones (Future) [Version 0.5.X]
 
 - **Milestone 1: Font Size Fixes (No Due Date)**
-  - **Description**:  working on resolving font size issues for Orange 1 & 2.
+  - **Description**:  Working on resolving font size issues for Orange 1 & 2.
 
 - **Milestone 2: Improved Symbol Support (No due Date)**
   - **Description**: Expanding symbol support to cover a wider range of characters.
