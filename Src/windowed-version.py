@@ -1,4 +1,5 @@
 # Import necessary libraries
+import os
 import sys
 
 import tkinter as tk
@@ -59,17 +60,18 @@ def on_font_change(*args):
 # Function to toggle dark mode and light mode
 def toggle_theme():
     current_theme = style.theme_use()
-    if current_theme == "equilux":
-        style.set_theme("elegance")  # Switch to light theme
-    else:
-        style.set_theme("equilux")  # Switch to dark theme
+    new_theme = "elegance" if current_theme == "equilux" else "equilux"
+    style.set_theme(new_theme)
 
 # Create the main window
 root = tk.Tk()
 root.title("Metal Slug Font")
-im = Image.open('Assets/Icon/Raven.ico')
-photo = ImageTk.PhotoImage(im)
-root.wm_iconphoto(True, photo)
+
+# Set the window icon
+if os.path.exists('Assets/Icon/Raven.ico'):
+    im = Image.open('Assets/Icon/Raven.ico')
+    photo = ImageTk.PhotoImage(im)
+    root.wm_iconphoto(True, photo)
 
 # Apply the initial dark theme
 style = ThemedStyle(root)
