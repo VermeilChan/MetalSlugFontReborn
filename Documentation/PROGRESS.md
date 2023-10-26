@@ -11,16 +11,6 @@ Welcome to the progress report for the MetalSlugFontReborn project. This documen
 
 ---
 
-## Recent Updates
-
-### [2023-10-09]
-
-- **Update**: Added GUI (Graphical User Interface).
-- **Resolved Issues**:
-  - Fixed file extensions for certain fonts being in uppercase.
-
----
-
 ## Achieved Milestones
 
 - **Milestone 1: GUI Integration**
@@ -33,7 +23,7 @@ Welcome to the progress report for the MetalSlugFontReborn project. This documen
 
 - **Milestone 3: Native Support For Linux**
   - **Date Achieved**: 2023-10-16
-  - **Description**: Added native support for Linux distributions including Debian, Ubuntu, Arch, Fedora, and OpenSUSE.
+  - **Description**: Added native support for Linux distributions including Debian, Ubuntu, Arch, Fedora, and OpenSUSE Tumbleweed.
 
 ---
 
