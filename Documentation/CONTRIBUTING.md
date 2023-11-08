@@ -1,6 +1,6 @@
 # Metal Slug Font Reborn Contribution Guidelines
 
-Metal Slug Font Reborn is an exciting project that enables users to effortlessly create images with the iconic Metal Slug font style. The project's goal is to simplify text-to-image transformation, making it reminiscent of the Metal Slug arcade game series.
+Metal Slug Font Reborn is a project that enables users to effortlessly create images with the iconic Metal Slug font style. The project's goal is to simplify text-to-image transformation.
 
 ## Contribution Opportunities
 
@@ -12,7 +12,7 @@ To contribute effectively, you should have:
 
 - Proficiency in Python 3.8+.
 - Familiarity with the Pillow library if you plan to modify the image generation process in `main.py`.
-- Knowledge of tkinter for GUI development if you intend to make UI modifications in `windowed-version.py`.
+- Knowledge of tkinter and ttkthemes for GUI development if you intend to make UI modifications in `windowed-version.py`.
 
 There are no specific requirements for development tools, software, or environments. You're free to use your preferred code editor, such as VSCode, PyCharm, or any other of your choice.
 
