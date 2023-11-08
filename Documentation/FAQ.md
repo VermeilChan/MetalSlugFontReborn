@@ -48,7 +48,7 @@ A: If the web app is unavailable, consider using the console or windowed version
 ## Contributions
 
 **Q: How can I contribute to MetalSlugFontReborn?**
-A: We welcome contributions! You can help by reporting issues, submitting pull requests, or suggesting improvements.
+A: You can help by reporting issues, submitting pull requests, or suggesting improvements.
 
 ## License
 
