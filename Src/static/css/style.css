@@ -1,0 +1,148 @@
+/* Reset default margin, padding, font, and color */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Ubuntu', sans-serif;
+    color: #007bff;
+    /* Set background image and cover it */
+    background-image: url('https://cdn.discordapp.com/attachments/861700235890130986/1139858875147894804/background.webp');
+    background-size: cover;
+}
+
+/* Center content vertically and horizontally */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    /* Add fade-in animation */
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Define the fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Styling for headings */
+h1,
+h2 {
+    margin-bottom: 1rem;
+    transition: color 0.3s ease-in-out;
+    /* Add text shadow */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Styling for forms */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Styling for input fields and submit button */
+input[type="text"],
+input[type="submit"] {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Styling for input text when focused */
+input[type="text"]:focus {
+    background-color: #333;
+    color: #fff;
+}
+
+/* Styling for submit button */
+input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Styling for submit button when hovered */
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Styling for error messages */
+.error {
+    color: #ff5555;
+    margin-top: 1rem;
+    transition: color 0.3s ease-in-out;
+}
+
+/* Styling for error messages when hovered */
+.error:hover {
+    color: #ff0000;
+}
+
+/* Responsive design for small screens */
+@media (max-width: 600px) {
+    input[type="text"] {
+        width: 100%;
+    }
+}
+
+/* Styling for header image */
+.header-image {
+    width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Styling for the download button */
+#download_button {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+
+/* Styling for the download button */
+#download_button {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Styling for the download button link */
+#download_button a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Styling for the download button link when active */
+#download_button a:active {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Styling for the download button when hovered */
+#download_button:hover {
+    background-color: #0056b3;
+}
+
+/* Styling for the button container */
+.button-container {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+}

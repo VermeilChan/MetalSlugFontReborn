@@ -1,88 +1,101 @@
-# Import necessary libraries
-import os
-from datetime import datetime
-
 from PIL import Image, UnidentifiedImageError
+from collections import namedtuple
+from constants import SPACE_WIDTH, SPECIAL_CHARACTERS
+import random , string , os
+from typing import final
+from rich import console
 
-from constants import SPACE_WIDTH, MAX_FILENAME_LENGTH, DESKTOP_PATH, SPECIAL_CHARACTERS
+conosle = console.Console()
 
-# Function to generate a filename based on user input and timestamp
-def generate_filename(user_input):
-    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    input_2 = ''.join(c for c in user_input if c.isalnum() or c.isspace())
-    input_2 = '-'.join(input_2.split())
-    filename = f"{input_2}-{timestamp}.png"
-    return filename if len(filename) <= MAX_FILENAME_LENGTH else f"{timestamp}.png"
+@final
+class ImageGeneration(object):
 
-# Function to get paths to font assets based on font and color.
-def get_font_paths(font, color):
-    base_path = os.path.join('Assets', 'Fonts', f'Font-{font}', f'Font-{font}-{color}')
-    return (
-        os.path.join(base_path, 'Letters'),
-        os.path.join(base_path, 'Numbers'),
-        os.path.join(base_path, 'Symbols')
-    )
+    def __init__(self , user_input:str , font:int , color:str) -> None:
 
-# Function to get the image path for a specific character based on its type
-def get_character_image_path(char, font_paths):
-    CHARACTERS_FOLDER, NUMBERS_FOLDER, SYMBOLS_FOLDER = font_paths
+        self._user_input = user_input
+        self._font = font
+        self._color = color
+    
+    def GenerateFilename(self):
+        self.character = ""
+        for i in range(0 , 15):
 
-    if char.isalpha():
-        folder = 'Lower-Case' if char.islower() else 'Upper-Case'
-        char_img_path = os.path.join(CHARACTERS_FOLDER, folder, f"{char}.png")
-    elif char.isdigit():
-        char_img_path = os.path.join(NUMBERS_FOLDER, f"{char}.png")
-    elif char == ' ':
-        return None
-    else:
-        char_img_path = os.path.join(SYMBOLS_FOLDER, f"{SPECIAL_CHARACTERS.get(char, '')}.png")
+            random_character = random.choice(string.ascii_letters + string.digits)        
+            self.character += random_character
 
-    return char_img_path if os.path.isfile(char_img_path) else None
+        return f"{self.character}.png"
+    
+    def GetFontPath(self):
 
-# Generates an image from the given text using character images from specified fonts.
-def generate_image(text, filename, font_paths):
-    img_height = None
-    char_images = {}
-    img_path = os.path.join(DESKTOP_PATH, filename)
+        self.base = os.path.join('static' , 'assets' , 'fonts' , f'font-{self._font}' , f'Font-{self._font}-{self._color}')
 
-    try:
-        total_width = 0
+        self.container = namedtuple('Font' , ['Symbols' , 'Letters' , 'Numbers'])
 
-        # Iterate through each character in the input text
-        for char in text:
-            if char == ' ':
-                # Create an empty space character image
-                char_img = Image.new("RGBA", (SPACE_WIDTH, img_height or 1), (0, 0, 0, 0))
-            else:
-                # Get the path to the character image based on the font
-                char_img_path = get_character_image_path(char, font_paths)
-                if not char_img_path:
-                    raise FileNotFoundError(f"Image not found for character '{char}'")
+        self.container.Symbols = os.path.join(self.base, 'Symbols')
+        self.container.Letters = os.path.join(self.base, 'Letters')
+        self.container.Numbers = os.path.join(self.base, 'Numbers')
 
-                char_img = Image.open(char_img_path).convert("RGBA")
+        return self.container
+    
+    def GetCharacterImagePath(self , char:str):
 
-            char_images[char] = char_img
-            img_height = char_img.height if img_height is None else img_height
-            total_width += char_img.width
+        letters_folder   = self.GetFontPath().Letters
+        numbers_folder   = self.GetFontPath().Numbers
+        symbol_folder    = self.GetFontPath().Symbols
 
-        # Create the final image and paste character images into it
-        final_img = Image.new("RGBA", (total_width, img_height), (0, 0, 0, 0))
-        x = 0
+        if char.isalpha():
 
-        for char in text:
-            final_img.paste(char_images[char], (x, 0))
-            x += char_images[char].width
+            folder = 'Lower-Case' if char.islower() else 'Upper-Case'
 
-        # Save the final image
-        final_img.save(img_path)
+            self.char_img_path = os.path.join('Src' , letters_folder, folder, f"{char}.png")
 
-        return (filename, None)
 
-    except FileNotFoundError:
-        return (None, f"Error: Image not found for character '{char}'")
-    except UnidentifiedImageError:
-        return (None, "Error: Unable to identify image")
-    except ValueError as e:
-        return (None, f"Error: Invalid value - {str(e)}")
-    except Exception as e:
-        return (None, f"An unexpected error occurred: {str(e)}")
+        elif char.isdigit():
+
+            self.char_img_path = os.path.join('Src' , numbers_folder, f"{char}.png")
+
+
+        elif char == ' ':
+
+            ...
+
+        else:
+
+            self.char_img_path = os.path.join('Src' , symbol_folder, f"{SPECIAL_CHARACTERS.get(char, '')}.png")
+
+        return self.char_img_path
+
+    def GenerateImage(self): 
+
+        self.images = [
+            Image.open(self.GetCharacterImagePath(character)) for character in self._user_input
+        ]
+
+        self.widths , self.heights = zip(* (i.size for i in self.images))
+
+        self.total_width  = sum(self.widths)
+        self.total_height = sum(self.heights)
+
+        self.new_im = Image.new('RGBA', (self.total_width, self.total_height))
+
+        self.offset = 0
+
+        for i in self.images:
+            self.new_im.paste(i,(self.offset,0))
+            self.offset += i.size[0]
+
+        self.new_im.save(f'out/{self.GenerateFilename()}')
+
+
+
+
+
+
+
+o = ImageGeneration('like i just came' , 1 , 'Orange-1')
+
+
+try:
+    o.GenerateImage()
+except:
+    conosle.print_exception()

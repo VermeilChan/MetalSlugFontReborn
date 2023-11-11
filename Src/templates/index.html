@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% extends 'head.html' %}
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metal Slug Font</title>
+    {% endblock %}
+</head>
+
+<body>
+    {% block body %}
+    <div class="container">
+        <!-- Header -->
+        <img src="{{ url_for('static', filename='assets/Raven.ico') }}" alt="Sv-001" class="header-image">
+        <h1>Metal Slug Font</h1>
+
+        <!-- Form for Text Input -->
+        <form id="form" action="/" method="post">
+            <input type="text" name="text" placeholder="Enter Text" required>
+            <input type="submit" value="Generate">
+        </form>
+
+        <!-- Generated Image Section -->
+        {% if img_path %}
+        <h2>Generated Image:</h2>
+        <img src="{{ url_for('static', filename='Generated_Images/' + img_path) }}" alt="Generated Image">
+        <div class="button-container">
+            <!-- Download Button -->
+            <button id="download_button">
+                <a href="{{ url_for('static', filename='Generated_Images/' + img_path) }}"
+                    download="{{ img_path }}">Download</a>
+            </button>
+        </div>
+        {% endif %}
+
+        <!-- Error Message Section -->
+        {% if error_message %}
+        <p class="error">{{ error_message }}</p>
+        {% endif %}
+        
+    </div>
+    {% endblock %}
+</body>
+
+</html>

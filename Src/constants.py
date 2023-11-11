@@ -2,8 +2,6 @@ import os
 
 # main.py
 SPACE_WIDTH = 30
-MAX_FILENAME_LENGTH = 255
-DESKTOP_PATH = os.path.expanduser("~/Desktop")
 SPECIAL_CHARACTERS = {
     '!': 'Exclamation',
     '?': 'Question',
