@@ -1,5 +1,3 @@
-Here's a simplified version of the provided instructions:
-
 **Windows:**
 
 1. **Download MSFONT:**
@@ -33,9 +31,6 @@ Here's a simplified version of the provided instructions:
 2. **Installation and Launch:**
    1. **Extract the Archive:**
       - After downloading, extract the `MSFONT-Linux.tar.gz` file to a directory of your choice:
-        ```bash
-        tar -xzvf MSFONT-Linux.tar.gz
-        ```
 
    2. **Navigate to the 'Scripts' Folder:**
       - Change your working directory to the 'Scripts' folder:
