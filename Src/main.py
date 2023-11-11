@@ -9,8 +9,9 @@ from constants import SPACE_WIDTH, MAX_FILENAME_LENGTH, DESKTOP_PATH, SPECIAL_CH
 # Function to generate a filename based on user input and timestamp
 def generate_filename(user_input):
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    sanitized_input = '-'.join(filter(str.isalnum, user_input.split()))
-    filename = f"{sanitized_input}-{timestamp}.png"
+    input_2 = ''.join(c for c in user_input if c.isalnum() or c.isspace())
+    input_2 = '-'.join(input_2.split())
+    filename = f"{input_2}-{timestamp}.png"
     return filename if len(filename) <= MAX_FILENAME_LENGTH else f"{timestamp}.png"
 
 # Function to get paths to font assets based on font and color.
@@ -36,9 +37,7 @@ def get_character_image_path(char, font_paths):
     else:
         char_img_path = os.path.join(SYMBOLS_FOLDER, f"{SPECIAL_CHARACTERS.get(char, '')}.png")
 
-    if not os.path.isfile(char_img_path):
-        return None
-    return char_img_path
+    return char_img_path if os.path.isfile(char_img_path) else None
 
 # Generates an image from the given text using character images from specified fonts.
 def generate_image(text, filename, font_paths):
