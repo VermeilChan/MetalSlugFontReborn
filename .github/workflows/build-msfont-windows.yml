@@ -3,7 +3,7 @@ name: Build MSFONT-Dev
 on:
   push:
     branches:
-      - Development
+      - PyQt6-GUI
     paths:
       - 'Src/**'
       - 'Assets/**'
