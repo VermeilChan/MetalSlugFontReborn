@@ -1,3 +1,4 @@
+# Import necessary libraries
 import os
 import sys
 
@@ -7,8 +8,10 @@ from PyQt6.QtGui import QPalette, QColor, QIcon
 # Prevent the generation of .pyc (Python bytecode) files
 sys.dont_write_bytecode = True
 
+# Import necessary functions from the main module
 from main import generate_filename, generate_image, get_font_paths
 
+# Import necessary constants from the constants module
 from constants import VALID_COLORS_BY_FONT
 
 class ImageGenerator:
