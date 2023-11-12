@@ -3,10 +3,9 @@ import sys
 
 from flask import Flask, render_template, request
 
-# Disable writing bytecode to avoid clutter
+# Prevent the generation of .pyc (Python bytecode) files
 sys.dont_write_bytecode = True
 
-# Prevent the generation of .pyc (Python bytecode) files
 from main import ImageGeneration
 
 # Create a Flask application instance
