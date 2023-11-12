@@ -3,7 +3,9 @@ from constants import SPACE_WIDTH , SPECIAL_CHARACTERS
 import random , string , os
 from typing import final
 from rich import console
-import cv2
+import cv2 , numpy
+
+from PIL import Image , ImageDraw
 
 conosle = console.Console()
 
@@ -54,16 +56,11 @@ class ImageGeneration(object):
 
             self.char_img_path = os.path.join('src' , numbers_folder, f"{char}.png")
 
-
-        elif char == ' ':
-
-            ...
-
         else:
 
             self.char_img_path = os.path.join('src' , symbol_folder, f"{SPECIAL_CHARACTERS.get(char, '')}.png")
 
-        return self.char_img_path
+        return os.path.abspath(self.char_img_path)
 
     def GenerateImage(self): 
 
@@ -73,27 +70,31 @@ class ImageGeneration(object):
             pass
 
         self.filename = os.path.join('src' , 'static' , 'out' , self.GenerateFilename())
-
-        print(self.filename)
-
         self.images = []
-
         for character in self._user_input:
 
-            if character == ' ':
+
+            if character == " ":
                 continue
 
             self._image = cv2.imread(self.GetCharacterImagePath(character) , cv2.IMREAD_UNCHANGED)
             self.images.append(self._image)
 
-        self.horizentaly = cv2.hconcat(self.images)
+        try:
+
+            self.horizentaly = cv2.hconcat(self.images)
+            cv2.imwrite(self.filename , self.horizentaly)
+
+        except Exception as error:
+            print(error)
 
 
-        cv2.imwrite(self.filename , self.horizentaly)
+
+        return self.filename
+        
+       
 
 
-o = ImageGeneration('Hello World' , 1 , 'Orange-1')
-try:
-    o.GenerateImage()
-except:
-    conosle.print_exception()
+x = ImageGeneration('HELLO WORLD' , 1 , 'Orange-1')
+
+x.GenerateImage()
