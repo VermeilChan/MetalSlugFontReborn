@@ -1,5 +1,3 @@
-import os
-
 # main.py
 SPACE_WIDTH = 30
 SPECIAL_CHARACTERS = {
@@ -72,13 +70,3 @@ SPECIAL_CHARACTERS = {
     'ô': 'TODO',
     'õ': 'TODO'
 }
-
-# console-version.py, windowed-version.py
-VALID_COLORS_BY_FONT = {
-    1: ["Blue", "Orange-1", "Orange-2"],
-    2: ["Blue", "Orange-1", "Orange-2"],
-    3: ["Blue", "Orange-1", "Yellow"],
-    4: ["Blue", "Orange-1", "Yellow"],
-    5: ["Orange-1"]
-}
-CLOSING_MESSAGE = "Closing..."
