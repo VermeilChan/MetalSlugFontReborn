@@ -1,6 +1,5 @@
-from PIL import Image, UnidentifiedImageError
 from collections import namedtuple
-from constants import SPACE_WIDTH, SPECIAL_CHARACTERS
+from constants import SPACE_WIDTH , SPECIAL_CHARACTERS
 import random , string , os
 from typing import final
 from rich import console
@@ -48,12 +47,12 @@ class ImageGeneration(object):
 
             folder = 'Lower-Case' if char.islower() else 'Upper-Case'
 
-            self.char_img_path = os.path.join('Src' , letters_folder, folder, f"{char}.png")
+            self.char_img_path = os.path.join('src' , letters_folder, folder, f"{char}.png")
 
 
         elif char.isdigit():
 
-            self.char_img_path = os.path.join('Src' , numbers_folder, f"{char}.png")
+            self.char_img_path = os.path.join('src' , numbers_folder, f"{char}.png")
 
 
         elif char == ' ':
@@ -62,33 +61,38 @@ class ImageGeneration(object):
 
         else:
 
-            self.char_img_path = os.path.join('Src' , symbol_folder, f"{SPECIAL_CHARACTERS.get(char, '')}.png")
+            self.char_img_path = os.path.join('src' , symbol_folder, f"{SPECIAL_CHARACTERS.get(char, '')}.png")
 
         return self.char_img_path
 
     def GenerateImage(self): 
 
-        self.images = [
-            cv2.imread(self.GetCharacterImagePath(character)) for character in self._user_input
-        ]
+        try:
+            os.mkdir('src/static/out')
+        except Exception:
+            pass
+
+        self.filename = os.path.join('src' , 'static' , 'out' , self.GenerateFilename())
+
+        print(self.filename)
+
+        self.images = []
+
+        for character in self._user_input:
+
+            if character == ' ':
+                continue
+
+            self._image = cv2.imread(self.GetCharacterImagePath(character) , cv2.IMREAD_UNCHANGED)
+            self.images.append(self._image)
 
         self.horizentaly = cv2.hconcat(self.images)
 
 
-        cv2.imshow('Horizentaly' , self.horizentaly)
-        cv2.waitKey(0)
+        cv2.imwrite(self.filename , self.horizentaly)
 
-        cv2.destroyAllWindows()
-
-
-
-    
-
-        
 
 o = ImageGeneration('Hello World' , 1 , 'Orange-1')
-
-
 try:
     o.GenerateImage()
 except:
