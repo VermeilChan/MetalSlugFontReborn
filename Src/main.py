@@ -4,6 +4,7 @@ from constants import SPACE_WIDTH, SPECIAL_CHARACTERS
 import random , string , os
 from typing import final
 from rich import console
+import cv2
 
 conosle = console.Console()
 
@@ -68,31 +69,24 @@ class ImageGeneration(object):
     def GenerateImage(self): 
 
         self.images = [
-            Image.open(self.GetCharacterImagePath(character)) for character in self._user_input
+            cv2.imread(self.GetCharacterImagePath(character)) for character in self._user_input
         ]
 
-        self.widths , self.heights = zip(* (i.size for i in self.images))
+        self.horizentaly = cv2.hconcat(self.images)
 
-        self.total_width  = sum(self.widths)
-        self.total_height = sum(self.heights)
 
-        self.new_im = Image.new('RGBA', (self.total_width, self.total_height))
+        cv2.imshow('Horizentaly' , self.horizentaly)
+        cv2.waitKey(0)
 
-        self.offset = 0
-
-        for i in self.images:
-            self.new_im.paste(i,(self.offset,0))
-            self.offset += i.size[0]
-
-        self.new_im.save(f'out/{self.GenerateFilename()}')
+        cv2.destroyAllWindows()
 
 
 
+    
 
+        
 
-
-
-o = ImageGeneration('like i just came' , 1 , 'Orange-1')
+o = ImageGeneration('Hello World' , 1 , 'Orange-1')
 
 
 try:
