@@ -1,3 +1,2 @@
-Pillow>=10.1.0
-pyinstaller>=6.1.0
-ttkthemes>=3.2.2
+opencv-python>=4.8.1.78
+Flask>=3.0.0
