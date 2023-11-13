@@ -1,16 +1,14 @@
 /* Reset default margin, padding, font, and color */
-
 * {
     font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    color: #007bff;
+    color: #4815c0;
     /* Set background image and cover it */
-    background-image: url('https://cdn.discordapp.com/attachments/861700235890130986/1139858875147894804/background.webp');
-    background-size: cover;
+    background: url('https://cdn.discordapp.com/attachments/861700235890130986/1139858875147894804/background.webp') center/cover no-repeat;
 }
 
 /* Center content vertically and horizontally */
@@ -21,7 +19,7 @@ body {
     justify-content: center;
     min-height: 100vh;
     /* Add fade-in animation */
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeIn 0.8s ease-in-out;
 }
 
 /* Define the fade-in animation */
@@ -55,62 +53,62 @@ form {
 
 /* Styling for input fields and submit button */
 input[type="text"],
-input[type="submit"] {
-    padding: 0.5rem;
-    margin-bottom: 1rem;
+input[type="submit"],
+#font,
+#color {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     width: 100%;
-    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-}
-
-#font , #color {
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border: none;
-    border-radius: 5px;
-    width: 100%;
-    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 /* Styling for input text when focused */
-input[type="text"]:focus {
-    background-color: #333;
+input[type="text"]:focus,
+#font:focus,
+#color:focus {
+    background-color: #4815c0;
     color: #fff;
+    transform: scale(1.02);
 }
 
 /* Styling for submit button */
-input[type="submit"] {
-    background-color: #007bff;
+input[type="submit"],
+#download_button {
+    background-color: #4815c0;
     color: #fff;
     cursor: pointer;
 }
 
 /* Styling for submit button when hovered */
-input[type="submit"]:hover {
-    background-color: #0056b3;
+input[type="submit"]:hover,
+#download_button:hover {
+    background-color: #4815c0;
 }
 
 /* Styling for error messages */
 .error {
-    color: #ff5555;
+    color: #e57373;
     margin-top: 1rem;
     transition: color 0.3s ease-in-out;
 }
 
 /* Styling for error messages when hovered */
 .error:hover {
-    color: #ff0000;
+    color: #d32f2f;
 }
 
 /* Responsive design for small screens */
 @media (max-width: 600px) {
-    input[type="text"] {
+    input[type="text"],
+    #font,
+    #color {
         width: 100%;
     }
 }
 
-/* Styling for header image */
+/* Styling for the header image */
 .header-image {
     width: 150px;
     height: auto;
@@ -120,20 +118,15 @@ input[type="submit"]:hover {
 
 /* Styling for the download button */
 #download_button {
-    padding: 0.5rem;
-    margin-bottom: 1rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     width: 100%;
-    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-}
-
-
-/* Styling for the download button */
-#download_button {
-    background-color: #007bff;
+    background-color: #4815c0;
     color: #fff;
     cursor: pointer;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 /* Styling for the download button link */
@@ -150,16 +143,7 @@ input[type="submit"]:hover {
 
 /* Styling for the download button when hovered */
 #download_button:hover {
-    background-color: #0056b3;
-}
-
-#image {
-    margin:auto;
-    padding:15px;
-    display:flex;
-    flex-direction:row;
-    align-items:center;
-    justify-content:center;
+    background-color: #4815c0;
 }
 
 /* Styling for the button container */
