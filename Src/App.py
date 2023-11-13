@@ -17,6 +17,15 @@ def index():
     # Render the index.html template with a default state
     return render_template('index.html', state="on change")
 
+@app.route('/support')
+def supported():
+    return render_template('supported.html')
+
+@app.route('/examples')
+def examples():
+    return render_template('examples.html')
+
+
 # Define a route for form submission with support for multiple HTTP methods
 @app.route('/', methods=['POST', 'GET', 'PUT', 'DELETE'])
 def form():
