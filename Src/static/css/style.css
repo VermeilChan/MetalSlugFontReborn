@@ -8,7 +8,7 @@
 body {
     color: #4815c0;
     /* Set background image and cover it */
-    background: url('https://cdn.discordapp.com/attachments/861700235890130986/1139858875147894804/background.webp') center/cover no-repeat;
+    background: url('../assets/background.png') center/cover no-repeat;
 }
 
 /* Center content vertically and horizontally */
