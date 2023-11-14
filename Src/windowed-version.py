@@ -68,8 +68,8 @@ root = tk.Tk()
 root.title("Metal Slug Font")
 
 # Set the window icon
-if os.path.exists('Assets/Icon/Raven.ico'):
-    im = Image.open('Assets/Icon/Raven.ico')
+if os.path.exists('Assets/Icon/Raubtier.ico'):
+    im = Image.open('Assets/Icon/Raubtier.ico')
     photo = ImageTk.PhotoImage(im)
     root.wm_iconphoto(True, photo)
 
