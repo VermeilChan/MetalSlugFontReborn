@@ -24,7 +24,7 @@ class ImageGeneration(object):
     def GenerateFilename(self):
         # Generate a random filename for the image
         self.character = ""
-        for i in range(0, 15):
+        for _ in range(0, 15):
             random_character = random.choice(string.ascii_letters + string.digits)        
             self.character += random_character
 
