@@ -8,15 +8,16 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #121212;
-            color: #ffffff;
+            background-color: #282c35;
+            color: #61dafb;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         header {
-            background-color: #333;
+            background-color: #1a1a1a;
             padding: 15px;
             text-align: center;
         }
@@ -51,6 +52,11 @@
 
         li {
             margin-bottom: 10px;
+            transition: background-color 0.3s;
+        }
+
+        li:hover {
+            background-color: #3a3e4b;
         }
 
         strong {
@@ -63,6 +69,11 @@
             border: 1px solid #61dafb;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(97, 218, 251, 0.7);
+            transition: transform 0.3s;
+        }
+
+        img:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -70,6 +81,7 @@
 
 <header>
     <h1>Font and Color Examples</h1>
+    <h3>In these examples, we will use the text: "I Love Cats!"</h3>
 </header>
 
 <main>

@@ -8,23 +8,30 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #121212;
-            color: #ffffff;
+            background-color: #282c35;
+            color: #c0c5ce;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #1a1a1a;
         }
 
         h1, h2 {
             color: #61dafb;
             border-bottom: 2px solid #61dafb;
-            padding-bottom: 5px;
+            padding-bottom: 10px;
             margin-bottom: 20px;
         }
 
         p {
-            line-height: 1.6;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         ul {
@@ -35,10 +42,16 @@
 
         li {
             margin-bottom: 10px;
+            transition: background-color 0.3s;
+        }
+
+        li:hover {
+            background-color: #3a3e4b;
         }
 
         strong {
             margin-right: 10px;
+            font-weight: bold;
         }
 
         img {
@@ -47,6 +60,22 @@
             border: 1px solid #61dafb;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(97, 218, 251, 0.7);
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        section {
+            margin-bottom: 40px;
+            border-radius: 5px;
+            background-color: #1e2128;
+            padding: 20px;
+            transition: background-color 0.3s;
+        }
+
+        section:hover {
+            background-color: #2b2e39;
         }
     </style>
 </head>
@@ -58,42 +87,50 @@
 
 <main>
 
-    <p>This guide lists the characters supported by MetalSlugFontReborn across its five different fonts.</p>
+    <section>
+        <h2>Font 1 Support</h2>
+        <ul>
+            <li><strong>Letters:</strong> Lowercase and Uppercase</li>
+            <li><strong>Numbers:</strong> 0 to 9</li>
+            <li><strong>Symbols:</strong> , * {} () ^ : $ = ! > - ∞ < # % . + & ? " ; / ~ _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ⋆ ★ ☞</li>
+        </ul>
+    </section>
 
-    <h2>Font 1 Support</h2>
-    <ul>
-        <li><strong>Letters:</strong> Lowercase and Uppercase</li>
-        <li><strong>Numbers:</strong> 0 to 9</li>
-        <li><strong>Symbols:</strong> , * {} () ^ : $ = ! > - ∞ < # % . + & ? " ; / ~ _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ⋆ ★ ☞</li>
-    </ul>
+    <section>
+        <h2>Font 2 Support</h2>
+        <ul>
+            <li><strong>Letters:</strong> Lowercase and Uppercase</li>
+            <li><strong>Numbers:</strong> 0 to 9</li>
+            <li><strong>Symbols:</strong> , = ︷ ! - . + & ? / ♪ Ⅰ Ⅱ Ⅲ Ⅳ Ⅴ</li>
+        </ul>
+    </section>
 
-    <h2>Font 2 Support</h2>
-    <ul>
-        <li><strong>Letters:</strong> Lowercase and Uppercase</li>
-        <li><strong>Numbers:</strong> 0 to 9</li>
-        <li><strong>Symbols:</strong> , = ︷ ! - . + & ? / ♪ Ⅰ Ⅱ Ⅲ Ⅳ Ⅴ</li>
-    </ul>
+    <section>
+        <h2>Font 3 Support</h2>
+        <ul>
+            <li><strong>Letters:</strong> Lowercase and Uppercase</li>
+            <li><strong>Numbers:</strong> 0 to 9</li>
+            <li><strong>Symbols:</strong> ' {} () : , = ! > - < . + ? " ; / _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ⋆ ★ ☞</li>
+        </ul>
+    </section>
 
-    <h2>Font 3 Support</h2>
-    <ul>
-        <li><strong>Letters:</strong> Lowercase and Uppercase</li>
-        <li><strong>Numbers:</strong> 0 to 9</li>
-        <li><strong>Symbols:</strong> ' {} () : , = ! > - < . + ? " ; / _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ⋆ ★ ☞</li>
-    </ul>
+    <section>
+        <h2>Font 4 Support</h2>
+        <ul>
+            <li><strong>Letters:</strong> Lowercase and Uppercase</li>
+            <li><strong>Numbers:</strong> 0 to 9</li>
+            <li><strong>Symbols:</strong> ' * {} () ^ : $ = ! > - < # % . + & ? " ; / ~ _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ⋆ ★ ☞</li>
+        </ul>
+    </section>
 
-    <h2>Font 4 Support</h2>
-    <ul>
-        <li><strong>Letters:</strong> Lowercase and Uppercase</li>
-        <li><strong>Numbers:</strong> 0 to 9</li>
-        <li><strong>Symbols:</strong> ' * {} () ^ : $ = ! > - < # % . + & ? " ; / ~ _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ⋆ ★ ☞</li>
-    </ul>
-
-    <h2>Font 5 Support</h2>
-    <ul>
-        <li><strong>Letters:</strong> Uppercase</li>
-        <li><strong>Numbers:</strong> 1 to 9</li>
-        <li><strong>Symbols:</strong> ! ?</li>
-    </ul>
+    <section>
+        <h2>Font 5 Support</h2>
+        <ul>
+            <li><strong>Letters:</strong> Uppercase</li>
+            <li><strong>Numbers:</strong> 1 to 9</li>
+            <li><strong>Symbols:</strong> ! ?</li>
+        </ul>
+    </section>
 
 </main>
 
