@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn">
-    <img src="Assets/Markdown/Readme/Metal-Slug-Font-Reborn-Banner.png" width="400" alt="MSFONT logo">
+    <img src="Assets/Markdown/Readme/Metal-Slug-Font-Reborn-Banner.png" width="640" alt="Metal-Slug-Font-Reborn Logo">
   </a>
 </p>
 
