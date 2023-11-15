@@ -1,6 +1,6 @@
 /* Reset default margin, padding, font, and color */
 * {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Source Code Pro', monospace;
     margin: 0;
     padding: 0;
 }
