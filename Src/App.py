@@ -2,6 +2,7 @@
 import sys
 
 from flask import Flask, render_template, request
+import requests
 
 # Prevent the generation of .pyc (Python bytecode) files
 sys.dont_write_bytecode = True
@@ -41,14 +42,24 @@ def form():
         image = ImageGeneration(x, y, z)
         
         # Generate the image and get the image URL
-        image_url: str = image.GenerateImage()
+        
 
         # Render the index.html template with the generated image URL
-        return render_template('index.html', output=image_url.replace('src', ''))
+
+        try: 
+            image_url: str = image.GenerateImage()
+            if isinstance(image_url , str):
+                return render_template('index.html', output=image_url.replace('src', ''))
+            else:
+                raise AttributeError
+        
+        except Exception as error:
+            return render_template('index.html' , error=error)
+        
     else:
         # Render the index.html template with an error message if the method is not POST
-        return render_template('index.html', error="something went wrong")
+        return render_template('index.html', error="POST METHOD NOT AVAILABLE")
 
 # Run the Flask application if the script is executed directly
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

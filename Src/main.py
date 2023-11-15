@@ -12,6 +12,14 @@ sys.dont_write_bytecode = True
 # Import necessary constants from the constants module
 from constants import SPACE_WIDTH, SPECIAL_CHARACTERS
 
+class CharacterNotFound(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+        self.errno = 10
+
+    def add_note(self, __note: str) -> None:
+        return super().add_note("Unsupported Character")
+
 @final
 class ImageGeneration(object):
 
@@ -42,19 +50,24 @@ class ImageGeneration(object):
 
     def GetCharacterImagePath(self, char: str):
         # Get the image path for a specific character based on its type
-        letters_folder = self.GetFontPath().Letters
-        numbers_folder = self.GetFontPath().Numbers
-        symbol_folder = self.GetFontPath().Symbols
+        try:
+            letters_folder = self.GetFontPath().Letters
+            numbers_folder = self.GetFontPath().Numbers
+            symbol_folder = self.GetFontPath().Symbols
 
-        if char.isalpha():
-            folder = 'Lower-Case' if char.islower() else 'Upper-Case'
-            self.char_img_path = os.path.join('src', letters_folder, folder, f"{char}.png")
-        elif char.isdigit():
-            self.char_img_path = os.path.join('src', numbers_folder, f"{char}.png")
-        else:
-            self.char_img_path = os.path.join('src', symbol_folder, f"{SPECIAL_CHARACTERS.get(char, '')}.png")
+            if char.isalpha():
+                folder = 'Lower-Case' if char.islower() else 'Upper-Case'
+                self.char_img_path = os.path.join('src', letters_folder, folder, f"{char}.png")
 
-        return os.path.abspath(self.char_img_path)
+            elif char.isdigit():
+                self.char_img_path = os.path.join('src', numbers_folder, f"{char}.png")
+                
+            else:
+                self.char_img_path = os.path.join('src', symbol_folder, f"{SPECIAL_CHARACTERS.get(char, '')}.png")
+            return os.path.abspath(self.char_img_path)
+        
+        except Exception as error:
+            return error
 
     def GenerateImage(self): 
         # Generate the final image based on user input
@@ -67,14 +80,18 @@ class ImageGeneration(object):
         self.images = []
         for character in self._user_input:
 
-            if character == " ":
-                # Create an image for space and append it to the list
-                space_image = numpy.zeros((self._image.shape[0], SPACE_WIDTH, 4), dtype=numpy.uint8)
-                self.images.append(space_image)
-                continue
+            try:
+                if character == " ":
+                    # Create an image for space and append it to the list
+                    space_image = numpy.zeros((self._image.shape[0], SPACE_WIDTH, 4), dtype=numpy.uint8)
+                    self.images.append(space_image)
+                    continue
 
-            self._image = cv2.imread(self.GetCharacterImagePath(character), cv2.IMREAD_UNCHANGED)
-            self.images.append(self._image)
+                self._image = cv2.imread(self.GetCharacterImagePath(character), cv2.IMREAD_UNCHANGED)
+                self.images.append(self._image)
+
+            except cv2.error as error:
+                return error
 
         try:
             # Concatenate the images horizontally and save the final image
@@ -83,6 +100,6 @@ class ImageGeneration(object):
 
         except Exception as error:
             # Print an error message if an exception occurs
-            print(error)
+            return error
 
         return self.filename

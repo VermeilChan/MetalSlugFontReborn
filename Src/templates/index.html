@@ -11,12 +11,6 @@
 <body>
     {% block body %}
 
-    <section>
-        <p style="color:red;">
-            {{ error }}
-        </p>
-    </section>
-
     <div class="container">
         <!-- Header -->
         <img src="{{ url_for('static', filename='assets/Raven.ico') }}" alt="Raven" class="header-image">
@@ -46,14 +40,18 @@
             </form>
 
             <section>
-
-                {% if output %}
+                {% if error %}
+                    <section>
+                        <p style="color:red;">
+                            unsupported character , check the support <a href='/support'>here</a>
+                        </p>
+                    </section>
+                {% else %}
                     <img id="image" src="{{output}}" alt="Image"/>
-                    <button id="download_button">
+                        <button id="download_button">
                         <a href="{{output}}" download="{{output}}">Download</a>
                     </button>
                 {% endif %}
-                
             </section>
 
             <!-- Support Characters Section -->
