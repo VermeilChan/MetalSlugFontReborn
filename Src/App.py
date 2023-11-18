@@ -60,6 +60,8 @@ def form():
         # Render the index.html template with an error message if the method is not POST
         return render_template('index.html', error="POST METHOD NOT AVAILABLE")
 
+#
+
 # Run the Flask application if the script is executed directly
 if __name__ == "__main__":
     app.run(debug=True)
