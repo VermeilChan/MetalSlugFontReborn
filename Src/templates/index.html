@@ -12,54 +12,53 @@
     {% block body %}
 
     <div class="container">
-        <!-- Header -->
-        <img src="{{ url_for('static', filename='assets/Raubtier.ico') }}" alt="Raubtier" class="header-image">
+        <img src="{{ url_for('static', filename='assets/icon/Raubtier.gif') }}" alt="Raubtier" class="header-image">
         <h1>MetalSlugFontReborn</h1>
 
-        <!-- Form for Text Input -->
-        
-            <form id="form" action="/" method="post">
-                <input type="text" name="text" placeholder="Enter Text" required>
-                
-                <select id="font" name="font">
-                    <option value="1">Font 1</option>
-                    <option value="2">Font 2</option>
-                    <option value="3">Font 3</option>
-                    <option value="4">Font 4</option>
-                    <option value="5">Font 5</option>
-                </select>
+        <form id="form" action="/" method="post">
+            <input type="text" name="text" placeholder="Enter Text" required>
+            
+            <select id="font" name="font">
+                <option value="1">Font 1</option>
+                <option value="2">Font 2</option>
+                <option value="3">Font 3</option>
+                <option value="4">Font 4</option>
+                <option value="5">Font 5</option>
+            </select>
 
-                <select id="color" name="color">
-                    <option value="Blue">Blue</option>
-                    <option value="Orange-1">Orange 1</option>
-                    <option value="Orange-2">Orange 2</option>
-                </select>
+            <select id="color" name="color">
+                <option value="Blue">Blue</option>
+                <option value="Orange-1">Orange 1</option>
+                <option value="Orange-2">Orange 2</option>
+            </select>
 
-                <input type="submit" value="Generate">
+            <input type="submit" value="Generate">
 
-            </form>
+        </form>
 
-            <section>
-                {% if error %}
-                    <section>
-                        <p style="color:red;">
-                            unsupported character , check the support <a href='/support'>here</a>
-                        </p>
-                    </section>
-                {% else %}
+        <section>
+            {% if error %}
+                <section>
+                    <p style="color:red;">
+                        {{ error }}
+                        Check the supported characters <a href='/support'>here</a>.
+                    </p>
+                </section>
+            {% else %}
+                {% if state %}
                     <img id="image" src="{{output}}" alt="Image"/>
-                        <button id="download_button">
+                    <button id="download_button">
                         <a href="{{output}}" download="{{output}}">Download</a>
                     </button>
                 {% endif %}
-            </section>
+            {% endif %}
+        </section>
 
-            <!-- Support Characters Section -->
-            <section id="support">
-                <h2>Support Characters</h2>
-                <p>Check out the list of supported characters <a href="/support">here</a>.</p>
-                <p>Or if you want to see how they look <a href="/examples">here</a>.</p>
-            </section> 
+        <section id="support">
+            <h2>Support Characters</h2>
+            <p>Check out the list of supported characters <a href="/support">here</a>.</p>
+            <p>Or if you want to see how they look <a href="/examples">here</a>.</p>
+        </section> 
 
     </div>
 
@@ -90,8 +89,6 @@
             }))
         })
     </script>
-
-    <section>
 
     </section>
     {% endblock %}

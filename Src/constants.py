@@ -1,4 +1,3 @@
-# main.py
 SPACE_WIDTH = 30
 SPECIAL_CHARACTERS = {
     '!': 'Exclamation',

@@ -1,105 +1,102 @@
-# Import necessary libraries
-import random, string, os, sys
+import os
+import random
+import string
 
 from collections import namedtuple
 from typing import final
 
-import cv2, numpy
+import cv2
+import numpy as np
 
-# Prevent the generation of .pyc (Python bytecode) files
-sys.dont_write_bytecode = True
-
-# Import necessary constants from the constants module
 from constants import SPACE_WIDTH, SPECIAL_CHARACTERS
 
 class CharacterNotFound(Exception):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)
+    def __init__(self, unsupported_characters: str) -> None:
+        super().__init__(f"Unsupported Character '{unsupported_characters}', Try another font or ")
         self.errno = 10
-
-    def add_note(self, __note: str) -> None:
-        return super().add_note("Unsupported Character")
 
 @final
 class ImageGeneration(object):
+    state = False
 
     def __init__(self, user_input: str, font: int, color: str) -> None:
-        # Initialize the ImageGeneration object with user input, font, and color
         self._user_input = user_input
         self._font = font
         self._color = color
-    
-    def GenerateFilename(self):
-        # Generate a random filename for the image
-        self.character = ""
-        for _ in range(0, 15):
-            random_character = random.choice(string.ascii_letters + string.digits)        
-            self.character += random_character
+        self._image = None
+        self._font_paths = self._compute_font_paths()
 
-        return f"{self.character}.png"
+    def _compute_font_paths(self):
+        base = os.path.join('static', 'assets', 'fonts', f'font-{self._font}', f'Font-{self._font}-{self._color}')
+        FontPaths = namedtuple('Font', ['Symbols', 'Letters', 'Numbers'])
+        FontPaths.Symbols = os.path.join(base, 'Symbols')
+        FontPaths.Letters = os.path.join(base, 'Letters')
+        FontPaths.Numbers = os.path.join(base, 'Numbers')
+        return FontPaths
 
-    def GetFontPath(self):
-        # Get the paths for different font components (symbols, letters, numbers)
-        self.base = os.path.join('static', 'assets', 'fonts', f'font-{self._font}', f'Font-{self._font}-{self._color}')
-        self.container = namedtuple('Font', ['Symbols', 'Letters', 'Numbers'])
-        self.container.Symbols = os.path.join(self.base, 'Symbols')
-        self.container.Letters = os.path.join(self.base, 'Letters')
-        self.container.Numbers = os.path.join(self.base, 'Numbers')
-
-        return self.container
-
-    def GetCharacterImagePath(self, char: str):
-        # Get the image path for a specific character based on its type
+    def _get_character_image_path(self, char: str):
         try:
-            letters_folder = self.GetFontPath().Letters
-            numbers_folder = self.GetFontPath().Numbers
-            symbol_folder = self.GetFontPath().Symbols
+            letters_folder = self._font_paths.Letters
+            numbers_folder = self._font_paths.Numbers
+            symbol_folder = self._font_paths.Symbols
 
             if char.isalpha():
                 folder = 'Lower-Case' if char.islower() else 'Upper-Case'
-                self.char_img_path = os.path.join('src', letters_folder, folder, f"{char}.png")
-
+                char_img_path = os.path.join('src', letters_folder, folder, f"{char}.png")
             elif char.isdigit():
-                self.char_img_path = os.path.join('src', numbers_folder, f"{char}.png")
-                
+                char_img_path = os.path.join('src', numbers_folder, f"{char}.png")
             else:
-                self.char_img_path = os.path.join('src', symbol_folder, f"{SPECIAL_CHARACTERS.get(char, '')}.png")
-            return os.path.abspath(self.char_img_path)
-        
-        except Exception as error:
-            return error
+                char_img_path = os.path.join('src', symbol_folder, f"{SPECIAL_CHARACTERS.get(char, '')}.png")
+                if not os.path.exists(char_img_path):
+                    raise CharacterNotFound(char)
 
-    def GenerateImage(self): 
-        # Generate the final image based on user input
+            return os.path.abspath(char_img_path)
+
+        except CharacterNotFound as error:
+            raise error
+        except Exception as error:
+            return str(error)
+
+    def generate_filename(self):
+        random_characters = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(15))
+        return f"{random_characters}.png"
+
+    def generate_image(self):
         try:
-            os.mkdir('src/static/Generated-Images')
-        except Exception:
+            os.mkdir(os.path.join('src', 'static', 'Generated-Images'))
+        except FileExistsError:
             pass
 
-        self.filename = os.path.join('src', 'static', 'Generated-Images', self.GenerateFilename())
-        self.images = []
-        for character in self._user_input:
+        filename = os.path.join('src', 'static', 'Generated-Images', self.generate_filename())
+        images = []
 
+        zero_image = np.zeros((1, 1, 4), dtype=np.uint8)
+
+        for character in self._user_input:
             try:
-                if character == " ":
-                    # Create an image for space and append it to the list
-                    space_image = numpy.zeros((self._image.shape[0], SPACE_WIDTH, 4), dtype=numpy.uint8)
-                    self.images.append(space_image)
+                if character == ' ':
+                    space_image = np.zeros((zero_image.shape[0], SPACE_WIDTH, 4), dtype=np.uint8)
+                    images.append(space_image)
                     continue
 
-                self._image = cv2.imread(self.GetCharacterImagePath(character), cv2.IMREAD_UNCHANGED)
-                self.images.append(self._image)
+                char_image_path = self._get_character_image_path(character)
+                char_image = cv2.imread(char_image_path, cv2.IMREAD_UNCHANGED)
+                if char_image is None:
+                    raise FileNotFoundError(f"Image not found for character '{character}'")
 
-            except cv2.error as error:
-                return error
+                images.append(char_image)
+
+            except (cv2.error, FileNotFoundError) as error:
+                return str(error)
 
         try:
-            # Concatenate the images horizontally and save the final image
-            self.horizontally = cv2.hconcat(self.images)
-            cv2.imwrite(self.filename, self.horizontally)
+            max_height = max(image.shape[0] for image in images)
+            resized_images = [cv2.resize(image, (image.shape[1], max_height)) for image in images]
 
-        except Exception as error:
-            # Print an error message if an exception occurs
-            return error
+            horizontally = cv2.hconcat(resized_images)
+            cv2.imwrite(filename, horizontally)
+        except Exception as write_error:
+            return str(write_error)
 
-        return self.filename
+        self.state = True
+        return filename

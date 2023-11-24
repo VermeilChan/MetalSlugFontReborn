@@ -1,28 +1,32 @@
-/* Reset default margin, padding, font, and color */
+@font-face {
+    font-family: 'MetalSlugLatinoRegular';
+    src: url('./font/Metal\ Slug\ Latino\ Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 * {
-    font-family: 'Source Code Pro', monospace;
+    font-family: 'MetalSlugLatinoRegular', monospace;
     margin: 0;
     padding: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 body {
-    color: #4815c0;
-    /* Set background image and cover it */
-    background: url('../assets/background.png') center/cover no-repeat;
+    color: #bfbfbf; /* 75% lighter color (light gray) */
+    background: url('./background/background-1.gif') center;
+    background-size: cover;
 }
 
-/* Center content vertically and horizontally */
 .container {
-    display:flex;
-    flex-direction:column;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    /* Add fade-in animation */
     animation: fadeIn 0.8s ease-in-out;
 }
 
-/* Define the fade-in animation */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -35,23 +39,24 @@ body {
     }
 }
 
-/* Styling for headings */
 h1,
 h2 {
     margin-bottom: 1rem;
     transition: color 0.3s ease-in-out;
-    /* Add text shadow */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    color: #000; /* Black color */
 }
 
-/* Styling for forms */
+h1, h2, form, input[type="text"], input[type="submit"], #font, #color, .error, #download_button, #download_button a {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    color: #000; /* Black color */
+}
+
 form {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* Styling for input fields and submit button */
 input[type="text"],
 input[type="submit"],
 #font,
@@ -62,44 +67,39 @@ input[type="submit"],
     border-radius: 8px;
     width: 100%;
     transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    color: #000; /* Black color */
 }
 
-/* Styling for input text when focused */
 input[type="text"]:focus,
 #font:focus,
 #color:focus {
-    background-color: #4815c0;
+    background-color: #1f1f1f;
     color: #fff;
     transform: scale(1.02);
 }
 
-/* Styling for submit button */
 input[type="submit"],
 #download_button {
-    background-color: #4815c0;
+    background-color: #d32f2f;
     color: #fff;
     cursor: pointer;
 }
 
-/* Styling for submit button when hovered */
 input[type="submit"]:hover,
 #download_button:hover {
-    background-color: #4815c0;
+    background-color: #b71c1c;
 }
 
-/* Styling for error messages */
 .error {
     color: #e57373;
     margin-top: 1rem;
     transition: color 0.3s ease-in-out;
 }
 
-/* Styling for error messages when hovered */
 .error:hover {
     color: #d32f2f;
 }
 
-/* Responsive design for small screens */
 @media (max-width: 600px) {
     input[type="text"],
     #font,
@@ -108,7 +108,6 @@ input[type="submit"]:hover,
     }
 }
 
-/* Styling for the header image */
 .header-image {
     width: 150px;
     height: auto;
@@ -116,37 +115,30 @@ input[type="submit"]:hover,
     margin: 0 auto;
 }
 
-/* Styling for the download button */
 #download_button {
     padding: 1rem;
     margin-bottom: 1.5rem;
     border: none;
     border-radius: 8px;
     width: 100%;
-    background-color: #4815c0;
-    color: #fff;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-/* Styling for the download button link */
 #download_button a {
-    color: #fff;
+    color: #000; /* Black color */
     text-decoration: none;
 }
 
-/* Styling for the download button link when active */
 #download_button a:active {
-    color: #fff;
+    color: #000; /* Black color */
     text-decoration: none;
 }
 
-/* Styling for the download button when hovered */
 #download_button:hover {
-    background-color: #4815c0;
+    background-color: #b71c1c;
 }
 
-/* Styling for the button container */
 .button-container {
     margin-top: 30px;
     display: flex;
@@ -154,5 +146,5 @@ input[type="submit"]:hover,
 }
 
 .main {
-    display:flex;
+    display: flex;
 }
