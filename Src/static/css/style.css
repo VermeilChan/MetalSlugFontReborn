@@ -13,7 +13,7 @@
 }
 
 body {
-    color: #bfbfbf; /* 75% lighter color (light gray) */
+    color: #bfbfbf;
     background: url('./background/background-1.gif') center;
     background-size: cover;
 }
@@ -43,12 +43,12 @@ h1,
 h2 {
     margin-bottom: 1rem;
     transition: color 0.3s ease-in-out;
-    color: #000; /* Black color */
+    color: #000;
 }
 
 h1, h2, form, input[type="text"], input[type="submit"], #font, #color, .error, #download_button, #download_button a {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    color: #000; /* Black color */
+    color: #000;
 }
 
 form {
@@ -67,7 +67,7 @@ input[type="submit"],
     border-radius: 8px;
     width: 100%;
     transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out;
-    color: #000; /* Black color */
+    color: #000;
 }
 
 input[type="text"]:focus,
@@ -126,12 +126,12 @@ input[type="submit"]:hover,
 }
 
 #download_button a {
-    color: #000; /* Black color */
+    color: #000;
     text-decoration: none;
 }
 
 #download_button a:active {
-    color: #000; /* Black color */
+    color: #000;
     text-decoration: none;
 }
 
