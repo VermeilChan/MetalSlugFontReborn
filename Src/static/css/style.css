@@ -121,17 +121,18 @@ input[type="submit"]:hover,
     border: none;
     border-radius: 8px;
     width: 100%;
+    max-width: 200px;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 #download_button a {
-    color: #000;
+    color: #fff;
     text-decoration: none;
 }
 
-#download_button a:active {
-    color: #000;
+#download_button:active {
+    color: #fff;
     text-decoration: none;
 }
 

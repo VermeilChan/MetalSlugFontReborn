@@ -10,7 +10,6 @@
 </head>
 <body>
     {% block body %}
-
     <div class="container">
         <img src="{{ url_for('static', filename='assets/icon/Raubtier.gif') }}" alt="Raubtier" class="header-image">
         <h1>MetalSlugFontReborn</h1>
@@ -33,36 +32,33 @@
             </select>
 
             <input type="submit" value="Generate">
-
         </form>
 
         <section>
             {% if error %}
-                <section>
-                    <p style="color:red;">
-                        {{ error }}
-                        Check the supported characters <a href='/support'>here</a>.
-                    </p>
-                </section>
+                <p style="color:red;">
+                    {{ error }}
+                    Check the supported characters <a href='/support'>here</a>.
+                </p>
             {% else %}
                 {% if state %}
                     <img id="image" src="{{output}}" alt="Image"/>
-                    <button id="download_button">
-                        <a href="{{output}}" download="{{output}}">Download</a>
-                    </button>
                 {% endif %}
             {% endif %}
         </section>
+
+        {% if state %}
+            <button id="download_button">
+                <a href="{{output}}" download="{{output}}">Download</a>
+            </button>
+        {% endif %}
 
         <section id="support">
             <h2>Support Characters</h2>
             <p>Check out the list of supported characters <a href="/support">here</a>.</p>
             <p>Or if you want to see how they look <a href="/examples">here</a>.</p>
         </section> 
-
     </div>
-
-    </section>
     {% endblock %}
 </body>
 </html>
