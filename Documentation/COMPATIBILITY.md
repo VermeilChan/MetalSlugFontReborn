@@ -17,26 +17,10 @@ Here you can find the tested Operating Systems and Distributions with MetalSlugF
 - **Supported Linux Distributions**
   - Debian 12
   - Ubuntu 22.04.3 LTS
-  - Fedora 38
+  - Fedora 39
   - Arch Linux
   - OpenSUSE Tumbleweed
 
----
-
-#### MacOS Compatibility
-- **Not Yet Tested on MacOS**
-  If you've successfully tested this on MacOS, please provide your MacOS version along with WineHQ version.
-
-  **Example:**
-  - MacOS 14 Sonoma
-  - WineHQ 8.19
-
----
-
-#### Wine Compatibility
-- **Tested WineHQ Versions:**
-  - 8.18
-  - 8.17
-  - 8.16
-  - 8.15
-  - 8.0.2
+#### macOS Compatibility
+- **Incompatible:**
+  - MacOS (not supported)

@@ -1,12 +1,6 @@
 # MetalSlugFontReborn
 
 <p align="center">
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn">
-    <img src="Assets/Markdown/Readme/Metal-Slug-Font-Reborn-Banner.png" width="640" alt="Metal-Slug-Font-Reborn Logo">
-  </a>
-</p>
-
-<p align="center">
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/graphs/contributors">
     <img alt="Contributors" src="https://img.shields.io/github/contributors/VermeilChan/MetalSlugFontReborn.svg?color=blue" />
   </a>
@@ -36,66 +30,58 @@
 
 - [Key Features](#key-features)
 - [Previewing Fonts](#previewing-fonts)
-  - [MSFONT Usage Guide](#msfont-usage-guide)
+- [MetalSlugFontReborn Usage Guide](#metalslugfontreborn-usage-guide)
 - [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
-  - [Contact](#contact)
+- [Contact](#contact)
 
 ## Key Features
 
-- Transform text into images using the iconic Metal Slug font.
+- Easily transform text into images using the iconic Metal Slug font.
 - Supports uppercase and lowercase alphabets (A-Z, a-z), numbers (0-9), and symbols.
-- Minimal resource usage: Requires less than 40MB of disk space and RAM.
+- Supports both Windows 11/10 and GNU/Linux.
+- Easy-to-use user interface and command line support.
 
-For additional details, please refer to [**SUPPORTED.md**](Documentation/SUPPORTED.md).
+For additional details, please refer to [SUPPORTED](Documentation/SUPPORTED.md) and [COMPATIBILITY](Documentation\COMPATIBILITY.md).
 
 ## Previewing Fonts
 
-Explore visual samples of fonts in action by checking out [**EXAMPLE.md**](EXAMPLE.md).
+Explore visual samples of fonts in action by checking out [EXAMPLE](EXAMPLE.md).
 
-## MSFONT Usage Guide
+## MetalSlugFontReborn Usage Guide
 
-1. Open MSFONT, and you'll be greeted with a font selection prompt.
-2. Select a font by typing a number from 1 to 5.
-3. The available color options will adjust based on your font choice.
-4. To create Metal Slug font images, follow on-screen instructions or refer to the [**Setup Guide**](INSTALL.md) and [**Supported Characters**](Documentation/SUPPORTED.md).
-5. Specify the color for your chosen font:
-   - For some fonts, use `Blue`.
-   - For specific fonts, select `Orange-1`.
-   - For other fonts, pick `Orange-2`.
-   - For other fonts, use `Yellow`
-6. Your resulting image will be automatically saved on your desktop for convenient access. Enjoy using MSFONT!
+To install and use MetalSlugFontReborn, refer to the documentation in [INSTALL](Documentation/INSTALL.md)
 
-## Contributing
+## How to Contribute
 
-If you find issues or have ideas for improvements, please:
+If you discover problems or have suggestions for making things better, please:
 
-- [**Report an issue**](https://github.com/VermeilChan/MetalSlugFontReborn/issues)
-- [**Submit a pull request**](https://github.com/VermeilChan/MetalSlugFontReborn/pulls)
+- [Tell me about the issue](https://github.com/VermeilChan/MetalSlugFontReborn/issues)
+- [Share your improvements](https://github.com/VermeilChan/MetalSlugFontReborn/pulls)
 
-Your input and involvement are essential in enhancing this project.
+Your feedback and help are crucial for improving this project.
 
 ## License
 
-This project is licensed under the [**Apache License 2.0**](LICENSE).
+This project is licensed under the [Apache License 2.0](LICENSE).
 
 ## Acknowledgments
 
-I want to express my sincere thanks to the following individuals and groups for their valuable contributions and support:
+I want to say a big thank you to the people and groups who helped me.
 
-- [**Division 六**](https://6th-divisions-den.com/): Provided Fonts 1, 2, 3, and 4 assets.
-- [**BinRich**](https://discord.com/users/477459550904254464/): Supplied diacritic marks.
-- [**GussPrint**](https://www.spriters-resource.com/submitter/Gussprint/): Shared assets for Font 5.
+- [SNK Corporation](https://www.snk-corp.co.jp): Program Icon, Fonts
+- [SikroxMemer](https://github.com/SikroxMemer): Helping make the program and webapp :D
+- [Division 六](https://6th-divisions-den.com/): Provided Fonts 1, 2, 3, and 4 assets.
+- [GussPrint](https://www.spriters-resource.com/submitter/Gussprint/): Shared assets for Font 5.
+- [BinRich](https://discord.com/users/477459550904254464/): Supplied diacritic marks.
+- [PyInstaller](https://pyinstaller.org/en/stable/): Empowering standalone executables.
+- [PyQt6](https://www.riverbankcomputing.com): Building the GUI with PyQt6.
+- [UPX](https://upx.github.io): Efficiently compressed binary packages.
 
 ## Contact
 
-If you have any questions, suggestions, or need assistance, feel free to reach out to me through the following platforms:
+If you have any questions, ideas, or need help, you can contact me through these platforms:
 
 - **Discord:** [mommy_vermeil](https://discord.com/users/857841811736100925) (Most active GMT+1)
-- **Twitter:** [@VermeilChan2](https://twitter.com/VermeilChan2)
 - **GitHub Issues:** [Project Issues](https://github.com/VermeilChan/MetalSlugFontReborn/issues) (Active)
-- **Reddit:** [_Vermeil_](https://www.reddit.com/user/_Vermeil_)
-- **Stack Overflow:** [Vermeil](https://stackoverflow.com/users/20787000/vermeil)
-
-I'm quickest to respond on Discord and GitHub, so those are the best options for timely assistance.

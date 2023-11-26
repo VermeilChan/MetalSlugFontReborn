@@ -1,29 +1,20 @@
-# Import necessary libraries
 import os
 import sys
 
-# Prevent the generation of .pyc (Python bytecode) files
-sys.dont_write_bytecode = True
-
-# Import necessary functions from the main module
 from main import generate_filename, generate_image, get_font_paths
-# Import necessary functions from the constants module
+
 from constants import CLOSING_MESSAGE, VALID_COLORS_BY_FONT
 
-# Function to display an introductory message
 def display_intro_message():
     print("Note: Metal Slug Font style conversion may not be compatible with all fonts.")
     print("Refer to the SUPPORTED.md file for details.")
 
-# Function to get user input for text to be converted
 def get_user_input():
     return input("Enter the text you want to generate (type 'exit' to close): ")
 
-# Function to allow the user to select a font and color
 def select_font_and_color():
     while True:
         try:
-            # Prompt the user to choose a font or exit
             user_input = input("Choose a font from 1 to 5 (Refer to EXAMPLE.md for Font Preview) or type 'exit' to close: ")
 
             if user_input.lower() == 'exit':
@@ -32,7 +23,6 @@ def select_font_and_color():
 
             font = int(user_input)
 
-            # Check if the chosen font is valid
             if font in VALID_COLORS_BY_FONT:
                 valid_colors = VALID_COLORS_BY_FONT[font]
                 print("Available colors: " + " | ".join(valid_colors))
@@ -53,14 +43,12 @@ def select_font_and_color():
         except ValueError:
             print("Invalid input. Please enter a valid number.")
 
-# Function to generate and display an image based on user input
 def generate_and_display_image(text, font, color):
     try:
         if text.lower() == 'exit':
             print(CLOSING_MESSAGE)
             sys.exit(0)
 
-        # Check for empty input
         if not text.strip():
             print("Input text is empty. Please enter some text.")
             return
@@ -87,7 +75,6 @@ def generate_and_display_image(text, font, color):
         error_message_generate = f"An error occurred: {e}"
         print(error_message_generate)
 
-# The main function of the program
 def main():
     display_intro_message()
 
@@ -104,6 +91,5 @@ def main():
         error_message_main_inner = f"An unexpected error occurred: {e}"
         print(error_message_main_inner)
 
-# Entry point of the script
 if __name__ == "__main__":
     main()

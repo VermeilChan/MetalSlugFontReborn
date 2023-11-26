@@ -1,10 +1,11 @@
-Version: 0.0.4.9
-CompanyName: Vermeil
-FileDescription: MSFONT-Dev
-InternalName: MSFONT-Dev
+CompanyName: VermeilChan
+FileDescription: MetalSlugFontReborn
+FileVersion: 0.6.3.0
+InternalName: MetalSlugFontReborn
 LegalCopyright: Apache License 2.0.
-OriginalFilename: MSFONT-Dev.exe
-ProductName: MSFONT-Dev
+OriginalFilename: MetalSlugFontReborn.exe
+ProductName: MetalSlugFontReborn
+ProductVersion: 0.6.3.0
 Translation:
   - langID: 0
     charsetID: 1200

@@ -4,8 +4,8 @@ Welcome to the progress report for the MetalSlugFontReborn project. This documen
 
 ## Current Status
 
-- **Version**: 0.4.9 (Pre-release)
-- **Release Date**: 2023-10-15
+- **Version**: 0.6.3 (Stable Release)
+- **Release Date**: 2023-11-26
 - **Project Link**: [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn)
 - **Maintainer**: VermeilChan
 
@@ -27,7 +27,7 @@ Welcome to the progress report for the MetalSlugFontReborn project. This documen
 
 ---
 
-## Future Milestones (Future) [Version 0.5.X]
+## Future Milestones (Future) [Version 0.6.X]
 
 - **Milestone 1: Font Size Fixes (No Due Date)**
   - **Description**:  Working on resolving font size issues for Orange 1 & 2.
