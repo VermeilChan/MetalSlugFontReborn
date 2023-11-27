@@ -48,10 +48,6 @@
 
       # Or
 
-      sh Install-Deps.sh
-
-      # Or
-
       chmod +x Install-Deps.sh
       ./Install-Deps.sh
       ```
@@ -60,10 +56,6 @@
    - Launch MetalSlugFontReborn after the installation script completes:
       ```bash
       bash Run.sh
-
-      # Or
-
-      sh Run.sh
 
       # Or
 
