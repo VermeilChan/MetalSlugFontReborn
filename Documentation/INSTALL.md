@@ -1,26 +1,29 @@
-**Windows:**
+# **Windows:**
 
 1. **Download MetalSlugFontReborn:**
    - Get the latest stable release of MetalSlugFontReborn from the [Releases Page](https://github.com/VermeilChan/MetalSlugFontReborn/releases).
 
-      <img src="Markdown/Guide/Windows/Download-Program.png"/>
+      <img src="Markdown/Guide/Download-Program.svg"/>
 
 2. **Extract Archive And Run MetalSlugFontReborn:**
-   - Locate the downloaded file `MetalSlugFontReborn-X.X.X-x64-win.7z` and extract it.
+   - Locate the downloaded file `MetalSlugFontReborn-X.X.X-x64-win.7z`. 
+   - Extract it.
 
-   <img src="Markdown/Guide/Windows/Extract-Program-Windows.png" width="539" height="346"/>
+   <img src="Markdown/Guide/Windows/Extract-Program-Windows.svg" width="539" height="346"/>
 
-   - Go inside `MetalSlugFontReborn-X.X.X-x64-win` folder and run `MetalSlugFontReborn.exe`.
+   - Go inside `MetalSlugFontReborn-X.X.X-x64-win` folder.
+   - Run `MetalSlugFontReborn.exe`.
 
-   <img src="Markdown/Guide/Windows/Run-Program-Windows.png"/>
+   <img src="Markdown/Guide/Windows/Run-Program-Windows.svg"/>
 
 3. **Select a Font:**
-   - When MetalSlugFontReborn opens, you can choose your perfected font and color. You can preview them in [EXAMPLE.md](EXAMPLE.md).
+   - When MetalSlugFontReborn opens, you can choose your perfected font and color.
+   - You can preview them in [EXAMPLE.md](Documentation/EXAMPLE.md).
 
-      <img src="Markdown/Guide/Windows/MetalSlugFontReborn-GUI.png" width="412" height="238"/>
+      <img src="Markdown/Guide/Windows/MetalSlugFontReborn-GUI.svg" width="412" height="238"/>
 
 4. **Input Your Text:**
-   - Enter the text you want to transform into Metal Slug style.
+   - Enter the text you want to transform into Metal Slug font.
 
 5. **Generate the Image:**
    - Click `Generate And Save Image` to create the stylized image.
@@ -30,27 +33,40 @@
 
 ---
 
-**GNU/Linux:**
+# **GNU/Linux:**
 
 1. **Download MetalSlugFontReborn:**
    - Download the latest stable release of MetalSlugFontReborn from the [Releases Page](https://github.com/VermeilChan/MetalSlugFontReborn/releases).
 
-   <img src="Markdown/Guide/GNU-Linux/Download-Program-GNU-Linux.png"/>
+   <img src="Markdown/Guide/Download-Program.svg"/>
 
 2. **Extract the Archive:**
-   - Locate the downloaded file `MetalSlugFontReborn-X.X.X-x64-GNU-Linux.7z` and extract it.
+   - Extract `MetalSlugFontReborn-X.X.X-x64-GNU-Linux.7z` after downloading.
+
+   <img src="Markdown/Guide/GNU-Linux/Extract-Program-GNU-Linux.svg"/>
+
+3. **Install Dependencies:**
    - Go inside `MetalSlugFontReborn-X.X.X-x64-GNU-Linux` folder.
-
-2. **Install Dependencies:**
-   - Open a terminal in the same directory and run the following commands:
-   - Run the installation script to download and install dependencies:
+   - Open a terminal inside `MetalSlugFontReborn-X.X.X-x64-GNU-Linux` folder and run the following command:
      ```bash
-     python3 Install-Deps.py
-     ```
+      bash Install-Deps.sh
 
-3. **Run MetalSlugFontReborn:**
+      # Or
+
+      chmod +x Install-Deps.sh
+      ./Install-Deps.sh
+      ```
+
+4. **Run MetalSlugFontReborn:**
    - After the installation script finishes, you can launch MetalSlugFontReborn:
-   ```sh
-   # (GUI version by default, command line if GUI fails)
-   bash Run.sh
-   ```
+      ```sh
+      bash Run.sh
+
+      # Or
+
+      chmod +x Run.sh
+      ./Run.sh
+      ```
+
+**Follow the Same Steps as Windows:**
+   - Follow steps 3 to 6 from the Windows guide to choose a font, input your text, generate the image, and view the result.
