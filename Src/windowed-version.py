@@ -18,7 +18,7 @@ from constants import VALID_COLORS_BY_FONT
 from theme import dark_theme
 
 class ImageGenerator:
-    def generate_and_display_image(text, font, color):
+    def generate_and_display_image(self, text, font, color):
         try:
             if not text.strip():
                 QMessageBox.critical(None, "Error", "Input text is empty. Please enter some text.")
