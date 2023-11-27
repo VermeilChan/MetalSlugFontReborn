@@ -40,7 +40,7 @@
 
 - Easily transform text into images using the iconic Metal Slug font.
 - Supports uppercase and lowercase alphabets (A-Z, a-z), numbers (0-9), and symbols.
-- Supports both Windows 11/10 and GNU/Linux.
+- Supports both Windows 11/10/8.1 and GNU/Linux (Debian, Fedora, Arch, OpenSUSE Tumbleweed).
 - Easy-to-use user interface and command line support.
 
 For additional details, please refer to [SUPPORTED](Documentation/SUPPORTED.md) and [COMPATIBILITY](Documentation\COMPATIBILITY.md).
@@ -49,7 +49,7 @@ For additional details, please refer to [SUPPORTED](Documentation/SUPPORTED.md) 
 
 Explore visual samples of fonts in action by checking out [EXAMPLE](EXAMPLE.md).
 
-## MetalSlugFontReborn Usage Guide
+## MetalSlugFontReborn Guide
 
 To install and use MetalSlugFontReborn, refer to the documentation in [INSTALL](Documentation/INSTALL.md)
 
