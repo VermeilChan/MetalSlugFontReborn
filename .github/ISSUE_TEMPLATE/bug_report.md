@@ -1,23 +1,31 @@
 ---
-name: Bug Report
-about: Report a bug to improve the project
-title: ''
-labels: Bug
-assignees: VermeilChan
+name: 🐛 Bug Report
+about: Create a report to help us improve
+
 ---
 
-**Bug Description**
-Please provide a brief and clear description of the bug.
+## Bug Description
 
-**Environment Details**
-- Operating System: [Windows/Linux/MacOS]
-- Program Version: e.g., 0.1.5
+**Version:** [Enter the version number where you encountered the issue]
 
-**Steps to Reproduce**
-To understand and fix the issue, please provide step-by-step instructions:
-1. Font Choice: '...'
-2. Color Choice: '...'
-3. Generated Content: '...'
+**Platform:** [Specify the operating system, e.g., Windows, GNU/Linux]
 
-**Additional Information**
-Include any other relevant context or details about the problem here.
+### Steps to Reproduce
+
+[Describe the steps to reproduce the bug. Be as detailed as possible, including any specific inputs or conditions that trigger the issue.]
+
+### Expected Behavior
+
+[Describe what you expected to happen.]
+
+**Screenshots:** [If applicable, add screenshots to help illustrate the problem.]
+
+### Additional Information
+
+- [Any additional information or context that may be relevant.]
+
+---
+
+**Note:**
+- Before submitting, please make sure that you are using the latest version of the program.
+- If the bug is related to a specific feature, check if there is an existing GitHub issue or discussion on the topic.

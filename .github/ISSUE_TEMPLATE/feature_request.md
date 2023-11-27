@@ -1,19 +1,30 @@
 ---
-name: Feature Request
-about: Share your idea for this project
-title: ''
-labels: Enhancement
-assignees: VermeilChan
+name: 🚀 Feature Request
+about: Share an idea for MetalSlugFontReborn
+labels: [feature request]
+
 ---
 
-**Problem Description**
-Briefly explain the issue you're facing or the problem you'd like to address.
+## What's the Issue?
 
-**Proposed Solution**
-Provide a clear and concise description of the solution you'd like to see.
+**What's the problem you want to solve?**
 
-**Alternatives**
-If you've thought of any alternative solutions or features, please describe them here.
+[Explain the problem or limitation you've noticed.]
 
-**Additional Information**
-Include any relevant context or screenshots for your feature request.
+## Your Idea
+
+**What's Your Idea?**
+
+[Explain your feature idea in simple terms.]
+
+**How It Helps**
+
+[Share why this feature would be useful and when people might use it.]
+
+**Anything Else?**
+
+[Add any extra details or context that might help understand your idea.]
+
+**Show and Tell**
+
+[If you have pictures to explain, feel free to attach them here.]
