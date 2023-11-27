@@ -43,8 +43,12 @@
 3. **Install Dependencies:**
    - Navigate to the `MetalSlugFontReborn-X.X.X-x64-GNU-Linux` folder in the terminal.
    - Run the following command:
-     ```bash
+      ```bash
       bash Install-Deps.sh
+
+      # Or
+
+      sh Install-Deps.sh
 
       # Or
 
@@ -54,8 +58,12 @@
 
 4. **Run MetalSlugFontReborn:**
    - Launch MetalSlugFontReborn after the installation script completes:
-      ```sh
+      ```bash
       bash Run.sh
+
+      # Or
+
+      sh Run.sh
 
       # Or
 
