@@ -19,7 +19,7 @@ from theme import dark_theme
 
 class ImageGenerator:
     @staticmethod
-    def generate_and_display_image(self, text, font, color):
+    def generate_and_display_image(text, font, color):
         try:
             if not text.strip():
                 QMessageBox.critical(None, "Error", "Input text is empty. Please enter some text.")
@@ -106,7 +106,7 @@ class MetalSlugFontReborn(QMainWindow):
         font = int(self.font_combobox.currentText())
         color = self.color_combobox.currentText()
 
-        ImageGenerator.generate_and_display_image(self, text, font, color)
+        ImageGenerator.generate_and_display_image(text, font, color)
 
 def main():
     app = QApplication([])
