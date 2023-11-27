@@ -1,12 +1,12 @@
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (
-    QApplication, 
-    QMainWindow, QVBoxLayout, 
-    QLabel, 
-    QLineEdit, 
-    QComboBox, 
-    QPushButton, 
-    QWidget, 
+    QApplication,
+    QMainWindow, QVBoxLayout,
+    QLabel,
+    QLineEdit,
+    QComboBox,
+    QPushButton,
+    QWidget,
     QSizePolicy,
     QMessageBox
 )
@@ -18,6 +18,7 @@ from constants import VALID_COLORS_BY_FONT
 from theme import dark_theme
 
 class ImageGenerator:
+    @staticmethod
     def generate_and_display_image(self, text, font, color):
         try:
             if not text.strip():
@@ -105,7 +106,7 @@ class MetalSlugFontReborn(QMainWindow):
         font = int(self.font_combobox.currentText())
         color = self.color_combobox.currentText()
 
-        ImageGenerator.generate_and_display_image(text, font, color)
+        ImageGenerator.generate_and_display_image(self, text, font, color)
 
 def main():
     app = QApplication([])
