@@ -78,6 +78,7 @@ I want to say a big thank you to the people and groups who helped me.
 - [PyInstaller](https://pyinstaller.org/en/stable/): Empowering standalone executables.
 - [PyQt6](https://www.riverbankcomputing.com): Building the GUI with PyQt6.
 - [UPX](https://upx.github.io): Efficiently compressed binary packages.
+- [Pillow](https://python-pillow.org/): Image processing library for Python.
 
 ## Contact
 
