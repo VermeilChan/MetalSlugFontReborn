@@ -1,5 +1,5 @@
-import random
 import string
+import secrets
 from pathlib import Path
 
 from PIL import Image
@@ -7,7 +7,7 @@ from PIL import Image
 from constants import SPACE_WIDTH, DESKTOP_PATH, SPECIAL_CHARACTERS
 
 def generate_filename(_):
-    random_chars = ''.join(random.choices(string.ascii_letters + string.digits, k=15))
+    random_chars = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(15))
     filename = f"{random_chars}.png"
     return filename
 
