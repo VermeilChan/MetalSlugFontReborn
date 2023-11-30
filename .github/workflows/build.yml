@@ -1,0 +1,29 @@
+name: Archive MetalSlugFontReborn For GNU/Linux
+
+on:
+  push:
+    branches:
+      - Development
+    paths:
+      - 'Assets/**'
+      - 'Src/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.before }}
+
+    - name: Archive MetalSlugFontReborn
+      run: |
+        tar -czvf MetalSlugFontReborn-${{ github.sha }}-x64-GNU-Linux.tar.gz MetalSlugFontReborn
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: MetalSlugFontReborn-${{ github.sha }}-x64-GNU-Linux
+        path: MetalSlugFontReborn-${{ github.sha }}-x64-GNU-Linux.tar.gz
