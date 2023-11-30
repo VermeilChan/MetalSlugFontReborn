@@ -1,9 +1,9 @@
 import os
-import random
 import string
+import secrets
 
-from collections import namedtuple
 from typing import final
+from collections import namedtuple
 
 import cv2
 import numpy as np
@@ -27,12 +27,22 @@ class ImageGeneration(object):
         self._font_paths = self._compute_font_paths()
 
     def _compute_font_paths(self):
-        base = os.path.join('static', 'assets', 'fonts', f'font-{self._font}', f'Font-{self._font}-{self._color}')
+        base = os.path.join('/home/Vermeil/MetalSlugFontReborn/Src/static/assets/fonts', f'font-{self._font}', f'Font-{self._font}-{self._color}')
         FontPaths = namedtuple('Font', ['Symbols', 'Letters', 'Numbers'])
         FontPaths.Symbols = os.path.join(base, 'Symbols')
         FontPaths.Letters = os.path.join(base, 'Letters')
         FontPaths.Numbers = os.path.join(base, 'Numbers')
         return FontPaths
+
+# development server
+#
+#    def _compute_font_paths(self):
+#        base = os.path.join('static', 'assets', 'fonts', f'font-{self._font}', f'Font-{self._font}-{self._color}')
+#        FontPaths = namedtuple('Font', ['Symbols', 'Letters', 'Numbers'])
+#        FontPaths.Symbols = os.path.join(base, 'Symbols')
+#        FontPaths.Letters = os.path.join(base, 'Letters')
+#        FontPaths.Numbers = os.path.join(base, 'Numbers')
+#        return FontPaths
 
     def _get_character_image_path(self, char: str):
         try:
@@ -58,17 +68,28 @@ class ImageGeneration(object):
             return str(error)
 
     def generate_filename(self):
-        random_characters = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(15))
+        random_characters = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(15))
         return f"{random_characters}.png"
 
     def generate_image(self):
         try:
-            os.mkdir(os.path.join('src', 'static', 'Generated-Images'))
+            os.makedirs('/home/Vermeil/MetalSlugFontReborn/Src/static/Generated-Images', exist_ok=True)
         except FileExistsError:
             pass
 
-        filename = os.path.join('src', 'static', 'Generated-Images', self.generate_filename())
+        filename = '/home/Vermeil/MetalSlugFontReborn/Src/static/Generated-Images/' + self.generate_filename()
         images = []
+
+# development server
+#
+#    def generate_image(self):
+#        try:
+#            os.mkdir(os.path.join('src', 'static', 'Generated-Images'))
+#        except FileExistsError:
+#            pass
+#
+#        filename = os.path.join('src', 'static', 'Generated-Images', self.generate_filename())
+#        images = []
 
         zero_image = np.zeros((1, 1, 4), dtype=np.uint8)
 
