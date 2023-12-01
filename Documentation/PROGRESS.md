@@ -1,6 +1,6 @@
 # Project Progress Report
 
-Welcome to the progress report for the MetalSlugFontReborn project. This document provides an overview of the latest updates, milestones, and upcoming development plans.
+This document provides an overview of the latest updates, milestones, and upcoming development plans.
 
 ## Current Status
 
