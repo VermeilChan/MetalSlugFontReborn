@@ -18,10 +18,10 @@ jobs:
       with:
         ref: ${{ github.event.before }}
 
-  - name: Debug
-    run: |
-      ls -R
-      ls MetalSlugFontReborn
+    - name: Debug
+      run: |
+        ls -R
+        ls MetalSlugFontReborn
 
     - name: Archive MetalSlugFontReborn
       run: |
