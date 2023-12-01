@@ -18,6 +18,11 @@ jobs:
       with:
         ref: ${{ github.event.before }}
 
+  - name: Debug
+    run: |
+      ls -R
+      ls MetalSlugFontReborn
+
     - name: Archive MetalSlugFontReborn
       run: |
         tar -czvf MetalSlugFontReborn-${{ github.sha }}-x64-GNU-Linux.tar.gz MetalSlugFontReborn
