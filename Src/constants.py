@@ -1,7 +1,7 @@
-import os
+from pathlib import Path
 
 SPACE_WIDTH = 30
-DESKTOP_PATH = os.path.expanduser("~/Desktop")
+DESKTOP_PATH = Path.home() / 'Desktop'
 SPECIAL_CHARACTERS = {
     '!': 'Exclamation',
     '?': 'Question',
@@ -80,4 +80,4 @@ VALID_COLORS_BY_FONT = {
     4: ["Blue", "Orange-1"],
     5: ["Orange-1"]
 }
-CLOSING_MESSAGE = "Closing..."
+CLOSING_MESSAGE = "\nClosing...\n"
