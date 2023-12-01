@@ -22,8 +22,8 @@ def select_font_and_color():
 
             font = int(user_input)
 
-            if font in VALID_COLORS_BY_FONT:
-                valid_colors = VALID_COLORS_BY_FONT[font]
+            if 1 <= font <= 5:
+                valid_colors = VALID_COLORS_BY_FONT.get(font, [])
                 print("Available colors: " + " | ".join(valid_colors))
                 color_input = input("Enter the color you want to use or type 'exit' to close: ")
 
