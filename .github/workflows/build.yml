@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - Development
-    paths:
-      - 'Assets/**'
-      - 'Src/**'
 
 jobs:
   build:
@@ -22,10 +19,11 @@ jobs:
       run: |
         ls -R
         ls MetalSlugFontReborn
+        ls MetalSlugFontReborn/MetalSlugFontReborn
 
     - name: Archive MetalSlugFontReborn
       run: |
-        tar -czvf MetalSlugFontReborn-${{ github.sha }}-x64-GNU-Linux.tar.gz MetalSlugFontReborn
+        tar -czvf MetalSlugFontReborn-${{ github.sha }}-x64-GNU-Linux.tar.gz -C MetalSlugFontReborn .
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
