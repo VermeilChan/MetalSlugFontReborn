@@ -1,13 +1,12 @@
-import os
 import sys
 
 from main import generate_filename, generate_image, get_font_paths
 
-from constants import CLOSING_MESSAGE, VALID_COLORS_BY_FONT
+from constants import CLOSING_MESSAGE, VALID_COLORS_BY_FONT, DESKTOP_PATH
 
 def display_intro_message():
-    print("Note: Metal Slug Font style conversion may not be compatible with all fonts.")
-    print("Refer to the SUPPORTED.md file for details.")
+    print("Note: Converting your text input to the Metal Slug font may not work with all fonts.")
+    print("Please refer to the details provided in the SUPPORTED.md file for more information.")
 
 def get_user_input():
     return input("Enter the text you want to generate (type 'exit' to close): ")
@@ -36,44 +35,39 @@ def select_font_and_color():
                     return font, color_input
                 else:
                     print("Invalid color. Please choose a valid color.")
-
             else:
                 print("Invalid input. Please choose a font between 1 and 5.")
 
         except ValueError:
             print("Invalid input. Please enter a valid number.")
-
-def generate_and_display_image(text, font, color):
-    try:
-        if text.lower() == 'exit':
+        except KeyboardInterrupt:
             print(CLOSING_MESSAGE)
             sys.exit(0)
 
-        if not text.strip():
-            print("Input text is empty. Please enter some text.")
-            return
+def generate_and_display_image(text, font, color):
+    if text.lower() == 'exit':
+        print(CLOSING_MESSAGE)
+        sys.exit(0)
 
+    if not text.strip():
+        print("Input text is empty. Please enter some text.")
+        return
+
+    try:
         filename = generate_filename(text)
-
         font_paths = get_font_paths(font, color)
-
         img_path, error_message_generate = generate_image(text, filename, font_paths)
 
         if error_message_generate:
             print(f"Error: {error_message_generate}")
         else:
-            print(f"Image successfully generated and saved as: {img_path}")
-            print(f"You can find the image on your desktop: {os.path.abspath(os.path.join(os.path.expanduser('~'), 'Desktop', img_path))}")
+            print(f"Image successfully generated and saved as: {filename}")
+            print(f"You can find the image on your desktop: {DESKTOP_PATH / img_path}")
 
-    except KeyboardInterrupt:
+    except Exception as e:
+        print(f"Error: {e}")
         print(CLOSING_MESSAGE)
         sys.exit(0)
-    except FileNotFoundError as e:
-        error_message_generate = f"Font file not found: {e.filename}"
-        print(error_message_generate)
-    except Exception as e:
-        error_message_generate = f"An error occurred: {e}"
-        print(error_message_generate)
 
 def main():
     display_intro_message()
@@ -87,9 +81,6 @@ def main():
     except KeyboardInterrupt:
         print(CLOSING_MESSAGE)
         sys.exit(0)
-    except Exception as e:
-        error_message_main_inner = f"An unexpected error occurred: {e}"
-        print(error_message_main_inner)
 
 if __name__ == "__main__":
     main()
