@@ -28,15 +28,15 @@
 
 ## Table of Contents
 
-- [Key Features](#key-features)
-- [Previewing Fonts](#previewing-fonts)
-- [MetalSlugFontReborn Usage Guide](#metalslugfontreborn-usage-guide)
-- [Contributing](#contributing)
+- [Features](#features)
+- [Preview Fonts](#preview-fonts)
+- [MetalSlugFontReborn Guide](#metalslugfontreborn-guide)
+- [How to Contribute](#how-to-contribute)
 - [License](#license)
-- [Acknowledgments](#acknowledgments)
+- [Credits](#credits)
 - [Contact](#contact)
 
-## Key Features
+## Features
 
 - Easily transform text into images using the iconic Metal Slug font.
 - Supports uppercase and lowercase alphabets (A-Z, a-z), numbers (0-9), symbols and colors.
@@ -45,9 +45,9 @@
 
 For additional details, please refer to [SUPPORTED.md](Documentation/SUPPORTED.md) and [COMPATIBILITY.md](Documentation/COMPATIBILITY.md).
 
-## Previewing Fonts
+## Preview Fonts
 
-Explore visual samples of fonts in action by checking out [EXAMPLE.md](Documentation/EXAMPLE.md).
+See different font examples [EXAMPLE.md](Documentation/EXAMPLE.md).
 
 ## MetalSlugFontReborn Guide
 
@@ -66,10 +66,11 @@ Your feedback and help are crucial for improving this project.
 
 This project is licensed under the [Apache License 2.0](LICENSE).
 
-## Acknowledgments
+## Credits
 
 I want to say a big thank you to the people and groups who helped me.
 
+- [SNK Corporation](https://www.snk-corp.co.jp): Utilized SNK's assets, including fonts and the program icon.
 - [SNK Corporation](https://www.snk-corp.co.jp): Program Icon, Fonts
 - [SikroxMemer](https://github.com/SikroxMemer): Helping make the program and webapp :D
 - [Division 六](https://6th-divisions-den.com/): Provided Fonts 1, 2, 3, and 4 assets.
@@ -84,5 +85,5 @@ I want to say a big thank you to the people and groups who helped me.
 
 If you have any questions, ideas, or need help, you can contact me through these platforms:
 
-- **Discord:** [mommy_vermeil](https://discord.com/users/857841811736100925) (Most active GMT+1)
+- **Discord:** [vermeildev](https://discord.com/users/857841811736100925) (Most active GMT+1)
 - **GitHub Issues:** [Project Issues](https://github.com/VermeilChan/MetalSlugFontReborn/issues) (Active)
