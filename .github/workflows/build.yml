@@ -24,6 +24,8 @@ jobs:
         tar -czvf MetalSlugFontReborn-${{ github.sha }}-x64-GNU-Linux.tar.gz MetalSlugFontReborn
 
     - name: Upload artifact
+      run: |
+        ls -R
       uses: actions/upload-artifact@v3
       with:
         name: MetalSlugFontReborn-${{ github.sha }}-x64-GNU-Linux
