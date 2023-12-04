@@ -34,7 +34,7 @@ QComboBox:hover {
 }
 
 QComboBox:pressed {
-    border: 2px solid #4B0082;
+    border: 2px solid #8b1515;
 }
 
 QComboBox QAbstractItemView {
@@ -52,9 +52,9 @@ QComboBox::drop-down {
 
 QComboBox::down-arrow {
     image: url("Assets/Icons/Drop-Down-Arrow.svg");
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
+    width: 25px;
+    height: 25px;
+    margin-right: 25px;
 }
 
 QPushButton {
