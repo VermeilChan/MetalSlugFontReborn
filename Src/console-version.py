@@ -5,16 +5,16 @@ from main import generate_filename, generate_image, get_font_paths
 from constants import CLOSING_MESSAGE, VALID_COLORS_BY_FONT, DESKTOP_PATH
 
 def display_intro_message():
-    print("Note: Converting your text input to the Metal Slug font may not work with all fonts.")
-    print("Please refer to the details provided in the SUPPORTED.md file for more information.")
+    print("Note: Converting your text to the Metal Slug font may not work with all fonts.")
+    print("Please refer to SUPPORTED.md file for more information.\n")
 
 def get_user_input():
-    return input("Enter the text you want to generate (type 'exit' to close): ")
+    return input("\nEnter the text you want to generate: ")
 
 def select_font_and_color():
     while True:
         try:
-            user_input = input("Choose a font from 1 to 5 (Refer to EXAMPLE.md for Font Preview) or type 'exit' to close: ")
+            user_input = input("Choose a font from 1 to 5 (type 'exit' to close): ")
 
             if user_input.lower() == 'exit':
                 print(CLOSING_MESSAGE)
@@ -24,8 +24,8 @@ def select_font_and_color():
 
             if 1 <= font <= 5:
                 valid_colors = VALID_COLORS_BY_FONT.get(font, [])
-                print("Available colors: " + " | ".join(valid_colors))
-                color_input = input("Enter the color you want to use or type 'exit' to close: ")
+                print("\nAvailable colors: " + " | ".join(valid_colors))
+                color_input = input("\nChoose a color: ")
 
                 if color_input.lower() == 'exit':
                     print(CLOSING_MESSAGE)
@@ -61,7 +61,7 @@ def generate_and_display_image(text, font, color):
         if error_message_generate:
             print(f"Error: {error_message_generate}")
         else:
-            print(f"Image successfully generated and saved as: {filename}")
+            print(f"\nImage saved as: {filename}")
             print(f"You can find the image on your desktop: {DESKTOP_PATH / img_path}")
 
     except Exception as e:
