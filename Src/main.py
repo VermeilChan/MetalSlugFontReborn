@@ -3,12 +3,23 @@ import string
 import secrets
 
 from typing import final
-from collections import namedtuple
+from collections import namedtuple, deque
 
 import cv2
 import numpy as np
 
 from constants import SPACE_WIDTH, SPECIAL_CHARACTERS
+
+def clean_url(url):
+    x = deque()
+    x.appendleft('/')
+    new_url = url.split('/')[5:]
+    for item in new_url:
+        x.append(f'{item}/')
+    output_url = ""
+    for item in x:
+        output_url += item
+    return output_url
 
 class CharacterNotFound(Exception):
     def __init__(self, unsupported_characters: str) -> None:
@@ -119,5 +130,7 @@ class ImageGeneration(object):
         except Exception as write_error:
             return str(write_error)
 
+        relative_path = clean_url(filename)
+
         self.state = True
-        return filename
+        return relative_path
