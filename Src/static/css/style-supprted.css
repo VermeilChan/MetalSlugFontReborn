@@ -79,6 +79,7 @@ section:hover {
 
 ::-webkit-scrollbar {
     width: 12px;
+    height: 12px;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -86,10 +87,14 @@ section:hover {
     border-radius: 6px;
     }
 
-    ::-webkit-scrollbar-track {
-    background-color: transparent;
+    ::-webkit-scrollbar-thumb:hover {
+    background-color: #1f1f1f;
     }
 
-    body {
-    margin-right: 20px;
+    ::-webkit-scrollbar-track {
+    background-color: #353535;
+    }
+
+    ::-webkit-scrollbar-track:hover {
+    background-color: #353535;
     }
