@@ -80,3 +80,20 @@ section {
 section:hover {
     background-color: #2b2e39;
 }
+
+::-webkit-scrollbar {
+    width: 12px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+    background-color: #1f1f1f;
+    border-radius: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+    background-color: transparent;
+    }
+
+    body {
+    margin-right: 20px;
+    }

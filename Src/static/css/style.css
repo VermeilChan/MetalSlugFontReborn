@@ -14,7 +14,7 @@
 body {
     font-family: 'Roboto', sans-serif;
     color: #fff;
-    background: url('./background/background-1.gif') center/cover;
+    background: url('./background/background-1.webp') center/cover;
 }
 
 .container {
@@ -225,11 +225,6 @@ a:visited {
     background-color: transparent;
     }
 
-  * {
-    scrollbar-color: #1f1f1f #ffffff;
-    scrollbar-width: thin;
-    }
-
     body {
-    margin-right: 12px;
+    margin-right: 20px;
     }
