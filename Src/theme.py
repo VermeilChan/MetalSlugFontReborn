@@ -71,4 +71,9 @@ QPushButton:hover {
     border: 1px solid #b71c1c;
     border-radius: 5px;
 }
+
+QDialog {
+    background-color: #2E2E2E;
+    color: #FFFFFF;
+}
 """
