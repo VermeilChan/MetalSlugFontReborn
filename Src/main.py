@@ -106,7 +106,7 @@ class ImageGeneration(object):
 
         for character in self._user_input:
             try:
-                if character == ' ':
+                if character.isspace():
                     space_image = np.zeros((zero_image.shape[0], SPACE_WIDTH, 4), dtype=np.uint8)
                     images.append(space_image)
                     continue
