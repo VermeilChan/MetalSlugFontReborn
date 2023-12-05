@@ -58,7 +58,7 @@ class ImageGenerator:
                 error_message = f"Error: {error_message_generate}"
                 InfoPopup("Error", error_message, "Assets/Icons/Raubtier.ico").exec()
             else:
-                success_message = f"Image successfully generated and saved as: {img_path}"
+                success_message = f"Image saved as: \n{img_path}"
                 InfoPopup("Success", success_message, "Assets/Icons/Raubtier.ico").exec()
 
         except FileNotFoundError as e:
