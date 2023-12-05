@@ -71,7 +71,6 @@ This project is licensed under the [GNU General Public License v3.0](LICENSE).
 I want to say a big thank you to the people and groups who helped me.
 
 - [SNK Corporation](https://www.snk-corp.co.jp): Utilized SNK's assets, including fonts and the program icon.
-- [SNK Corporation](https://www.snk-corp.co.jp): Program Icon, Fonts
 - [SikroxMemer](https://github.com/SikroxMemer): Helping make the program and webapp :D
 - [Division 六](https://6th-divisions-den.com/): Provided Fonts 1, 2, 3, and 4 assets.
 - [GussPrint](https://www.spriters-resource.com/submitter/Gussprint/): Shared assets for Font 5.
