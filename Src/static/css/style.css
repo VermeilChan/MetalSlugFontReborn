@@ -195,7 +195,7 @@ a:visited {
     padding: 8px;
     position: absolute;
     z-index: 1;
-    top: 100%;
+    top: 150%;
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
