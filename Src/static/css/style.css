@@ -211,3 +211,25 @@ a:visited {
 .icons:hover {
     background-color: rgba(31, 31, 31, 1);
 }
+
+::-webkit-scrollbar {
+    width: 12px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+    background-color: #1f1f1f;
+    border-radius: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+    background-color: transparent;
+    }
+
+  * {
+    scrollbar-color: #1f1f1f #ffffff;
+    scrollbar-width: thin;
+    }
+
+    body {
+    margin-right: 12px;
+    }
