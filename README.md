@@ -40,8 +40,8 @@
 
 - Easily transform text into images using the iconic Metal Slug font.
 - Supports uppercase and lowercase alphabets (A-Z, a-z), numbers (0-9), symbols and colors.
-- Supports both Windows (11/10/8.1) and GNU/Linux (Debian, Ubuntu, Fedora, Arch, OpenSUSE Tumbleweed).
-- Easy-to-use user interface and command line support.
+- Supports both Windows (11/10/8.1) and GNU/Linux (Debian, Ubuntu, Fedora, Arch Linux, OpenSUSE Tumbleweed).
+- Easy-to-use user interface with both GUI and command line support.
 
 For additional details, please refer to [SUPPORTED.md](Documentation/SUPPORTED.md) and [COMPATIBILITY.md](Documentation/COMPATIBILITY.md).
 
@@ -64,7 +64,7 @@ Your feedback and help are crucial for improving this project.
 
 ## License
 
-This project is licensed under the [Apache License 2.0](LICENSE).
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
 
 ## Credits
 

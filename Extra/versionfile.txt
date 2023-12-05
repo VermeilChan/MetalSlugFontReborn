@@ -34,7 +34,7 @@ VSVersionInfo(
         StringStruct(u'FileDescription', u'MetalSlugFontReborn'),
         StringStruct(u'FileVersion', u'0.6.3.0'),
         StringStruct(u'InternalName', u'MetalSlugFontReborn'),
-        StringStruct(u'LegalCopyright', u'Apache License 2.0.'),
+        StringStruct(u'LegalCopyright', u'GNU General Public License v3.0.'),
         StringStruct(u'OriginalFilename', u'MetalSlugFontReborn.exe'),
         StringStruct(u'ProductName', u'MetalSlugFontReborn'),
         StringStruct(u'ProductVersion', u'0.6.3.0')])
