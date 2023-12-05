@@ -1,25 +1,38 @@
 $(document).ready(function () {
-    $('#font').change((function() {
-        if ($('#font').val() == "1" || $('#font').val() == "2") {
-            $('#color').html(
-                `<option value=Blue>Blue</option>
-                <option  value=Orange-1>Orange 1</option>
-                <option  value=Orange-2>Orange 2</option>`
-            )
+    const $font = $('#font');
+    const $color = $('#color');
+
+    $font.change(function () {
+        updateColorOptions($font.val());
+    });
+
+    function updateColorOptions(fontValue) {
+        let colorOptions = '';
+
+        switch (fontValue) {
+            case '1':
+            case '2':
+                colorOptions = `
+                    <option value="Blue">Blue</option>
+                    <option value="Orange-1">Orange 1</option>
+                    <option value="Orange-2">Orange 2</option>`;
+                break;
+
+            case '3':
+            case '4':
+                colorOptions = `
+                    <option value="Blue">Blue</option>
+                    <option value="Orange-1">Orange 1</option>`;
+                break;
+
+            case '5':
+                colorOptions = `<option value="Orange-1">Orange 1</option>`;
+                break;
+
+            default:
+                return;
         }
-        else if ($('#font').val() == "3" || $('#font').val() == "4") {
-            $('#color').html(
-                `<option value=Blue> Blue</option>
-                <option value=Orange-1> Orange 1</option>`
-            )
-        }
-        else if ($('#font').val() == "5") {
-            $('#color').html(
-                `<option value=Orange-1 >Orange 1</option>`
-            )
-        }
-        else {
-            return null;
-        }
-    }))
-})
+
+        $color.html(colorOptions);
+    }
+});
