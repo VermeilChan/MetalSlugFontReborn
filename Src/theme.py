@@ -1,21 +1,23 @@
 dark_theme = """
 QMainWindow {
-    background-color: #2E2E2E;
+    background-color: #222222;
     color: #FFFFFF;
 }
 
 QLabel {
     color: #FFFFFF;
     font-size: 16px;
+    font-family: Roboto, sans-serif;
 }
 
 QLineEdit {
-    background-color: #242424;
+    background-color: #3b3b3b;
     color: #FFFFFF;
-    selection-background-color: #b71c1c;
+    selection-background-color: #d32f2f;
     border-radius: 5px;
     font-size: 14px;
     height: 30px;
+    font-family: Roboto, sans-serif;
 }
 
 QComboBox {
@@ -27,6 +29,7 @@ QComboBox {
     font-size: 14px;
     height: 30px;
     border: 2px solid #d32f2f;
+    font-family: Roboto, sans-serif;
 }
 
 QComboBox:hover {
@@ -34,7 +37,7 @@ QComboBox:hover {
 }
 
 QComboBox:pressed {
-    border: 2px solid #8b1515;
+    border: 2px solid #D50000;
 }
 
 QComboBox QAbstractItemView {
@@ -44,6 +47,7 @@ QComboBox QAbstractItemView {
     selection-background-color: #d32f2f;
     border-radius: 5px;
     font-size: 14px;
+    font-family: Roboto, sans-serif;
 }
 
 QComboBox::drop-down {
@@ -64,11 +68,17 @@ QPushButton {
     padding: 10px;
     border-radius: 5px;
     font-size: 16px;
+    font-family: Roboto, sans-serif;
 }
 
 QPushButton:hover {
     background-color: #b71c1c;
     border: 1px solid #b71c1c;
     border-radius: 5px;
+}
+
+QDialog {
+    background-color: #222222;
+    color: #FFFFFF;
 }
 """
