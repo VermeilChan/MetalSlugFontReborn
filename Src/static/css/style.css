@@ -91,14 +91,14 @@ input[type="submit"]:hover,
     background-color: #b71c1c;
 }
 
-.error {
-    color: #e57373;
+.error-message {
+    color: #FFBF00;
     margin-top: 1rem;
     transition: color 0.3s ease-in-out;
 }
 
-.error:hover {
-    color: #d32f2f;
+.error-message:hover {
+    color: #f1d274;
 }
 
 @media (max-width: 600px) {
