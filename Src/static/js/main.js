@@ -36,3 +36,12 @@ $(document).ready(function () {
         $color.html(colorOptions);
     }
 });
+
+$(document).ready(function() {
+    if (navigator.userAgent.indexOf("Firefox") != -1) {
+    $("*").css({
+        "scrollbar-color": "#1f1f1f #353535",
+        "scrollbar-width": "12px"
+    });
+    }
+});
