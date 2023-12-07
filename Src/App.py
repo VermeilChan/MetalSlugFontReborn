@@ -1,8 +1,11 @@
 from flask import Flask, render_template, request
 
+from flask_sslify import SSLify
+
 from main import ImageGeneration, CharacterNotFound
 
 App = Flask(__name__)
+sslify = SSLify(App)
 
 @App.route('/')
 def index():
