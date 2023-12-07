@@ -35,6 +35,7 @@ class ImageGeneration(object):
         self._font = font
         self._color = color
         self._font_paths = self._compute_font_paths()
+        self._character_images_cache = {}
 
     def _compute_font_paths(self):
         base = os.path.join('/home/Vermeil/MetalSlugFontReborn/Src/static/assets/fonts', f'font-{self._font}', f'Font-{self._font}-{self._color}')
@@ -67,6 +68,16 @@ class ImageGeneration(object):
         except Exception as error:
             return str(error)
 
+    def _load_character_image(self, character: str):
+        if character not in self._character_images_cache:
+            character_image_path = self._get_character_image_path(character)
+            image = cv2.imread(character_image_path, cv2.IMREAD_UNCHANGED)
+            if image is None:
+                raise FileNotFoundError(f"Image not found for character '{character}'")
+            self._character_images_cache[character] = image
+
+        return self._character_images_cache[character]
+
     def generate_filename(self):
         random_filename = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(15))
         return f"{random_filename}.png"
@@ -81,7 +92,6 @@ class ImageGeneration(object):
         images = []
 
         zero_image = np.zeros((1, SPACE_WIDTH, 4), dtype=np.uint8)
-        character_images = {}
 
         for character in self._user_input:
             try:
@@ -89,13 +99,8 @@ class ImageGeneration(object):
                     images.append(np.zeros_like(zero_image))
                     continue
 
-                if character not in character_images:
-                    character_image_path = self._get_character_image_path(character)
-                    character_images[character] = cv2.imread(character_image_path, cv2.IMREAD_UNCHANGED)
-                    if character_images[character] is None:
-                        raise FileNotFoundError(f"Image not found for character '{character}'")
-
-                images.append(character_images[character])
+                character_image = self._load_character_image(character)
+                images.append(character_image)
 
             except (cv2.error, FileNotFoundError) as error:
                 return str(error)
