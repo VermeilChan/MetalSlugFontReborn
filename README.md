@@ -1,30 +1,36 @@
-# MetalSlugFontReborn
+# <div align="center">MetalSlugFontReborn</div>
+
+## <div align="center">A tool for creating images with the Metal Slug font</div>
 
 <p align="center">
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/graphs/contributors">
-    <img alt="Contributors" src="https://img.shields.io/github/contributors/VermeilChan/MetalSlugFontReborn.svg?color=blue" />
+    <img alt="Contributors" src="https://img.shields.io/github/contributors/VermeilChan/MetalSlugFontReborn?color=green" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/releases">
-    <img alt="Latest Release" src="https://img.shields.io/github/release/VermeilChan/MetalSlugFontReborn.svg?color=green" />
+    <img alt="Latest Release" src="https://img.shields.io/github/release/VermeilChan/MetalSlugFontReborn?color=blue" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/releases">
-    <img alt="Downloads" src="https://img.shields.io/github/downloads/VermeilChan/MetalSlugFontReborn/total.svg?color=orange" />
+    <img alt="Downloads" src="https://img.shields.io/github/downloads/VermeilChan/MetalSlugFontReborn/total?color=orange" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/blob/Development/LICENSE">
-    <img alt="License" src="https://img.shields.io/github/license/VermeilChan/MetalSlugFontReborn.svg?color=purple" />
+    <img alt="License" src="https://img.shields.io/github/license/VermeilChan/MetalSlugFontReborn?color=purple" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/issues">
-    <img alt="Open Issues" src="https://img.shields.io/github/issues/VermeilChan/MetalSlugFontReborn.svg?color=red" />
+    <img alt="Open Issues" src="https://img.shields.io/github/issues/VermeilChan/MetalSlugFontReborn?color=red" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/pulls">
-    <img alt="Open Pull Requests" src="https://img.shields.io/github/issues-pr/VermeilChan/MetalSlugFontReborn.svg?color=yellow" />
+    <img alt="Open Pull Requests" src="https://img.shields.io/github/issues-pr/VermeilChan/MetalSlugFontReborn?color=yellow" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/commits/Development">
-    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/VermeilChan/MetalSlugFontReborn.svg?color=green" />
+    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/VermeilChan/MetalSlugFontReborn?color=darkcyan" />
+  </a>
+  <a href="https://github.com/VermeilChan/MetalSlugFontReborn">
+    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/VermeilChan/MetalSlugFontReborn?color=yellowgreen" />
+  </a>
+  <a href="https://github.com/VermeilChan/MetalSlugFontReborn">
+    <img alt="GitHub forks" src="https://img.shields.io/github/forks/VermeilChan/MetalSlugFontReborn?color=lightcoral" />
   </a>
 </p>
-
-# A tool for creating images with the iconic Metal Slug font
 
 ## Table of Contents
 
@@ -38,7 +44,7 @@
 
 ## Features
 
-- Easily transform text into images using the iconic Metal Slug font.
+- Easily transform text into images using the Metal Slug font.
 - Supports uppercase and lowercase alphabets (A-Z, a-z), numbers (0-9), symbols and colors.
 - Supports both Windows (11/10/8.1) and GNU/Linux (Debian, Ubuntu, Fedora, Arch Linux, OpenSUSE Tumbleweed).
 - Easy-to-use user interface with both GUI and command line support.
