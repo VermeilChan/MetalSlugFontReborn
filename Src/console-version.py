@@ -1,56 +1,71 @@
 import sys
+from termcolor import cprint
 
 from main import generate_filename, generate_image, get_font_paths
 
-from constants import CLOSING_MESSAGE, VALID_COLORS_BY_FONT, DESKTOP_PATH
+from constants import VALID_COLORS_BY_FONT, DESKTOP_PATH
 
 def display_intro_message():
-    print("Note: Converting your text to the Metal Slug font may not work with all fonts.")
-    print("Please refer to SUPPORTED.md file for more information.\n")
+    cprint(f"\nNote: Converting your text to the Metal Slug font may not work with all fonts.", 'yellow', attrs=['bold'])
+    cprint(f"Please refer to SUPPORTED.txt file for more information.\n", 'yellow', attrs=['underline'])
 
 def get_user_input():
-    return input("\nEnter the text you want to generate: ")
+    return input(f"\nEnter the text you want to generate: ")
 
 def select_font_and_color():
     while True:
         try:
-            user_input = input("Choose a font from 1 to 5 (type 'exit' to close): ")
+            user_input = input(f"Choose a font from 1 to 5 (type 'exit' to close): ")
 
             if user_input.lower() == 'exit':
-                print(CLOSING_MESSAGE)
+                cprint(f'\nClosing...\n', 'blue')
                 sys.exit(0)
 
             font = int(user_input)
 
             if 1 <= font <= 5:
                 valid_colors = VALID_COLORS_BY_FONT.get(font, [])
-                print("\nAvailable colors: " + " | ".join(valid_colors))
-                color_input = input("\nChoose a color: ")
+                cprint(f"\nAvailable colors: " + " | ".join(valid_colors), 'blue')
+                color_input = input(f"\nChoose a color: ")
 
                 if color_input.lower() == 'exit':
-                    print(CLOSING_MESSAGE)
+                    cprint(f'\nClosing...\n', 'blue')
                     sys.exit(0)
                 elif color_input.title() in valid_colors:
                     color_input = color_input.title()
                     return font, color_input
                 else:
-                    print("Invalid color. Please choose a valid color.")
+                    cprint(f"\nInvalid color. Please choose a valid color.\n", 'red')
             else:
-                print("Invalid input. Please choose a font between 1 and 5.")
+                cprint(f"\nInvalid input. Please choose a font between 1 and 5.\n", 'red')
 
         except ValueError:
-            print("Invalid input. Please enter a valid number.")
+            cprint(f"\nInvalid input. Please enter a valid number.\n", 'red')
         except KeyboardInterrupt:
-            print(CLOSING_MESSAGE)
+            cprint(f'\nClosing...\n', 'blue')
             sys.exit(0)
+
+def ask_to_check_supported_characters():
+    check_supported = input(f"Do you want to check the supported characters? [Y/n]: ").lower()
+
+    if check_supported == 'y':
+        with open(f"Documentation/SUPPORTED.txt", "r") as supported_file:
+            content = supported_file.read()
+            cprint(content, 'blue')
+            cprint(f"Note:", 'light_magenta')
+            cprint(f"Some characters may not load due to font limitations or console compatibility.\n", 'light_magenta')
+    elif check_supported == 'n':
+        pass
+    else:
+        cprint(f"\nInvalid input.\n", 'red')
 
 def generate_and_display_image(text, font, color):
     if text.lower() == 'exit':
-        print(CLOSING_MESSAGE)
+        cprint(f'\nClosing...\n', 'blue')
         sys.exit(0)
 
     if not text.strip():
-        print("Input text is empty. Please enter some text.")
+        cprint(f"Input text is empty. Please enter some text.", 'red')
         return
 
     try:
@@ -59,18 +74,17 @@ def generate_and_display_image(text, font, color):
         img_path, error_message_generate = generate_image(text, filename, font_paths)
 
         if error_message_generate:
-            print(f"Error: {error_message_generate}")
+            cprint(f"Error: {error_message_generate}", 'red')
         else:
-            print(f"\nImage saved as: {filename}")
-            print(f"You can find the image on your desktop: {DESKTOP_PATH / img_path}")
+            cprint(f"\nImage saved as: {filename}", 'green')
+            cprint(f"\nYou can find the image on your desktop: \n{DESKTOP_PATH / img_path}", 'magenta')
 
     except Exception as e:
-        print(f"Error: {e}")
-        print(CLOSING_MESSAGE)
-        sys.exit(0)
+        cprint(f"Error: {e}", 'red')
 
 def main():
     display_intro_message()
+    ask_to_check_supported_characters()
 
     font, color = select_font_and_color()
 
@@ -79,7 +93,7 @@ def main():
             text = get_user_input()
             generate_and_display_image(text, font, color)
     except KeyboardInterrupt:
-        print(CLOSING_MESSAGE)
+        cprint(f'\nClosing...\n', 'light_grey')
         sys.exit(0)
 
 if __name__ == "__main__":
