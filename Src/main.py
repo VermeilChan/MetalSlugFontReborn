@@ -38,7 +38,7 @@ def get_character_image(character, font_paths):
 
     character_image_path = get_character_image_path(character, font_paths)
     if not character_image_path or not character_image_path.is_file():
-        raise FileNotFoundError(f"Error: Image not found for character '{character}'")
+        raise FileNotFoundError(f"Image not found for character '{character}'")
 
     image = Image.open(character_image_path).convert("RGBA")
     character_image_cache[character] = image
