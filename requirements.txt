@@ -1,3 +1,4 @@
 opencv-python>=4.8.1.78
 Flask>=3.0.0
 watchdog>=3.0.0
+Flask-SSLify>=0.1.5
