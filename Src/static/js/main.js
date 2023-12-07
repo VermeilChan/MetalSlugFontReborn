@@ -40,7 +40,7 @@ $(document).ready(function () {
 $(document).ready(function() {
     if (navigator.userAgent.indexOf("Firefox") != -1) {
     $("*").css({
-        "scrollbar-color": "#1f1f1f #353535",
+        "scrollbar-color": "#353535 #1f1f1f",
         "scrollbar-width": "12px"
     });
     }
