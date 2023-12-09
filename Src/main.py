@@ -36,6 +36,9 @@ def get_character_image(character, font_paths):
     if character in character_image_cache:
         return character_image_cache[character]
 
+    if character.isspace():
+        return create_character_image(character, font_paths)
+
     character_image_path = get_character_image_path(character, font_paths)
     if not character_image_path or not character_image_path.is_file():
         raise FileNotFoundError(f"Image not found for character '{character}'")
@@ -44,6 +47,10 @@ def get_character_image(character, font_paths):
     character_image_cache[character] = image
 
     return image
+
+def create_character_image(character, font_paths):
+    if character.isspace():
+        return Image.new("RGBA", (SPACE_WIDTH, 1), (0, 0, 0, 0))
 
 def calculate_total_width_and_max_height(text, font_paths):
     total_width = 0
