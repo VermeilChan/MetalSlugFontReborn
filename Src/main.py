@@ -48,7 +48,7 @@ def get_character_image(character, font_paths):
 
     return image
 
-def create_character_image(character, font_paths):
+def create_character_image(character, _):
     if character.isspace():
         return Image.new("RGBA", (SPACE_WIDTH, 1), (0, 0, 0, 0))
 
