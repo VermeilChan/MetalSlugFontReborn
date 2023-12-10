@@ -71,6 +71,8 @@ Before installing MetalSlugFontReborn, ensure that your system meets the followi
 | **GUI Version**         | 50MB                 | 100MB                |
 | **CLI Version**         | 20MB                 | 30MB                 |
 
+_Additional space required for generating images._
+
 _GUI: Graphical User Interface_<br>
 _CLI: Command Line Interface_
 
@@ -83,6 +85,12 @@ See different font examples [EXAMPLE.md](Documentation/EXAMPLE.md).
 To install and use MetalSlugFontReborn, refer to the documentation in [INSTALL.md](Documentation/INSTALL.md)
 
 ## How to Contribute
+
+1. Fork the Repository
+2. Create your Branch
+3. Commit your Changes
+4. Push to the Branch
+5. Open a Pull Request
 
 If you discover problems or have suggestions for making things better, please:
 
@@ -104,7 +112,7 @@ I want to say a big thank you to the people and groups who helped me.
 - [Division 六](https://6th-divisions-den.com/): Provided Fonts 1, 2, 3, and 4 assets.
 - [GussPrint](https://www.spriters-resource.com/submitter/Gussprint/): Shared assets for Font 5.
 - [BinRich](https://discord.com/users/477459550904254464/): Supplied diacritic marks.
-- [PyInstaller](https://pyinstaller.org/en/stable/): Empowering standalone executables.
+- [PyInstaller](https://pyinstaller.org/en/stable/): bundles a Python application and all its dependencies into a single package.
 - [PyQt6](https://www.riverbankcomputing.com): Building the GUI with PyQt6.
 - [UPX](https://upx.github.io): Efficiently compressed binary packages.
 - [Pillow](https://python-pillow.org/): Image processing library for Python.
