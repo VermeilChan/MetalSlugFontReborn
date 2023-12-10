@@ -1,6 +1,16 @@
 from PyQt6.QtGui import (
-    QIcon
-    )
+    QIcon,
+    QMovie,
+)
+
+from PyQt6.QtCore import (
+    Qt, 
+    QUrl,
+)
+
+from PyQt6.QtGui import (
+    QDesktopServices,
+)
 
 from PyQt6.QtWidgets import (
     QApplication,
@@ -13,7 +23,9 @@ from PyQt6.QtWidgets import (
     QWidget,
     QDialog,
     QLabel,
-    )
+    QTabWidget,
+    QTextEdit,
+)
 
 from main import generate_filename, generate_image, get_font_paths
 
@@ -118,6 +130,12 @@ class MetalSlugFontReborn(QMainWindow):
 
         self.setStyleSheet(dark_theme)
 
+        menubar = self.menuBar()
+        help_menu = menubar.addMenu("Help")
+
+        about_action = help_menu.addAction("About")
+        about_action.triggered.connect(self.show_about_dialog)
+
     def on_font_change(self):
         font = int(self.font_combobox.currentText())
         valid_colors = VALID_COLORS_BY_FONT.get(font, [])
@@ -133,6 +151,67 @@ class MetalSlugFontReborn(QMainWindow):
         color = self.color_combobox.currentText()
 
         ImageGenerator.generate_and_display_image(text, font, color)
+
+    def show_about_dialog(self):
+        about_dialog = QDialog(self)
+        about_dialog.setWindowTitle("About MetalSlugFontReborn")
+
+        layout = QVBoxLayout()
+
+        icon_label = QLabel()
+        icon_label.setMovie(QMovie("Assets/Icons/Raubtier.gif"))
+        icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(icon_label)
+
+        program_name_label = QLabel("<h1>MetalSlugFontReborn</h1>\n")
+        program_name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(program_name_label)
+
+        version_label = QLabel("Version 0.6.3\n")
+        version_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(version_label)
+
+        author_label = QLabel("Developed by: VermeilChan\n")
+        author_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(author_label)
+
+        description_label = QLabel("A tool for creating images with the Metal Slug font.\n")
+        description_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(description_label)
+
+        license_label = QLabel("License: GPL-3.0 License\n")
+        license_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(license_label)
+
+        credits_label = QLabel(
+            "Special thanks to <br>"
+            "<a href='https://www.snk-corp.co.jp'>SNK Corporation</a> <br>"
+            "<a href='https://github.com/SikroxMemer'>SikroxMemer</a> <br>"
+            "<a href='https://6th-divisions-den.com/'>Division 六</a> <br>"
+            "<a href='https://www.spriters-resource.com/submitter/Gussprint/'>GussPrint</a> <br>"
+            "<a href='https://discord.com/users/477459550904254464/'>BinRich</a> <br>"
+            "<a href='https://pyinstaller.org/en/stable/'>PyInstaller</a> <br>"
+            "<a href='https://www.riverbankcomputing.com'>PyQt6</a> <br>"
+            "<a href='https://upx.github.io'>UPX</a> <br>"
+            "<a href='https://python-pillow.org/'>Pillow</a>\n"
+        )
+        credits_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        credits_label.setOpenExternalLinks(True)
+        layout.addWidget(credits_label)
+
+        release_date_label = QLabel("\nRelease: November 27, 2023\n")
+        release_date_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(release_date_label)
+
+        github_button = QPushButton("GitHub Repository")
+        github_button.clicked.connect(self.open_github_repository)
+        layout.addWidget(github_button)
+
+        about_dialog.setLayout(layout)
+        about_dialog.exec()
+
+    def open_github_repository(self):
+        QDesktopServices.openUrl(QUrl("https://github.com/VermeilChan/MetalSlugFontReborn"))
 
 def main():
     app = QApplication([])
