@@ -25,5 +25,3 @@
 ### Font 5
 
 - **Orange 1**: ![Font 5 Orange 1](Markdown/Examples/Font-5/Font-5-Color-Orange-1.png)
-
-These examples showcase different fonts and colors applied to the input text.
