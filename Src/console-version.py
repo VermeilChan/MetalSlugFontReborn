@@ -5,8 +5,7 @@ from main import generate_filename, generate_image, get_font_paths
 from constants import VALID_COLORS_BY_FONT, DESKTOP_PATH
 
 def display_intro_message():
-    print(f"\nNote: Converting your text to the Metal Slug font may not work with all fonts.")
-    print(f"Please refer to SUPPORTED.txt file for more information.\n")
+    print(f"\nNote:\nConverting your text to the Metal Slug font may not work with all fonts.\n")
 
 def get_user_input():
     return input(f"\nEnter the text you want to generate: ")
@@ -52,8 +51,10 @@ def ask_to_check_supported_characters():
             content = supported_file.read()
             print(content)
             print(f"Note:")
-            print(f"Some characters may not load due to font limitations or terminal compatibility.\n")
+            print(f"Some characters may not load due to font limitations or terminal compatibility.")
+            print(f"You can open SUPPORTED.txt if it doesn't work properly\n")
     elif check_supported == 'n':
+        print(f"\nYou can check them later if you want in SUPPORTED.txt\n")
         pass
     else:
         print(f"\nInvalid input.\n")
