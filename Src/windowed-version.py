@@ -159,7 +159,9 @@ class MetalSlugFontReborn(QMainWindow):
         layout = QVBoxLayout()
 
         icon_label = QLabel()
-        icon_label.setMovie(QMovie("Assets/Icons/Raubtier.gif"))
+        movie = QMovie("Assets/Icons/Raubtier.gif")
+        icon_label.setMovie(movie)
+        movie.start()
         icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(icon_label)
 
