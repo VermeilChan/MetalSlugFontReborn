@@ -169,7 +169,7 @@ class MetalSlugFontReborn(QMainWindow):
         program_name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(program_name_label)
 
-        version_label = QLabel("Version 0.6.3\n")
+        version_label = QLabel("Version 0.6.5\n")
         version_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(version_label)
 
