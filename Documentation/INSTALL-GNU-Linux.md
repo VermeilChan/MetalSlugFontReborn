@@ -39,10 +39,10 @@
    ![MetalSlugFontReborn](Markdown/Guide/GNU-Linux/MetalSlugFontReborn.svg)
 
 4. **Input Your Text:**
-   - Enter the text for transformation into the Metal Slug font.
+   - Enter the text you want to convert to the metal slug font.
 
 5. **Generate the Image:**
    - Click `Generate And Save Image` to create the stylized image.
 
 6. **View the Result:**
-   - The program will save the stylized image on your desktop after clicking `Generate And Save Image`.
+   - The program will save the stylized image on your desktop.
