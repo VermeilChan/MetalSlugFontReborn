@@ -173,6 +173,10 @@ class MetalSlugFontReborn(QMainWindow):
         version_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(version_label)
 
+        release_date_label = QLabel("\nRelease: December 10, 2023\n")
+        release_date_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(release_date_label)
+
         author_label = QLabel("Developed by: VermeilChan\n")
         author_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(author_label)
@@ -200,10 +204,6 @@ class MetalSlugFontReborn(QMainWindow):
         credits_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         credits_label.setOpenExternalLinks(True)
         layout.addWidget(credits_label)
-
-        release_date_label = QLabel("\nRelease: November 27, 2023\n")
-        release_date_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(release_date_label)
 
         github_button = QPushButton("GitHub Repository")
         github_button.clicked.connect(self.open_github_repository)
