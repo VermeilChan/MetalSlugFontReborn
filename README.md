@@ -62,7 +62,7 @@ Before installing MetalSlugFontReborn, ensure that your system meets the followi
 | **Operating System**    | **Versions**                                                                 |
 |-----------------------  |------------------------------------------------------------------------------|
 | **Windows**             | 11, 10, 8.1                                                                  |
-| **GNU/Linux**           | Debian, Ubuntu, Fedora, Arch Linux, OpenSUSE Tumbleweed                      |
+| **GNU/Linux**           | Debian 12, Ubuntu 22.04.3 LTS, Fedora 39, Arch Linux, OpenSUSE Tumbleweed    |
 | **MacOS**               | Currently not supported.                                                     |
 
 
@@ -82,7 +82,7 @@ See different font examples [EXAMPLE.md](Documentation/EXAMPLE.md).
 
 ## MetalSlugFontReborn Guide
 
-To install and use MetalSlugFontReborn, refer to the documentation in [INSTALL.md](Documentation/INSTALL.md)
+To install and use MetalSlugFontReborn, refer to the documentation in [SELECT.md](Documentation/SELECT.md)
 
 ## How to Contribute
 
@@ -91,11 +91,6 @@ To install and use MetalSlugFontReborn, refer to the documentation in [INSTALL.m
 3. Commit your Changes
 4. Push to the Branch
 5. Open a Pull Request
-
-If you discover problems or have suggestions for making things better, please:
-
-- [Tell me about the issue](https://github.com/VermeilChan/MetalSlugFontReborn/issues)
-- [Share your improvements](https://github.com/VermeilChan/MetalSlugFontReborn/pulls)
 
 Your feedback and help are crucial for improving this project.
 
@@ -107,19 +102,12 @@ This project is licensed under the [GNU General Public License v3.0](LICENSE).
 
 I want to say a big thank you to the people and groups who helped me.
 
-- [SNK Corporation](https://www.snk-corp.co.jp): Utilized SNK's assets, including fonts and the program icon.
-- [SikroxMemer](https://github.com/SikroxMemer): Helping make the program and webapp :D
-- [Division 六](https://6th-divisions-den.com/): Provided Fonts 1, 2, 3, and 4 assets.
-- [GussPrint](https://www.spriters-resource.com/submitter/Gussprint/): Shared assets for Font 5.
-- [BinRich](https://discord.com/users/477459550904254464/): Supplied diacritic marks.
-- [PyInstaller](https://pyinstaller.org/en/stable/): bundles a Python application and all its dependencies into a single package.
-- [PyQt6](https://www.riverbankcomputing.com): Building the GUI with PyQt6.
-- [UPX](https://upx.github.io): Efficiently compressed binary packages.
-- [Pillow](https://python-pillow.org/): Image processing library for Python.
-
-## Contact
-
-If you have any questions, ideas, or need help, you can contact me through these platforms:
-
-- **Discord:** [vermeildev](https://discord.com/users/857841811736100925) (Most active GMT+1)
-- **GitHub Issues:** [Project Issues](https://github.com/VermeilChan/MetalSlugFontReborn/issues) (Active)
+- [SNK Corporation](https://www.snk-corp.co.jp): Used some of their assets.
+- [SikroxMemer](https://github.com/SikroxMemer): Helped build the program and web app.
+- [Division 六](https://6th-divisions-den.com): Provided fonts 1 to 4 assets.
+- [GussPrint](https://www.spriters-resource.com/submitter/Gussprint): Contributed assets for font 5.
+- [BinRich](https://discord.com/users/477459550904254464): Provided diacritic marks.
+- [PyInstaller](https://pyinstaller.org/en/stable): Converted Python code to exe.
+- [PyQt6](https://www.riverbankcomputing.com): Used for the graphical interface.
+- [Pillow](https://python-pillow.org): Used for image processing.
+- [UPX](https://upx.github.io): Compressed files for a smaller size.

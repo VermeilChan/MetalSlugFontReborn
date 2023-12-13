@@ -1,14 +1,12 @@
 # **GNU/Linux:**
 
 1. **Download MetalSlugFontReborn:**
-   - Download the latest stable release from the [Releases Page](https://github.com/VermeilChan/MetalSlugFontReborn/releases).
+   - Download the latest stable release from [here](https://github.com/VermeilChan/MetalSlugFontReborn/releases).
 
    ![Download MetalSlugFontReborn](Markdown/Guide/Download-Program.svg)
 
 2. **Extract the Archive:**
-   - Extract `MetalSlugFontReborn-X.X.X-x64-GNU-Linux.7z` after downloading.
-
-   ![Extract MetalSlugFontReborn](Markdown/Guide/GNU-Linux/Extract-Program.svg)
+   - Extract `MetalSlugFontReborn-X.X.X-x64-GNU-Linux.7z`.
 
 3. **Install Dependencies:**
    - Navigate to the `MetalSlugFontReborn-X.X.X-x64-GNU-Linux` folder in the terminal.
