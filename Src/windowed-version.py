@@ -4,7 +4,7 @@ from PyQt6.QtGui import (
 )
 
 from PyQt6.QtCore import (
-    Qt, 
+    Qt,
     QUrl,
 )
 
@@ -169,11 +169,11 @@ class MetalSlugFontReborn(QMainWindow):
         program_name_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(program_name_label)
 
-        version_label = QLabel("Version 0.6.5\n")
+        version_label = QLabel("Version 1.6.7\n")
         version_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(version_label)
 
-        release_date_label = QLabel("\nRelease: December 10, 2023\n")
+        release_date_label = QLabel("Release: December 10, 2023\n")
         release_date_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(release_date_label)
 
