@@ -6,7 +6,7 @@ Here you can find the tested Operating Systems and Distributions with MetalSlugF
 - **Supported Operating Systems:**
   - Windows 11
   - Windows 10
-  - Windows 8.1
+  - Windows 8.1 (CLI)
 
 - **Incompatible:**
   - Windows 7

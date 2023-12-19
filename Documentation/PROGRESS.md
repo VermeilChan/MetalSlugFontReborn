@@ -4,8 +4,8 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 ## Current Status
 
-- **Version**: 0.6.5 (Stable Release)
-- **Release Date**: 2023-11-27
+- **Version**: 1.6.7 (Stable Release)
+- **Release Date**: 2023-12-27
 - **Project Link**: [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn)
 - **Maintainer**: VermeilChan
 
@@ -15,11 +15,11 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 - **Milestone 1: GUI Integration**
   - **Date Achieved**: 2023-10-7
-  - **Description**: Successfully incorporated a user-friendly GUI into the project.
+  - **Description**: Added a GUI into MetalSlugFontReborn.
 
-- **Milestone 2: Enhanced User Interface**
+- **Milestone 2: Enhanced UI**
   - **Date Achieved**: 2023-10-15
-  - **Description**: Modernizing the user interface for improved user-friendliness.
+  - **Description**: Improved the user interface.
 
 - **Milestone 3: Native Support For Linux**
   - **Date Achieved**: 2023-10-16
@@ -27,7 +27,7 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 ---
 
-## Future Milestones (Future) [Version 0.6.X]
+## Future Milestones [Version X.6.X]
 
 - **Milestone 1: Font Size Fixes (No Due Date)**
   - **Description**:  Working on resolving font size issues for Orange 1 & 2.
