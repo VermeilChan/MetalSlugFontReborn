@@ -1,8 +1,10 @@
 import sys
+from pathlib import Path
 
 from main import generate_filename, generate_image, get_font_paths
+from constants import VALID_COLORS_BY_FONT
 
-from constants import VALID_COLORS_BY_FONT, DESKTOP_PATH
+DESKTOP_PATH = Path.home() / 'Desktop'
 
 def display_intro_message():
     print(f"\nNote:\nConverting your text to the Metal Slug font may not work with all fonts.\n")

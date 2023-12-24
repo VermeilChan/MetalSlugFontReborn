@@ -4,11 +4,14 @@ from pathlib import Path
 
 from PIL import Image
 
-from constants import SPACE_WIDTH, DESKTOP_PATH, SPECIAL_CHARACTERS
+from constants import SPECIAL_CHARACTERS
+
+SPACE_WIDTH = 30
+DESKTOP_PATH = Path.home() / 'Desktop'
 
 def generate_filename(_):
-    random_chars = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(15))
-    filename = f"{random_chars}.png"
+    random_characters = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(15))
+    filename = f"{random_characters}.png"
     return filename
 
 def get_font_paths(font, color):
