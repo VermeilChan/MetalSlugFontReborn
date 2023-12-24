@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 
 from flask_sslify import SSLify
 
@@ -30,7 +30,7 @@ def form():
 
         try:
             image_url = image.generate_image()
-            return render_template('index.html', output=image_url.replace('src', ''), state=image.state)
+            return redirect(url_for('result', output=image_url.replace('src', ''), state=image.state))
 
         except CharacterNotFound as error:
             return render_template('index.html', error=f"Error: {error}")
@@ -40,6 +40,12 @@ def form():
 
     else:
         return render_template('index.html', error="POST METHOD NOT AVAILABLE")
+
+@App.route('/result')
+def result():
+    output = request.args.get('output')
+    state = request.args.get('state')
+    return render_template('result.html', output=output, state=state)
 
 if __name__ == "__main__":
     App.run()

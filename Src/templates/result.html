@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends 'head.html' %}
+    {% block head %}
+        <title>Result - MetalSlugFontReborn</title>
+    {% endblock %}
+</head>
+<body>
+    {% block body %}
+    <div class="container">
+        <h1>Result</h1>
+
+        {% if state %}
+            <img id="image" src="{{output}}" alt="Image"/>
+            <button id="download_button">
+                <a href="{{output}}" download="{{output}}">Download</a>
+            </button>
+        {% else %}
+            <p>No result available. Please go back to the <a href="/">home page</a>.</p>
+        {% endif %}
+    </div>
+    {% endblock %}
+</body>
+</html>

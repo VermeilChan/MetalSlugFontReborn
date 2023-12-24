@@ -1,9 +1,4 @@
-@font-face {
-    font-family: 'Roboto';
-    src: url('./font/Roboto-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 body {
     font-family: 'Roboto', sans-serif;
@@ -88,7 +83,6 @@ section:hover {
 
 ::-webkit-scrollbar-thumb {
     background-color: #1f1f1f;
-    border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
