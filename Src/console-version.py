@@ -10,12 +10,12 @@ def display_intro_message():
     print(f"\nNote:\nConverting your text to the Metal Slug font may not work with all fonts.\n")
 
 def get_user_input():
-    return input(f"\nEnter the text you want to generate: ")
+    return input("\nEnter the text you want to generate: ")
 
 def select_font_and_color():
     while True:
         try:
-            user_input = input(f"Choose a font from 1 to 5 (type 'exit' to close): ")
+            user_input = input("Choose a font from 1 to 5 (type 'exit' to close): ")
 
             if user_input.lower() == 'exit':
                 print(f'\nClosing...\n')
@@ -25,7 +25,7 @@ def select_font_and_color():
 
             if 1 <= font <= 5:
                 valid_colors = VALID_COLORS_BY_FONT.get(font, [])
-                print(f"\nAvailable colors: " + " | ".join(valid_colors))
+                print("\nAvailable colors: " + " | ".join(valid_colors))
                 color_input = input("\nChoose a color: ")
 
                 if color_input.lower() == 'exit':
@@ -49,7 +49,7 @@ def ask_to_check_supported_characters():
     check_supported = input("Do you want to check the supported characters? [Y/n]: ").lower()
 
     if check_supported == 'y':
-        with open(f"Documentation/SUPPORTED.txt", "r") as supported_file:
+        with open("Documentation/SUPPORTED.txt", "r") as supported_file:
             content = supported_file.read()
             print(content)
             print(f"Note:")

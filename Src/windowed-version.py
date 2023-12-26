@@ -1,8 +1,7 @@
 import platform
 
-from PyQt6.QtGui import QIcon, QMovie
-from PyQt6.QtCore import QSize
-from PyQt6.QtWidgets import ( 
+from PyQt6.QtGui import QIcon, QPixmap
+from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,
     QHBoxLayout,
@@ -38,13 +37,13 @@ class InfoPopup(QDialog):
         self.setLayout(layout)
 
 class ImageGenerator:
-    ICON_PATH = f"Assets/Icons/Raubtier.ico"
+    ICON_PATH = "Assets/Icons/Raubtier.ico"
 
     @staticmethod
     def generate_and_display_image(text, font, color):
         try:
             if not text.strip():
-                error_message = f"\nInput text is empty. Please enter some text.\n"
+                error_message = "\nInput text is empty. Please enter some text.\n"
                 InfoPopup(f"Error", error_message, ImageGenerator.ICON_PATH).exec()
                 return
 
@@ -72,7 +71,7 @@ class MetalSlugFontReborn(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle(f"MetalSlugFontReborn")
+        self.setWindowTitle("MetalSlugFontReborn")
 
         self.setWindowIcon(QIcon(ImageGenerator.ICON_PATH))
 
@@ -80,19 +79,19 @@ class MetalSlugFontReborn(QMainWindow):
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout(central_widget)
 
-        text_label = QLabel(f"Text to Generate:")
+        text_label = QLabel("Text to Generate:")
         layout.addWidget(text_label)
         self.text_entry = QLineEdit()
         self.text_entry.setMinimumWidth(600)
         layout.addWidget(self.text_entry)
 
-        font_label = QLabel(f"Select Font:")
+        font_label = QLabel("Select Font:")
         layout.addWidget(font_label)
         self.font_combobox = QComboBox()
-        self.font_combobox.addItems([f"1", "2", "3", "4", "5"])
+        self.font_combobox.addItems(["1", "2", "3", "4", "5"])
         layout.addWidget(self.font_combobox)
 
-        color_label = QLabel(f"Select Color:")
+        color_label = QLabel("Select Color:")
         layout.addWidget(color_label)
         self.color_combobox = QComboBox()
         layout.addWidget(self.color_combobox)
@@ -107,9 +106,9 @@ class MetalSlugFontReborn(QMainWindow):
         self.on_font_change()
 
         menubar = self.menuBar()
-        help_menu = menubar.addMenu(f"Help")
+        help_menu = menubar.addMenu("Help")
 
-        about_action = help_menu.addAction(f"About...")
+        about_action = help_menu.addAction("About...")
         about_action.triggered.connect(self.show_about_dialog)
 
     def on_font_change(self):
@@ -130,43 +129,46 @@ class MetalSlugFontReborn(QMainWindow):
 
     def show_about_dialog(self):
         about_dialog = QDialog(self)
-        about_dialog.setWindowTitle(f"About")
+        about_dialog.setWindowTitle("About")
 
         layout = QVBoxLayout()
 
         top_left_layout = QHBoxLayout()
 
         icon_label = QLabel()
-        movie = QMovie(f"Assets/Icons/Raubtier.gif")
-        movie.setScaledSize(QSize(84, 108))
-        icon_label.setMovie(movie)
-        movie.start()
+        pixmap = QPixmap("Assets/Icons/Raubtier.png")
+        icon_label.setPixmap(pixmap)
         top_left_layout.addWidget(icon_label)
 
         metadata_layout = QVBoxLayout()
-        metadata_layout.addWidget(QLabel(f"MetalSlugFontReborn (64-bit)"))
-        metadata_layout.addWidget(QLabel(f"GPL-3.0 License"))
-        
-        github_link_label = QLabel(f'<a href="https://github.com/VermeilChan/MetalSlugFontReborn">GitHub Repository</a>')
+        metadata_layout.addWidget(QLabel("MetalSlugFontReborn (64-bit)"))
+        metadata_layout.addWidget(QLabel("GPL-3.0 License"))
+
+        github_link_label = QLabel('<a href="https://github.com/VermeilChan/MetalSlugFontReborn">GitHub Repository</a>')
         github_link_label.setOpenExternalLinks(True)
         metadata_layout.addWidget(github_link_label)
 
         top_left_layout.addLayout(metadata_layout)
         layout.addLayout(top_left_layout)
 
-        build_info_box = QGroupBox(f"Build Information")
+        build_info_box = QGroupBox("Build Information")
         build_info_layout = QVBoxLayout()
 
-        build_info_layout.addWidget(QLabel(f"Version: 1.x.x (Dev)"))
-        build_info_layout.addWidget(QLabel(f"Pyinstaller: 6.3.0"))
-        build_info_layout.addWidget(QLabel(f"PyQt6: 6.6.1"))
-        build_info_layout.addWidget(QLabel(f"Build date: Dec 27 2023"))
+        build_info_layout.addWidget(QLabel("Version: 1.x.x (Dev)"))
+        build_info_layout.addWidget(QLabel("Pyinstaller: 6.3.0"))
+        build_info_layout.addWidget(QLabel("PyQt6: 6.6.1"))
+        build_info_layout.addWidget(QLabel("Build date: Dec 27 2023"))
 
-        os_info_box = QGroupBox(f"Operating System")
+        os_info_box = QGroupBox("Operating System")
         os_info_layout = QVBoxLayout()
 
-        os_info_layout.addWidget(QLabel(f"OS: {platform.system()}"))
-        os_info_layout.addWidget(QLabel(f"Version: {platform.version()}"))
+        os_name = platform.system()
+        os_version = platform.version()
+        os_release = platform.release()
+        os_architecture = platform.architecture()[0]
+
+        os_info_layout.addWidget(QLabel(f"OS: {os_name} {os_release} ({os_architecture})"))
+        os_info_layout.addWidget(QLabel(f"Version: {os_version}"))
 
         os_info_box.setLayout(os_info_layout)
         layout.addWidget(os_info_box)
@@ -179,7 +181,7 @@ class MetalSlugFontReborn(QMainWindow):
 
 def main():
     app = QApplication([])
-    app.setStyle(f'Fusion')
+    app.setStyle('Fusion')
     window = MetalSlugFontReborn()
     window.show()
     app.exec()
