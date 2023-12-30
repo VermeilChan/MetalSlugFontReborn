@@ -1,5 +1,5 @@
-import string
-import secrets
+from string import ascii_letters, digits
+from secrets import choice
 from pathlib import Path
 
 from PIL import Image
@@ -10,15 +10,13 @@ SPACE_WIDTH = 30
 DESKTOP_PATH = Path.home() / 'Desktop'
 
 def generate_filename(_):
-    random_characters = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(15))
+    random_characters = ''.join(choice(ascii_letters + digits) for _ in range(15))
     filename = f"{random_characters}.png"
     return filename
 
 def get_font_paths(font, color):
     base_path = Path('Assets') / 'Fonts' / f'Font-{font}' / f'Font-{font}-{color}'
     return [base_path / folder for folder in ['Letters', 'Numbers', 'Symbols']]
-
-character_image_cache = {}
 
 def get_character_image_path(character, font_paths):
     CHARACTERS_FOLDER, NUMBERS_FOLDER, SYMBOLS_FOLDER = font_paths
@@ -36,9 +34,6 @@ def get_character_image_path(character, font_paths):
     return character_image_path if character_image_path.is_file() else None
 
 def get_character_image(character, font_paths):
-    if character in character_image_cache:
-        return character_image_cache[character]
-
     if character.isspace():
         return create_character_image(character, font_paths)
 
@@ -47,8 +42,6 @@ def get_character_image(character, font_paths):
         raise FileNotFoundError(f"Image not found for character '{character}'")
 
     image = Image.open(character_image_path).convert("RGBA")
-    character_image_cache[character] = image
-
     return image
 
 def create_character_image(character, _):
@@ -72,7 +65,10 @@ def paste_character_images_to_final_image(text, font_paths, total_width, max_hei
 
     for character in text:
         character_image = get_character_image(character, font_paths)
-        final_image.paste(character_image, (x_position, 0))
+
+        y_position = max_height - character_image.height
+
+        final_image.paste(character_image, (x_position, y_position))
         x_position += character_image.width
 
     return final_image
