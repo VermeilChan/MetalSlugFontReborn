@@ -1,4 +1,4 @@
-import platform
+from platform import system, version, release, architecture
 
 from PyQt6.QtGui import QIcon, QPixmap
 from PyQt6.QtWidgets import (
@@ -16,7 +16,14 @@ from PyQt6.QtWidgets import (
 )
 
 from main import generate_filename, generate_image, get_font_paths
-from constants import VALID_COLORS_BY_FONT
+
+VALID_COLORS_BY_FONT = {
+    1: ["Blue", "Orange-1", "Orange-2"],
+    2: ["Blue", "Orange-1", "Orange-2"],
+    3: ["Blue", "Orange-1"],
+    4: ["Blue", "Orange-1"],
+    5: ["Orange-1"]
+}
 
 class InfoPopup(QDialog):
     def __init__(self, title, message, ICON_PATH):
@@ -44,7 +51,7 @@ class ImageGenerator:
         try:
             if not text.strip():
                 error_message = "\nInput text is empty. Please enter some text.\n"
-                InfoPopup(f"Error", error_message, ImageGenerator.ICON_PATH).exec()
+                InfoPopup("Error", error_message, ImageGenerator.ICON_PATH).exec()
                 return
 
             filename = generate_filename(text)
@@ -54,18 +61,18 @@ class ImageGenerator:
 
             if error_message_generate:
                 error_message = f"Error: {error_message_generate}"
-                InfoPopup(f"Error", error_message, ImageGenerator.ICON_PATH).exec()
+                InfoPopup("Error", error_message, ImageGenerator.ICON_PATH).exec()
             else:
                 success_message = f"Image saved as: \n{img_path}"
-                InfoPopup(f"Success", success_message, ImageGenerator.ICON_PATH).exec()
+                InfoPopup("Success", success_message, ImageGenerator.ICON_PATH).exec()
 
         except FileNotFoundError as e:
-            error_message_generate = f"Font file not found: {e.filename}"
-            InfoPopup(f"Error", error_message_generate, ImageGenerator.ICON_PATH).exec()
+            error_message_generate = str(e)
+            InfoPopup("Error", error_message_generate, ImageGenerator.ICON_PATH).exec()
 
         except Exception as e:
             error_message_generate = f"An error occurred: {e}"
-            InfoPopup(f"Error", error_message_generate, ImageGenerator.ICON_PATH).exec()
+            InfoPopup("Error", error_message_generate, ImageGenerator.ICON_PATH).exec()
 
 class MetalSlugFontReborn(QMainWindow):
     def __init__(self):
@@ -96,7 +103,7 @@ class MetalSlugFontReborn(QMainWindow):
         self.color_combobox = QComboBox()
         layout.addWidget(self.color_combobox)
 
-        generate_button = QPushButton(f"Generate and Save Image", self)
+        generate_button = QPushButton("Generate and Save Image", self)
         generate_button.clicked.connect(self.generate_and_display_image)
         layout.addWidget(generate_button)
 
@@ -108,7 +115,7 @@ class MetalSlugFontReborn(QMainWindow):
         menubar = self.menuBar()
         help_menu = menubar.addMenu("Help")
 
-        about_action = help_menu.addAction("About...")
+        about_action = help_menu.addAction("About")
         about_action.triggered.connect(self.show_about_dialog)
 
     def on_font_change(self):
@@ -162,10 +169,10 @@ class MetalSlugFontReborn(QMainWindow):
         os_info_box = QGroupBox("Operating System")
         os_info_layout = QVBoxLayout()
 
-        os_name = platform.system()
-        os_version = platform.version()
-        os_release = platform.release()
-        os_architecture = platform.architecture()[0]
+        os_name = system()
+        os_version = version()
+        os_release = release()
+        os_architecture = architecture()[0]
 
         os_info_layout.addWidget(QLabel(f"OS: {os_name} {os_release} ({os_architecture})"))
         os_info_layout.addWidget(QLabel(f"Version: {os_version}"))

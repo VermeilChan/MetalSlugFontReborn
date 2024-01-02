@@ -76,6 +76,8 @@ _Additional space required for generating images._
 _GUI: Graphical User Interface_<br>
 _CLI: Command Line Interface_
 
+**Note:** The GUI version of MetalSlugFontReborn requires Windows 11 or 10, while the CLI version is compatible with 8.1 or later.
+
 ## Preview Fonts
 
 See different font examples [EXAMPLE.md](Documentation/EXAMPLE.md).

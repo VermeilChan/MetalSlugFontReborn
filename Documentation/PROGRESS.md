@@ -5,7 +5,7 @@ This document provides an overview of the latest updates, milestones, and upcomi
 ## Current Status
 
 - **Version**: 1.6.7 (Stable Release)
-- **Release Date**: 2023-12-27
+- **Release Date**: 2023-01-XX
 - **Project Link**: [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn)
 - **Maintainer**: VermeilChan
 
@@ -14,7 +14,7 @@ This document provides an overview of the latest updates, milestones, and upcomi
 ## Achieved Milestones
 
 - **Milestone 1: GUI Integration**
-  - **Date Achieved**: 2023-10-7
+  - **Date Achieved**: 2023-10-07
   - **Description**: Added a GUI into MetalSlugFontReborn.
 
 - **Milestone 2: Enhanced UI**
