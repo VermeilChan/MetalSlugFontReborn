@@ -39,11 +39,12 @@ $(document).ready(function () {
     if (navigator.userAgent.indexOf("Firefox") != -1) {
         $("*").css({
             "scrollbar-color": "#1f1f1f #353535",
-            "scrollbar-width": "12px"
+            "scrollbar-width": "18px"
         });
     }
 
-    if (performance.getEntriesByType("navigation")[0].type === "reload") {
+    const isHomePage = window.location.pathname === '/';
+    if (performance.getEntriesByType("navigation")[0].type === "reload" && !isHomePage) {
         window.location.href = "/";
     }
 });
