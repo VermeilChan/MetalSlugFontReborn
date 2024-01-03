@@ -1,14 +1,15 @@
 import os
-import string
-import secrets
-
 from typing import final
+from secrets import choice
+from string import ascii_letters, digits
 from collections import namedtuple, deque
 
 import cv2
 import numpy as np
 
-from constants import SPACE_WIDTH, SPECIAL_CHARACTERS
+from constants import SPECIAL_CHARACTERS
+
+SPACE_WIDTH = 30
 
 def clean_url(url):
     x = deque()
@@ -79,7 +80,7 @@ class ImageGeneration(object):
         return self._character_images_cache[character]
 
     def generate_filename(self):
-        random_filename = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(15))
+        random_filename = ''.join(choice(ascii_letters + digits) for _ in range(15))
         return f"{random_filename}.png"
 
     def generate_image(self):
@@ -107,7 +108,12 @@ class ImageGeneration(object):
 
         try:
             max_height = max(image.shape[0] for image in images)
-            resized_images = [cv2.resize(image, (image.shape[1], max_height)) for image in images]
+            resized_images = []
+
+            for image in images:
+                y_offset = max_height - image.shape[0]
+                padded_image = cv2.copyMakeBorder(image, y_offset, 0, 0, 0, cv2.BORDER_CONSTANT, value=(0, 0, 0, 0))
+                resized_images.append(padded_image)
 
             horizontally = np.hstack(resized_images)
             cv2.imwrite(filename, horizontally)
