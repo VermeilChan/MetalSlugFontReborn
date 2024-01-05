@@ -1,2 +1,4 @@
-Pillow>=10.0.1
-pyinstaller>=6.0.0
+opencv-python>=4.9.0.80
+Flask>=3.0.0
+watchdog>=3.0.0
+Flask-SSLify>=0.1.5

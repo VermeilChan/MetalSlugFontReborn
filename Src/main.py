@@ -1,112 +1,126 @@
-# Import necessary libraries
-import os
-from datetime import datetime
+from typing import final
+from secrets import choice
+from os import path, makedirs
+from string import ascii_letters, digits
+from collections import namedtuple, deque
 
-from PIL import Image, UnidentifiedImageError
+from numpy import zeros, uint8, zeros_like, hstack
+from cv2 import imread, IMREAD_UNCHANGED, imwrite, BORDER_CONSTANT, copyMakeBorder
 
-# Constants
+from constants import SPECIAL_CHARACTERS
+
 SPACE_WIDTH = 30
-MAX_FILENAME_LENGTH = 255
-DESKTOP_PATH = os.path.expanduser("~/Desktop")
-SPECIAL_CHARACTERS = {
-    '!': 'Exclamation', '?': 'Question', "'": 'Apostrophe', '*': 'Asterisk',
-    ')': 'Bracket-Left', '}': 'Bracket-Left-2', ']': 'Bracket-Left-3',
-    '(': 'Bracket-Right', '{': 'Bracket-Right-2', '[': 'Bracket-Right-3',
-    '^': 'Caret', ':': 'Colon', '$': 'Dollar', '=': 'Equals', '>': 'Greater-than',
-    '-': 'Hyphen', '∞': 'Infinity', '<': 'Less-than', '#': 'Number', '%': 'Percent',
-    '.': 'Period', '+': 'Plus', '"': 'Quotation', ';': 'Semicolon', '/': 'Slash',
-    '~': 'Tilde', '_': 'Underscore', '|': 'Vertical-bar', ',': 'Comma', '&': 'Ampersand',
-    '♥': 'Heart', '©': 'Copyright', '⛶': 'Square', 'Ⅰ': 'One', 'Ⅱ': 'Two', 'Ⅲ': 'Three',
-    'Ⅳ': 'Four', 'Ⅴ': 'Five', '◀': 'Left', '▲': 'Up', '▶': 'Right', '▼': 'Down',
-    '★': 'Star', '⋆': 'Mini-Star', '☞': 'Hand', '¥': 'Yen', '♪': 'Musical-Note', '︷': 'Up-Arrow'
-}
 
-# Function to generate a filename based on user input and timestamp
-def generate_filename(user_input):
-    try:
-        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        sanitized_input = '-'.join(filter(str.isalnum, user_input.split()))
-        filename = f"{sanitized_input}-{timestamp}.png"
-        return filename if len(filename) <= MAX_FILENAME_LENGTH else f"{timestamp}.png"
-    except Exception as e:
-        raise RuntimeError(f"Error generating filename: {str(e)}")
+def clean_url(url):
+    x = deque()
+    x.appendleft('/')
+    new_url = url.split('/')[5:]
+    for item in new_url:
+        x.append(f'{item}/')
+    output_url = ""
+    for item in x:
+        output_url += item
+    return output_url
 
-# Function to get paths to font assets based on font and color.
-def get_font_paths(font, color):
-    try:
-        base_path = os.path.join('Assets', 'Fonts', f'Font-{font}', f'Font-{font}-{color}')
-        return (
-            os.path.join(base_path, 'Letters'),
-            os.path.join(base_path, 'Numbers'),
-            os.path.join(base_path, 'Symbols')
-        )
-    except Exception as e:
-        raise RuntimeError(f"Error getting font paths: {str(e)}")
+class CharacterNotFound(Exception):
+    def __init__(self, unsupported_character: str) -> None:
+        super().__init__(f"Unsupported Character '{unsupported_character}', Try another font or ")
+        self.errno = 10
 
-# Function to get the image path for a specific character based on its type
-def get_character_image_path(char, font_paths):
-    CHARACTERS_FOLDER, NUMBERS_FOLDER, SYMBOLS_FOLDER = font_paths
+@final
+class ImageGeneration(object):
+    state = False
 
-    if char.isalpha():
-        folder = 'Lower-Case' if char.islower() else 'Upper-Case'
-        char_img_path = os.path.join(CHARACTERS_FOLDER, folder, f"{char}.png")
-    elif char.isdigit():
-        char_img_path = os.path.join(NUMBERS_FOLDER, f"{char}.png")
-    elif char == ' ':
-        return None
-    else:
-        char_img_path = os.path.join(SYMBOLS_FOLDER, f"{SPECIAL_CHARACTERS.get(char, '')}.png")
+    def __init__(self, user_input: str, font: int, color: str) -> None:
+        self._user_input = user_input
+        self._font = font
+        self._color = color
+        self._font_paths = self._compute_font_paths()
+        self._character_images_cache = {}
 
-    if not os.path.isfile(char_img_path):
-        return None
-    return char_img_path
+    def _compute_font_paths(self):
+        base = path.join('/home/Vermeil/MetalSlugFontReborn/Src/static/assets/fonts', f'font-{self._font}', f'Font-{self._font}-{self._color}')
+        FontPaths = namedtuple('Font', ['Symbols', 'Letters', 'Numbers'])
+        FontPaths.Letters = path.join(base, 'Letters')
+        FontPaths.Numbers = path.join(base, 'Numbers')
+        FontPaths.Symbols = path.join(base, 'Symbols')
+        return FontPaths
 
-# Generates an image from the given text using character images from specified fonts.
-def generate_image(text, filename, font_paths):
-    img_height = None
-    char_images = {}
-    img_path = os.path.join(DESKTOP_PATH, filename)
+    def _get_character_image_path(self, character: str):
+        try:
+            letters_folder = self._font_paths.Letters
+            numbers_folder = self._font_paths.Numbers
+            symbol_folder = self._font_paths.Symbols
 
-    try:
-        total_width = 0
-
-        # Iterate through each character in the input text
-        for char in text:
-            if char == ' ':
-                # Create an empty space character image
-                char_img = Image.new("RGBA", (SPACE_WIDTH, img_height or 1), (0, 0, 0, 0))
-
+            if character.isalpha():
+                folder = 'Lower-Case' if character.islower() else 'Upper-Case'
+                character_image_path = path.join('src', letters_folder, folder, f"{character}.png")
+            elif character.isdigit():
+                character_image_path = path.join('src', numbers_folder, f"{character}.png")
             else:
-                # Get the path to the character image based on the font
-                char_img_path = get_character_image_path(char, font_paths)
-                if not char_img_path:
+                character_image_path = path.join('src', symbol_folder, f"{SPECIAL_CHARACTERS.get(character, '')}.png")
+                if not path.exists(character_image_path):
+                    raise CharacterNotFound(character)
 
-                    raise FileNotFoundError(f"Image not found for character '{char}'")
+            return path.abspath(character_image_path)
 
-                char_img = Image.open(char_img_path).convert("RGBA")
+        except CharacterNotFound as error:
+            raise error
+        except Exception as error:
+            return str(error)
 
-            char_images[char] = char_img
-            img_height = char_img.height if img_height is None else img_height
-            total_width += char_img.width
+    def _load_character_image(self, character: str):
+        if character not in self._character_images_cache:
+            character_image_path = self._get_character_image_path(character)
+            image = imread(character_image_path, IMREAD_UNCHANGED)
+            if image is None:
+                raise FileNotFoundError(f"Image not found for character '{character}'")
+            self._character_images_cache[character] = image
 
-        # Create the final image and paste character images into it
-        final_img = Image.new("RGBA", (total_width, img_height), (0, 0, 0, 0))
-        x = 0
+        return self._character_images_cache[character]
 
-        for char in text:
-            final_img.paste(char_images[char], (x, 0))
-            x += char_images[char].width
+    def generate_filename(self):
+        random_filename = ''.join(choice(ascii_letters + digits) for _ in range(15))
+        return f"{random_filename}.png"
 
-        # Save the final image
-        final_img.save(img_path)
+    def generate_image(self):
+        try:
+            makedirs(path.join('/home/Vermeil/MetalSlugFontReborn/Src/static/Generated-Images'), exist_ok=True)
+        except OSError as e:
+            return str(e)
 
-        return (filename, None)
+        filename = path.join('/home/Vermeil/MetalSlugFontReborn/Src/static/Generated-Images/', self.generate_filename())
+        images = []
 
-    except FileNotFoundError:
-        return (None, f"Error: Image not found for character '{char}'")
-    except UnidentifiedImageError:
-        return (None, "Error: Unable to identify image")
-    except ValueError as e:
-        return (None, f"Error: Invalid value - {str(e)}")
-    except Exception as e:
-        return (None, f"An unexpected error occurred: {str(e)}")
+        zero_image = zeros((1, SPACE_WIDTH, 4), dtype=uint8)
+
+        for character in self._user_input:
+            try:
+                if character.isspace():
+                    images.append(zeros_like(zero_image))
+                    continue
+
+                character_image = self._load_character_image(character)
+                images.append(character_image)
+
+            except (Exception, FileNotFoundError) as error:
+                return str(error)
+
+        try:
+            max_height = max(image.shape[0] for image in images)
+            resized_images = []
+
+            for image in images:
+                y_offset = max_height - image.shape[0]
+                padded_image = copyMakeBorder(image, y_offset, 0, 0, 0, BORDER_CONSTANT, value=(0, 0, 0, 0))
+                resized_images.append(padded_image)
+
+            horizontally = hstack(resized_images)
+            imwrite(filename, horizontally)
+        except Exception as write_error:
+            return str(write_error)
+
+        relative_path = clean_url(filename)
+
+        self.state = True
+        return relative_path
