@@ -1,11 +1,11 @@
-import os
 from typing import final
 from secrets import choice
+from os import path, makedirs
 from string import ascii_letters, digits
 from collections import namedtuple, deque
 
-import cv2
-import numpy as np
+from numpy import zeros, uint8, zeros_like, hstack
+from cv2 import imread, IMREAD_UNCHANGED, imwrite, BORDER_CONSTANT, copyMakeBorder
 
 from constants import SPECIAL_CHARACTERS
 
@@ -39,11 +39,11 @@ class ImageGeneration(object):
         self._character_images_cache = {}
 
     def _compute_font_paths(self):
-        base = os.path.join('/home/Vermeil/MetalSlugFontReborn/Src/static/assets/fonts', f'font-{self._font}', f'Font-{self._font}-{self._color}')
+        base = path.join('/home/Vermeil/MetalSlugFontReborn/Src/static/assets/fonts', f'font-{self._font}', f'Font-{self._font}-{self._color}')
         FontPaths = namedtuple('Font', ['Symbols', 'Letters', 'Numbers'])
-        FontPaths.Symbols = os.path.join(base, 'Symbols')
-        FontPaths.Letters = os.path.join(base, 'Letters')
-        FontPaths.Numbers = os.path.join(base, 'Numbers')
+        FontPaths.Letters = path.join(base, 'Letters')
+        FontPaths.Numbers = path.join(base, 'Numbers')
+        FontPaths.Symbols = path.join(base, 'Symbols')
         return FontPaths
 
     def _get_character_image_path(self, character: str):
@@ -54,15 +54,15 @@ class ImageGeneration(object):
 
             if character.isalpha():
                 folder = 'Lower-Case' if character.islower() else 'Upper-Case'
-                character_img_path = os.path.join('src', letters_folder, folder, f"{character}.png")
+                character_image_path = path.join('src', letters_folder, folder, f"{character}.png")
             elif character.isdigit():
-                character_img_path = os.path.join('src', numbers_folder, f"{character}.png")
+                character_image_path = path.join('src', numbers_folder, f"{character}.png")
             else:
-                character_img_path = os.path.join('src', symbol_folder, f"{SPECIAL_CHARACTERS.get(character, '')}.png")
-                if not os.path.exists(character_img_path):
+                character_image_path = path.join('src', symbol_folder, f"{SPECIAL_CHARACTERS.get(character, '')}.png")
+                if not path.exists(character_image_path):
                     raise CharacterNotFound(character)
 
-            return os.path.abspath(character_img_path)
+            return path.abspath(character_image_path)
 
         except CharacterNotFound as error:
             raise error
@@ -72,7 +72,7 @@ class ImageGeneration(object):
     def _load_character_image(self, character: str):
         if character not in self._character_images_cache:
             character_image_path = self._get_character_image_path(character)
-            image = cv2.imread(character_image_path, cv2.IMREAD_UNCHANGED)
+            image = imread(character_image_path, IMREAD_UNCHANGED)
             if image is None:
                 raise FileNotFoundError(f"Image not found for character '{character}'")
             self._character_images_cache[character] = image
@@ -85,25 +85,25 @@ class ImageGeneration(object):
 
     def generate_image(self):
         try:
-            os.makedirs(os.path.join('/home/Vermeil/MetalSlugFontReborn/Src/static/Generated-Images'), exist_ok=True)
+            makedirs(path.join('/home/Vermeil/MetalSlugFontReborn/Src/static/Generated-Images'), exist_ok=True)
         except OSError as e:
             return str(e)
 
-        filename = os.path.join('/home/Vermeil/MetalSlugFontReborn/Src/static/Generated-Images/', self.generate_filename())
+        filename = path.join('/home/Vermeil/MetalSlugFontReborn/Src/static/Generated-Images/', self.generate_filename())
         images = []
 
-        zero_image = np.zeros((1, SPACE_WIDTH, 4), dtype=np.uint8)
+        zero_image = zeros((1, SPACE_WIDTH, 4), dtype=uint8)
 
         for character in self._user_input:
             try:
                 if character.isspace():
-                    images.append(np.zeros_like(zero_image))
+                    images.append(zeros_like(zero_image))
                     continue
 
                 character_image = self._load_character_image(character)
                 images.append(character_image)
 
-            except (cv2.error, FileNotFoundError) as error:
+            except (Exception, FileNotFoundError) as error:
                 return str(error)
 
         try:
@@ -112,11 +112,11 @@ class ImageGeneration(object):
 
             for image in images:
                 y_offset = max_height - image.shape[0]
-                padded_image = cv2.copyMakeBorder(image, y_offset, 0, 0, 0, cv2.BORDER_CONSTANT, value=(0, 0, 0, 0))
+                padded_image = copyMakeBorder(image, y_offset, 0, 0, 0, BORDER_CONSTANT, value=(0, 0, 0, 0))
                 resized_images.append(padded_image)
 
-            horizontally = np.hstack(resized_images)
-            cv2.imwrite(filename, horizontally)
+            horizontally = hstack(resized_images)
+            imwrite(filename, horizontally)
         except Exception as write_error:
             return str(write_error)
 
