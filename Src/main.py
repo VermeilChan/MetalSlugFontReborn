@@ -1,9 +1,7 @@
-from string import ascii_letters, digits
-from secrets import choice
 from pathlib import Path
-
+from secrets import choice
+from string import ascii_letters, digits
 from PIL import Image
-
 from constants import SPECIAL_CHARACTERS
 
 SPACE_WIDTH = 30
@@ -11,8 +9,7 @@ DESKTOP_PATH = Path.home() / 'Desktop'
 
 def generate_filename(_):
     random_characters = ''.join(choice(ascii_letters + digits) for _ in range(15))
-    filename = f"{random_characters}.png"
-    return filename
+    return f"{random_characters}.png"
 
 def get_font_paths(font, color):
     base_path = Path('Assets') / 'Fonts' / f'Font-{font}' / f'Font-{font}-{color}'
@@ -33,12 +30,12 @@ def get_character_image_path(character, font_paths):
 
     return character_image_path if character_image_path.is_file() else None
 
-def get_character_image(character, font_paths):
+def get_or_create_character_image(character, font_paths):
     if character.isspace():
         return create_character_image(character, font_paths)
 
     character_image_path = get_character_image_path(character, font_paths)
-    if not character_image_path or not character_image_path.is_file():
+    if character_image_path is None or not character_image_path.is_file():
         raise FileNotFoundError(f"Image not found for character '{character}'")
 
     image = Image.open(character_image_path).convert("RGBA")
@@ -53,7 +50,7 @@ def calculate_total_width_and_max_height(text, font_paths):
     max_height = 0
 
     for character in text:
-        character_image = get_character_image(character, font_paths)
+        character_image = get_or_create_character_image(character, font_paths)
         max_height = max(max_height, character_image.height)
         total_width += character_image.width
 
@@ -64,7 +61,7 @@ def paste_character_images_to_final_image(text, font_paths, total_width, max_hei
     final_image = Image.new("RGBA", (total_width, max_height), (0, 0, 0, 0))
 
     for character in text:
-        character_image = get_character_image(character, font_paths)
+        character_image = get_or_create_character_image(character, font_paths)
 
         y_position = max_height - character_image.height
 
