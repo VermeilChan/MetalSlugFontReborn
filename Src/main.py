@@ -1,25 +1,17 @@
 from typing import final
+from pathlib import Path
 from secrets import choice
 from os import path, makedirs
+from collections import namedtuple
 from string import ascii_letters, digits
-from collections import namedtuple, deque
-
-from numpy import zeros, uint8, zeros_like, hstack
-from cv2 import imread, IMREAD_UNCHANGED, imwrite, BORDER_CONSTANT, copyMakeBorder
-
+from PIL import Image
 from constants import SPECIAL_CHARACTERS
 
 SPACE_WIDTH = 30
 
 def clean_url(url):
-    x = deque()
-    x.appendleft('/')
     new_url = url.split('/')[5:]
-    for item in new_url:
-        x.append(f'{item}/')
-    output_url = ""
-    for item in x:
-        output_url += item
+    output_url = '/'.join(new_url) + '/'
     return output_url
 
 class CharacterNotFound(Exception):
@@ -62,7 +54,7 @@ class ImageGeneration(object):
                 if not path.exists(character_image_path):
                     raise CharacterNotFound(character)
 
-            return path.abspath(character_image_path)
+            return Path(character_image_path)
 
         except CharacterNotFound as error:
             raise error
@@ -72,7 +64,7 @@ class ImageGeneration(object):
     def _load_character_image(self, character: str):
         if character not in self._character_images_cache:
             character_image_path = self._get_character_image_path(character)
-            image = imread(character_image_path, IMREAD_UNCHANGED)
+            image = Image.open(str(character_image_path)).convert("RGBA")
             if image is None:
                 raise FileNotFoundError(f"Image not found for character '{character}'")
             self._character_images_cache[character] = image
@@ -90,33 +82,11 @@ class ImageGeneration(object):
             return str(e)
 
         filename = path.join('/home/Vermeil/MetalSlugFontReborn/Src/static/Generated-Images/', self.generate_filename())
-        images = []
-
-        zero_image = zeros((1, SPACE_WIDTH, 4), dtype=uint8)
-
-        for character in self._user_input:
-            try:
-                if character.isspace():
-                    images.append(zeros_like(zero_image))
-                    continue
-
-                character_image = self._load_character_image(character)
-                images.append(character_image)
-
-            except (Exception, FileNotFoundError) as error:
-                return str(error)
+        total_width, max_height = self.calculate_total_width_and_max_height()
+        final_image = self.paste_character_images_to_final_image(total_width, max_height)
 
         try:
-            max_height = max(image.shape[0] for image in images)
-            resized_images = []
-
-            for image in images:
-                y_offset = max_height - image.shape[0]
-                padded_image = copyMakeBorder(image, y_offset, 0, 0, 0, BORDER_CONSTANT, value=(0, 0, 0, 0))
-                resized_images.append(padded_image)
-
-            horizontally = hstack(resized_images)
-            imwrite(filename, horizontally)
+            final_image.save(filename)
         except Exception as write_error:
             return str(write_error)
 
@@ -124,3 +94,43 @@ class ImageGeneration(object):
 
         self.state = True
         return relative_path
+
+    def get_or_create_character_image(self, character):
+        if character.isspace():
+            return self.create_character_image(character)
+
+        character_image_path = self._get_character_image_path(character)
+        if character_image_path is None or not character_image_path.is_file():
+            raise FileNotFoundError(f"Image not found for character '{character}'")
+
+        image = Image.open(str(character_image_path)).convert("RGBA")
+        return image
+
+    def create_character_image(self, character):
+        if character.isspace():
+            return Image.new("RGBA", (SPACE_WIDTH, 1), (0, 0, 0, 0))
+
+    def calculate_total_width_and_max_height(self):
+        total_width = 0
+        max_height = 0
+
+        for character in self._user_input:
+            character_image = self.get_or_create_character_image(character)
+            max_height = max(max_height, character_image.height)
+            total_width += character_image.width
+
+        return total_width, max_height
+
+    def paste_character_images_to_final_image(self, total_width, max_height):
+        x_position = 0
+        final_image = Image.new("RGBA", (total_width, max_height), (0, 0, 0, 0))
+
+        for character in self._user_input:
+            character_image = self.get_or_create_character_image(character)
+
+            y_position = max_height - character_image.height
+
+            final_image.paste(character_image, (x_position, y_position))
+            x_position += character_image.width
+
+        return final_image
