@@ -36,7 +36,7 @@ def get_or_create_character_image(character, font_paths):
 
     character_image_path = get_character_image_path(character, font_paths)
     if character_image_path is None or not character_image_path.is_file():
-        raise FileNotFoundError(f"Image not found for character '{character}'")
+        raise FileNotFoundError(f"Unsupported character '{character}'")
 
     image = Image.open(character_image_path).convert("RGBA")
     return image
@@ -62,9 +62,9 @@ def paste_character_images_to_final_image(text, font_paths, total_width, max_hei
 
     for character in text:
         character_image = get_or_create_character_image(character, font_paths)
-
         y_position = max_height - character_image.height
 
+        final_image = Image.alpha_composite(final_image, Image.new("RGBA", final_image.size, (0, 0, 0, 0)))
         final_image.paste(character_image, (x_position, y_position))
         x_position += character_image.width
 

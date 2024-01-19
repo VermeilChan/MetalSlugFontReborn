@@ -66,12 +66,8 @@ class ImageGenerator:
                 success_message = f"Image saved as: \n{img_path}"
                 InfoPopup("Success", success_message, ImageGenerator.ICON_PATH).exec()
 
-        except FileNotFoundError as e:
+        except (FileNotFoundError, Exception) as e:
             error_message_generate = str(e)
-            InfoPopup("Error", error_message_generate, ImageGenerator.ICON_PATH).exec()
-
-        except Exception as e:
-            error_message_generate = f"An error occurred: {e}"
             InfoPopup("Error", error_message_generate, ImageGenerator.ICON_PATH).exec()
 
 class MetalSlugFontReborn(QMainWindow):
@@ -95,7 +91,7 @@ class MetalSlugFontReborn(QMainWindow):
         font_label = QLabel("Select Font:")
         layout.addWidget(font_label)
         self.font_combobox = QComboBox()
-        self.font_combobox.addItems(["1", "2", "3", "4", "5"])
+        self.font_combobox.addItems(map(str, range(1, 6)))
         layout.addWidget(self.font_combobox)
 
         color_label = QLabel("Select Color:")
