@@ -91,7 +91,7 @@ class MetalSlugFontReborn(QMainWindow):
         font_label = QLabel("Select Font:")
         layout.addWidget(font_label)
         self.font_combobox = QComboBox()
-        self.font_combobox.addItems(map(str, range(1, 6)))
+        self.font_combobox.addItems(map(str, sorted(VALID_COLORS_BY_FONT.keys())))
         layout.addWidget(self.font_combobox)
 
         color_label = QLabel("Select Color:")
