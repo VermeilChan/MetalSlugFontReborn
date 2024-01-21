@@ -3,7 +3,7 @@
 1. **Download MetalSlugFontReborn:**
    - Download the latest stable release from [here](https://github.com/VermeilChan/MetalSlugFontReborn/releases).
 
-   ![Download MetalSlugFontReborn](Markdown/Guide/Download-Program.svg)
+   ![Download MetalSlugFontReborn](Markdown/Guide/Download-Program.png)
 
 2. **Extract the Archive:**
    - Extract `MetalSlugFontReborn-X.X.X-x64-GNU-Linux.7z`.
