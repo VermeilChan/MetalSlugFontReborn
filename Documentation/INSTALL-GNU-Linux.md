@@ -34,7 +34,7 @@
 3. **Select a Font:**
    - Upon opening MetalSlugFontReborn, choose your desired font and color, you can preview them in [EXAMPLE.md](Documentation/EXAMPLE.md).
 
-   ![MetalSlugFontReborn](Markdown/Guide/GNU-Linux/MetalSlugFontReborn.svg)
+   ![MetalSlugFontReborn](Markdown/Guide/GNU-Linux/MetalSlugFontReborn.png)
 
 4. **Input Your Text:**
    - Enter the text you want to convert to the metal slug font.
