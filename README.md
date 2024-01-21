@@ -62,7 +62,7 @@ Before installing MetalSlugFontReborn, ensure that your system meets the followi
 | **Operating System**    | **Versions**                                                                 |
 |-----------------------  |------------------------------------------------------------------------------|
 | **Windows**             | 11, 10, 8.1                                                                  |
-| **GNU/Linux**           | Debian 12, Ubuntu 22.04.3, Fedora 39, Arch Linux, OpenSUSE Tumbleweed    |
+| **GNU/Linux**           | Debian 12, Ubuntu 22.04.3, Fedora 39, Arch Linux, OpenSUSE                   |
 | **MacOS**               | Currently not supported.                                                     |
 
 
@@ -88,13 +88,10 @@ To install and use MetalSlugFontReborn, refer to the documentation in [SELECT.md
 
 ## How to Contribute
 
-1. Fork the Repository
-2. Create your Branch
-3. Commit your Changes
-4. Push to the Branch
-5. Open a Pull Request
+If you find issues or have ideas for improvements, please:
 
-Your feedback and help are crucial for improving this project.
+- [Report an issue](https://github.com/VermeilChan/MetalSlugFontReborn/issues)
+- [Submit a pull request](https://github.com/VermeilChan/MetalSlugFontReborn/pulls)
 
 ## License
 
