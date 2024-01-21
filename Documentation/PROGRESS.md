@@ -23,7 +23,7 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 - **Milestone 3: Native Support For Linux**
   - **Date Achieved**: 2023-10-16
-  - **Description**: Added native support for Linux distributions including Debian, Ubuntu, Arch, Fedora, and OpenSUSE Tumbleweed.
+  - **Description**: Added native support for Linux distributions including Debian, Ubuntu, Arch, Fedora, and OpenSUSE.
 
 - **Milestone 4: Font Size Fixes**
   - **Date Achieved**: 2023-01-21
