@@ -25,12 +25,10 @@ This document provides an overview of the latest updates, milestones, and upcomi
   - **Date Achieved**: 2023-10-16
   - **Description**: Added native support for Linux distributions including Debian, Ubuntu, Arch, Fedora, and OpenSUSE Tumbleweed.
 
----
+- **Milestone 4: Font Size Fixes**
+  - **Date Achieved**: 2023-01-21
+  - **Description**:  Fixed font size issues for Orange 1 & 2.
 
-## Future Milestones [Version X.6.X]
-
-- **Milestone 1: Font Size Fixes (No Due Date)**
-  - **Description**:  Working on resolving font size issues for Orange 1 & 2.
-
-- **Milestone 2: Improved Symbol Support (No due Date)**
-  - **Description**: Expanding symbol support to cover a wider range of characters.
+- **Milestone 5: Improved Symbol Support**
+  - **Date Achieved**: 2023-01-21
+  - **Description**: Expanded symbol support to cover a wider range of characters.
