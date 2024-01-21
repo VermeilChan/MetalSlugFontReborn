@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-
 from flask_sslify import SSLify
-
 from main import ImageGeneration, CharacterNotFound
 
 App = Flask(__name__)
@@ -19,17 +17,17 @@ def supported():
 def examples():
     return render_template('examples.html')
 
-@App.route('/', methods=['POST', 'GET', 'PUT', 'DELETE'])
+@App.route('/', methods=['POST'])
 def form():
     if request.method == "POST":
-        x = request.form['text']
-        y = int(request.form['font'])
-        z = request.form['color']
-
-        image = ImageGeneration(x, y, z)
-
         try:
+            text = request.form['text']
+            font = int(request.form['font'])
+            color = request.form['color']
+
+            image = ImageGeneration(text, font, color)
             image_url = image.generate_image()
+
             return redirect(url_for('result', output=image_url.replace('src', ''), state=image.state))
 
         except CharacterNotFound as error:
@@ -38,8 +36,7 @@ def form():
         except Exception as error:
             return render_template('index.html', error=f"Unexpected error: {error}")
 
-    else:
-        return render_template('index.html', error="POST METHOD NOT AVAILABLE")
+    return render_template('index.html', error="POST METHOD NOT AVAILABLE")
 
 @App.route('/result')
 def result():
