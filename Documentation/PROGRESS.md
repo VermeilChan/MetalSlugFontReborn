@@ -5,7 +5,7 @@ This document provides an overview of the latest updates, milestones, and upcomi
 ## Current Status
 
 - **Version**: 1.6.7 (Stable Release)
-- **Release Date**: 2023-01-XX
+- **Release Date**: 2024-01-22
 - **Project Link**: [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn)
 - **Maintainer**: VermeilChan
 
@@ -26,9 +26,9 @@ This document provides an overview of the latest updates, milestones, and upcomi
   - **Description**: Added native support for Linux distributions including Debian, Ubuntu, Arch, Fedora, and OpenSUSE.
 
 - **Milestone 4: Font Size Fixes**
-  - **Date Achieved**: 2023-01-21
+  - **Date Achieved**: 2024-01-21
   - **Description**:  Fixed font size issues for Orange 1 & 2.
 
 - **Milestone 5: Improved Symbol Support**
-  - **Date Achieved**: 2023-01-21
+  - **Date Achieved**: 2024-01-21
   - **Description**: Expanded symbol support to cover a wider range of characters.
