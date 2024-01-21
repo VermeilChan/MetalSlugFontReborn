@@ -20,15 +20,15 @@ This guide lists the characters and colors supported by MetalSlugFontReborn acro
 
 - **Letters:** Lowercase and Uppercase
 - **Numbers:** 0 to 9
-- **Symbols:** ' {} () : , = ! > - < . + ? " ; / _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ⋆ ★ ☞
+- **Symbols:** ' {} () : , = ! > - < . + ? " ; / _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶
 - **Colors:** Blue, Orange 1
 
 ## Font 4 Support
 
 - **Letters:** Lowercase and Uppercase
 - **Numbers:** 0 to 9
-- **Symbols:** ' * {} () ^ : $ = ! > - < # % . + & ? " ; / ~ _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ⋆ ★ ☞
-- **Colors:** Blue, Orange 1
+- **Symbols:** ' * {} () ^ : $ = ! > - < # % . + & ? " ; / ~ _ ¥ ⛶ © ♥ ▲ ▼ ◀ ▶
+- **Colors:** Blue, Orange 1, Yellow
 
 ## Font 5 Support
 
