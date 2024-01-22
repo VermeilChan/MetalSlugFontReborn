@@ -15,6 +15,8 @@ def get_font_paths(font, color):
     base_path = Path('Assets') / 'Fonts' / f'Font-{font}' / f'Font-{font}-{color}'
     return [base_path / folder for folder in ['Letters', 'Numbers', 'Symbols']]
 
+character_image_cache = {}
+
 def get_character_image_path(character, font_paths):
     CHARACTERS_FOLDER, NUMBERS_FOLDER, SYMBOLS_FOLDER = font_paths
 
@@ -43,7 +45,7 @@ def get_or_create_character_image(character, font_paths):
 
 def create_character_image(character, _):
     if character.isspace():
-        return Image.new("RGBA", (SPACE_WIDTH, 1), (0, 0, 0, 0))
+        return create_character_image(character, font_paths)
 
 def calculate_total_width_and_max_height(text, font_paths):
     total_width = 0
@@ -57,7 +59,9 @@ def calculate_total_width_and_max_height(text, font_paths):
     return total_width, max_height
 
 def paste_character_images_to_final_image(text, font_paths, total_width, max_height):
+def paste_character_images_to_final_image(text, font_paths, total_width, max_height):
     x_position = 0
+    final_image = Image.new("RGBA", (total_width, max_height), (0, 0, 0, 0))
     final_image = Image.new("RGBA", (total_width, max_height), (0, 0, 0, 0))
 
     for character in text:
@@ -72,6 +76,9 @@ def paste_character_images_to_final_image(text, font_paths, total_width, max_hei
 
 def generate_image(text, filename, font_paths):
     total_width, max_height = calculate_total_width_and_max_height(text, font_paths)
+    final_image = paste_character_images_to_final_image(text, font_paths, total_width, max_height)
+    
+    image_path = Path(DESKTOP_PATH) / filename
     final_image = paste_character_images_to_final_image(text, font_paths, total_width, max_height)
     
     image_path = Path(DESKTOP_PATH) / filename

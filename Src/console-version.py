@@ -14,16 +14,18 @@ VALID_COLORS_BY_FONT = {
 
 def display_intro_message():
     print(f"\nNote:\nConverting your text to the Metal Slug font may not work with all fonts.\n")
+    print(f"\nNote:\nConverting your text to the Metal Slug font may not work with all fonts.\n")
 
 def get_user_input():
-    return input("\nEnter the text you want to generate: ")
+    return input(f"\nEnter the text you want to generate: ")
 
 def select_font_and_color():
     while True:
         try:
-            user_input = input("Choose a font from 1 to 5 (type 'exit' to close): ")
+            user_input = input(f"Choose a font from 1 to 5 (type 'exit' to close): ")
 
             if user_input.lower() == 'exit':
+                print(f'\nClosing...\n')
                 print(f'\nClosing...\n')
                 sys.exit(0)
 
@@ -31,10 +33,11 @@ def select_font_and_color():
 
             if 1 <= font <= 5:
                 valid_colors = VALID_COLORS_BY_FONT.get(font, [])
-                print("\nAvailable colors: " + " | ".join(valid_colors))
+                print(f"\nAvailable colors: " + " | ".join(valid_colors))
                 color_input = input("\nChoose a color: ")
 
                 if color_input.lower() == 'exit':
+                    print(f'\nClosing...\n')
                     print(f'\nClosing...\n')
                     sys.exit(0)
                 elif color_input.title() in valid_colors:
@@ -42,12 +45,16 @@ def select_font_and_color():
                     return font, color_input
                 else:
                     print(f"\nInvalid color. Please choose a valid color.\n")
+                    print(f"\nInvalid color. Please choose a valid color.\n")
             else:
+                print(f"\nInvalid input. Please choose a font between 1 and 5.\n")
                 print(f"\nInvalid input. Please choose a font between 1 and 5.\n")
 
         except ValueError:
             print(f"\nInvalid input. Please enter a valid number.\n")
+            print(f"\nInvalid input. Please enter a valid number.\n")
         except KeyboardInterrupt:
+            print(f'\nClosing...\n')
             print(f'\nClosing...\n')
             sys.exit(0)
 
@@ -70,9 +77,11 @@ def ask_to_check_supported_characters():
 def generate_and_display_image(text, font, color):
     if text.lower() == 'exit':
         print(f'\nClosing...\n')
+        print(f'\nClosing...\n')
         sys.exit(0)
 
     if not text.strip():
+        print(f"Input text is empty. Please enter some text.")
         print(f"Input text is empty. Please enter some text.")
         return
 
@@ -86,12 +95,14 @@ def generate_and_display_image(text, font, color):
         else:
             print(f"\nImage saved as: {filename}")
             print(f"\nYou can find the image on your desktop: \n{DESKTOP_PATH / img_path}")
+            print(f"\nYou can find the image on your desktop: \n{DESKTOP_PATH / img_path}")
 
     except Exception as e:
         print(f"Error: {e}")
 
 def main():
     display_intro_message()
+    ask_to_check_supported_characters()
     ask_to_check_supported_characters()
 
     font, color = select_font_and_color()
@@ -101,6 +112,7 @@ def main():
             text = get_user_input()
             generate_and_display_image(text, font, color)
     except KeyboardInterrupt:
+        print(f'\nClosing...\n')
         print(f'\nClosing...\n')
         sys.exit(0)
 
