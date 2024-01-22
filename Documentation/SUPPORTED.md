@@ -7,7 +7,6 @@ This guide lists the characters and colors supported by MetalSlugFontReborn acro
 - **Letters:** Lowercase and Uppercase
 - **Numbers:** 0 to 9
 - **Symbols:** , * {} () ^ : $ = ! > - ∞ < # % . + & ? " ; / ~ _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ⋆ ★ ☞
-- **Idk:** ȧ ä ā á à â ã í ü ū ú ė ë é ê ö ō ó ô õ
 - **Colors:** Blue, Orange 1 and Orange 2
 
 ## Font 2 Support
@@ -15,7 +14,6 @@ This guide lists the characters and colors supported by MetalSlugFontReborn acro
 - **Letters:** Lowercase and Uppercase
 - **Numbers:** 0 to 9
 - **Symbols:** , = ︷ ! - . + & ? / ♪ Ⅰ Ⅱ Ⅲ Ⅳ Ⅴ
-- **Idk:** ȧ ä ā ė ë ē ö ü ū ů
 - **Colors:** Blue, Orange 1 and Orange 2
 
 ## Font 3 Support
