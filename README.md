@@ -53,7 +53,7 @@ If you have a GitHub account and have found this repository helpful, please cons
 - Supports uppercase and lowercase alphabets (A-Z, a-z), numbers (0-9), symbols, and colors.
 - Easy-to-use user interface with both GUI and command line support.
 
-For additional details, please refer to [SUPPORTED.md](Documentation/SUPPORTED.md) and [COMPATIBILITY.md](Documentation/COMPATIBILITY.md).
+For additional details, please refer to [SUPPORTED.md](Documentation/SUPPORTED.md).
 
 ## Requirements
 
@@ -62,7 +62,7 @@ Before installing MetalSlugFontReborn, ensure that your system meets the followi
 | **Operating System**    | **Versions**                                                                 |
 |-----------------------  |------------------------------------------------------------------------------|
 | **Windows**             | 11, 10, 8.1                                                                  |
-| **GNU/Linux**           | Debian 12, Ubuntu 22.04.3, Fedora 39, Arch Linux, OpenSUSE                   |
+| **GNU/Linux**           | Debian 12, Ubuntu 22.04.3, Fedora 39/38, Arch Linux, OpenSUSE                   |
 | **MacOS**               | Currently not supported.                                                     |
 
 
