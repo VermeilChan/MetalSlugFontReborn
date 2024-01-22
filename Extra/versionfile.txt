@@ -7,8 +7,8 @@ VSVersionInfo(
   ffi=FixedFileInfo(
     # filevers and prodvers should be always a tuple with four items: (1, 2, 3, 4)
     # Set not needed items to zero 0. Must always contain 4 elements.
-    filevers=(0,5,1,0),
-    prodvers=(0,5,1,0),
+    filevers=(1, 6, 7, 0),
+    prodvers=(1, 6, 7, 0),
     # Contains a bitmask that specifies the valid bits 'flags'r
     mask=0x3f,
     # Contains a bitmask that specifies the Boolean attributes of the file.
@@ -30,14 +30,14 @@ VSVersionInfo(
       [
       StringTable(
         u'040904B0',
-        [StringStruct(u'CompanyName', u'Vermeil'),
-        StringStruct(u'FileDescription', u'MSFONT'),
-        StringStruct(u'FileVersion', u'0.5.1.0'),
-        StringStruct(u'InternalName', u'MSFONT'),
-        StringStruct(u'LegalCopyright', u'Apache License 2.0.'),
-        StringStruct(u'OriginalFilename', u'MSFONT.exe'),
-        StringStruct(u'ProductName', u'MSFONT'),
-        StringStruct(u'ProductVersion', u'0.5.1.0')])
+        [StringStruct(u'CompanyName', u'VermeilChan'),
+        StringStruct(u'FileDescription', u'MetalSlugFontReborn'),
+        StringStruct(u'FileVersion', u'1.6.7.0'),
+        StringStruct(u'InternalName', u'MetalSlugFontReborn'),
+        StringStruct(u'LegalCopyright', u'GNU General Public License v3.0.'),
+        StringStruct(u'OriginalFilename', u'MetalSlugFontReborn.exe'),
+        StringStruct(u'ProductName', u'MetalSlugFontReborn'),
+        StringStruct(u'ProductVersion', u'1.6.7.0')])
       ]), 
     VarFileInfo([VarStruct(u'Translation', [0, 1200, 1033, 1252])])
   ]

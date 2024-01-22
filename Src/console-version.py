@@ -1,104 +1,95 @@
-# Import necessary libraries
-import os
 import sys
-
-# Prevent the generation of .pyc (Python bytecode) files
-sys.dont_write_bytecode = True
 
 from main import generate_filename, generate_image, get_font_paths
 
-# Define valid color options for each font
 VALID_COLORS_BY_FONT = {
     1: ["Blue", "Orange-1", "Orange-2"],
     2: ["Blue", "Orange-1", "Orange-2"],
     3: ["Blue", "Orange-1"],
-    4: ["Blue", "Orange-1"],
+    4: ["Blue", "Orange-1", "Yellow"],
     5: ["Orange-1"]
 }
 
-# Define a constant for the closing message
-CLOSING_MESSAGE = "Closing..."
-
-# Function to display an introductory message
 def display_intro_message():
-    print("Note: Metal Slug Font style conversion may not be compatible with all fonts.")
-    print("Refer to the SUPPORTED.md file for details.")
+    print("\nNote:\nConverting your text to the Metal Slug font may not work with all fonts.\n")
 
-# Function to get user input for text to be converted
 def get_user_input():
-    return input("Enter the text you want to generate (type 'exit' to close): ")
+    return input("\nEnter the text you want to generate: ")
 
-# Function to allow the user to select a font and color
 def select_font_and_color():
     while True:
         try:
-            # Prompt the user to choose a font or exit
-            user_input = input("Choose a font from 1 to 5 (Refer to EXAMPLE.md for Font Preview) or type 'exit' to close: ")
+            user_input = input("Choose a font from 1 to 5 (type 'exit' to close): ")
 
             if user_input.lower() == 'exit':
-                print(CLOSING_MESSAGE)
+                print('\nClosing...\n')
                 sys.exit(0)
 
             font = int(user_input)
 
-            # Check if the chosen font is valid
-            if font in VALID_COLORS_BY_FONT:
-                valid_colors = VALID_COLORS_BY_FONT[font]
-                print("Available colors: " + " | ".join(valid_colors))
-                color_input = input("Enter the color you want to use or type 'exit' to close: ")
+            if 1 <= font <= 5:
+                valid_colors = VALID_COLORS_BY_FONT.get(font, [])
+                print("\nAvailable colors: " + " | ".join(valid_colors))
+                color_input = input("\nChoose a color: ")
 
                 if color_input.lower() == 'exit':
-                    print(CLOSING_MESSAGE)
+                    print('\nClosing...\n')
                     sys.exit(0)
                 elif color_input.title() in valid_colors:
                     color_input = color_input.title()
                     return font, color_input
                 else:
-                    print("Invalid color. Please choose a valid color.")
-
+                    print("\nInvalid color. Please choose a valid color.\n")
             else:
-                print("Invalid input. Please choose a font between 1 and 5.")
+                print("\nInvalid input. Please choose a font between 1 and 5.\n")
 
         except ValueError:
-            print("Invalid input. Please enter a valid number.")
-
-# Function to generate and display an image based on user input
-def generate_and_display_image(text, font, color):
-    try:
-        if text.lower() == 'exit':
-            print(CLOSING_MESSAGE)
+            print("\nInvalid input. Please enter a valid number.\n")
+        except KeyboardInterrupt:
+            print('\nClosing...\n')
             sys.exit(0)
 
-        # Check for empty input
-        if not text.strip():
-            print("Input text is empty. Please enter some text.")
-            return
+def ask_to_check_supported_characters():
+    check_supported = input("Do you want to check the supported characters? [Y/n]: ").lower()
 
+    if check_supported == 'y':
+        with open("Documentation/SUPPORTED.txt", "r") as supported_file:
+            content = supported_file.read()
+            print(content)
+            print("Note:")
+            print("Some characters may not load due to font limitations or terminal compatibility.")
+            print("You can open SUPPORTED.txt if it doesn't work properly\n")
+    elif check_supported == 'n':
+        print("\nYou can check them later if you want in SUPPORTED.txt\n")
+        pass
+    else:
+        print("\nInvalid input.\n")
+
+def generate_and_display_image(text, font, color):
+    if text.lower() == 'exit':
+        print('\nClosing...\n')
+        sys.exit(0)
+
+    if not text.strip():
+        print("Input text is empty. Please enter some text.")
+        return
+
+    try:
         filename = generate_filename(text)
-
         font_paths = get_font_paths(font, color)
-
-        img_path, error_message_generate = generate_image(text, filename, font_paths)
+        image_path, error_message_generate = generate_image(text, filename, font_paths)
 
         if error_message_generate:
             print(f"Error: {error_message_generate}")
         else:
-            print(f"Image successfully generated and saved as: {img_path}")
-            print(f"You can find the image on your desktop: {os.path.abspath(os.path.join(os.path.expanduser('~'), 'Desktop', img_path))}")
+            print(f"\nYou can find the image on your desktop: \n{image_path}")
 
-    except KeyboardInterrupt:
-        print(CLOSING_MESSAGE)
-        sys.exit(0)
-    except FileNotFoundError as e:
-        error_message_generate = f"Font file not found: {e.filename}"
-        print(error_message_generate)
     except Exception as e:
-        error_message_generate = f"An error occurred: {e}"
-        print(error_message_generate)
+        print(f"Error: {e}")
 
-# The main function of the program
 def main():
     display_intro_message()
+    ask_to_check_supported_characters()
 
     font, color = select_font_and_color()
 
@@ -107,12 +98,8 @@ def main():
             text = get_user_input()
             generate_and_display_image(text, font, color)
     except KeyboardInterrupt:
-        print(CLOSING_MESSAGE)
+        print('\nClosing...\n')
         sys.exit(0)
-    except Exception as e:
-        error_message_main_inner = f"An unexpected error occurred: {e}"
-        print(error_message_main_inner)
 
-# Entry point of the script
 if __name__ == "__main__":
     main()

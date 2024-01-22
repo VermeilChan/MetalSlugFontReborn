@@ -1,112 +1,80 @@
-# Import necessary libraries
-import os
-from datetime import datetime
+from pathlib import Path
+from secrets import choice
+from string import ascii_letters, digits
+from PIL import Image
+from constants import SPECIAL_CHARACTERS
 
-from PIL import Image, UnidentifiedImageError
-
-# Constants
 SPACE_WIDTH = 30
-MAX_FILENAME_LENGTH = 255
-DESKTOP_PATH = os.path.expanduser("~/Desktop")
-SPECIAL_CHARACTERS = {
-    '!': 'Exclamation', '?': 'Question', "'": 'Apostrophe', '*': 'Asterisk',
-    ')': 'Bracket-Left', '}': 'Bracket-Left-2', ']': 'Bracket-Left-3',
-    '(': 'Bracket-Right', '{': 'Bracket-Right-2', '[': 'Bracket-Right-3',
-    '^': 'Caret', ':': 'Colon', '$': 'Dollar', '=': 'Equals', '>': 'Greater-than',
-    '-': 'Hyphen', '∞': 'Infinity', '<': 'Less-than', '#': 'Number', '%': 'Percent',
-    '.': 'Period', '+': 'Plus', '"': 'Quotation', ';': 'Semicolon', '/': 'Slash',
-    '~': 'Tilde', '_': 'Underscore', '|': 'Vertical-bar', ',': 'Comma', '&': 'Ampersand',
-    '♥': 'Heart', '©': 'Copyright', '⛶': 'Square', 'Ⅰ': 'One', 'Ⅱ': 'Two', 'Ⅲ': 'Three',
-    'Ⅳ': 'Four', 'Ⅴ': 'Five', '◀': 'Left', '▲': 'Up', '▶': 'Right', '▼': 'Down',
-    '★': 'Star', '⋆': 'Mini-Star', '☞': 'Hand', '¥': 'Yen', '♪': 'Musical-Note', '︷': 'Up-Arrow'
-}
+DESKTOP_PATH = Path.home() / 'Desktop'
 
-# Function to generate a filename based on user input and timestamp
-def generate_filename(user_input):
-    try:
-        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        sanitized_input = '-'.join(filter(str.isalnum, user_input.split()))
-        filename = f"{sanitized_input}-{timestamp}.png"
-        return filename if len(filename) <= MAX_FILENAME_LENGTH else f"{timestamp}.png"
-    except Exception as e:
-        raise RuntimeError(f"Error generating filename: {str(e)}")
+def generate_filename(_):
+    random_characters = ''.join(choice(ascii_letters + digits) for _ in range(15))
+    return f"{random_characters}.png"
 
-# Function to get paths to font assets based on font and color.
 def get_font_paths(font, color):
-    try:
-        base_path = os.path.join('Assets', 'Fonts', f'Font-{font}', f'Font-{font}-{color}')
-        return (
-            os.path.join(base_path, 'Letters'),
-            os.path.join(base_path, 'Numbers'),
-            os.path.join(base_path, 'Symbols')
-        )
-    except Exception as e:
-        raise RuntimeError(f"Error getting font paths: {str(e)}")
+    base_path = Path('Assets') / 'Fonts' / f'Font-{font}' / f'Font-{font}-{color}'
+    return [base_path / folder for folder in ['Letters', 'Numbers', 'Symbols']]
 
-# Function to get the image path for a specific character based on its type
-def get_character_image_path(char, font_paths):
+def get_character_image_path(character, font_paths):
     CHARACTERS_FOLDER, NUMBERS_FOLDER, SYMBOLS_FOLDER = font_paths
 
-    if char.isalpha():
-        folder = 'Lower-Case' if char.islower() else 'Upper-Case'
-        char_img_path = os.path.join(CHARACTERS_FOLDER, folder, f"{char}.png")
-    elif char.isdigit():
-        char_img_path = os.path.join(NUMBERS_FOLDER, f"{char}.png")
-    elif char == ' ':
+    if character.isalpha():
+        folder = 'Lower-Case' if character.islower() else 'Upper-Case'
+        character_image_path = CHARACTERS_FOLDER / folder / f"{character}.png"
+    elif character.isdigit():
+        character_image_path = NUMBERS_FOLDER / f"{character}.png"
+    elif character.isspace():
         return None
     else:
-        char_img_path = os.path.join(SYMBOLS_FOLDER, f"{SPECIAL_CHARACTERS.get(char, '')}.png")
+        character_image_path = SYMBOLS_FOLDER / f"{SPECIAL_CHARACTERS.get(character, '')}.png"
 
-    if not os.path.isfile(char_img_path):
-        return None
-    return char_img_path
+    return character_image_path if character_image_path.is_file() else None
 
-# Generates an image from the given text using character images from specified fonts.
+def get_or_create_character_image(character, font_paths):
+    if character.isspace():
+        return create_character_image(character, font_paths)
+
+    character_image_path = get_character_image_path(character, font_paths)
+    if character_image_path is None or not character_image_path.is_file():
+        raise FileNotFoundError(f"Unsupported character '{character}'")
+
+    image = Image.open(character_image_path).convert("RGBA")
+    return image
+
+def create_character_image(character, _):
+    if character.isspace():
+        return Image.new("RGBA", (SPACE_WIDTH, 1), (0, 0, 0, 0))
+
+def calculate_total_width_and_max_height(text, font_paths):
+    total_width = 0
+    max_height = 0
+
+    for character in text:
+        character_image = get_or_create_character_image(character, font_paths)
+        max_height = max(max_height, character_image.height)
+        total_width += character_image.width
+
+    return total_width, max_height
+
+def paste_character_images_to_final_image(text, font_paths, total_width, max_height):
+    x_position = 0
+    final_image = Image.new("RGBA", (total_width, max_height), (0, 0, 0, 0))
+
+    for character in text:
+        character_image = get_or_create_character_image(character, font_paths)
+        y_position = max_height - character_image.height
+
+        final_image = Image.alpha_composite(final_image, Image.new("RGBA", final_image.size, (0, 0, 0, 0)))
+        final_image.paste(character_image, (x_position, y_position))
+        x_position += character_image.width
+
+    return final_image
+
 def generate_image(text, filename, font_paths):
-    img_height = None
-    char_images = {}
-    img_path = os.path.join(DESKTOP_PATH, filename)
+    total_width, max_height = calculate_total_width_and_max_height(text, font_paths)
+    final_image = paste_character_images_to_final_image(text, font_paths, total_width, max_height)
+    
+    image_path = Path(DESKTOP_PATH) / filename
+    final_image.save(image_path)
 
-    try:
-        total_width = 0
-
-        # Iterate through each character in the input text
-        for char in text:
-            if char == ' ':
-                # Create an empty space character image
-                char_img = Image.new("RGBA", (SPACE_WIDTH, img_height or 1), (0, 0, 0, 0))
-
-            else:
-                # Get the path to the character image based on the font
-                char_img_path = get_character_image_path(char, font_paths)
-                if not char_img_path:
-
-                    raise FileNotFoundError(f"Image not found for character '{char}'")
-
-                char_img = Image.open(char_img_path).convert("RGBA")
-
-            char_images[char] = char_img
-            img_height = char_img.height if img_height is None else img_height
-            total_width += char_img.width
-
-        # Create the final image and paste character images into it
-        final_img = Image.new("RGBA", (total_width, img_height), (0, 0, 0, 0))
-        x = 0
-
-        for char in text:
-            final_img.paste(char_images[char], (x, 0))
-            x += char_images[char].width
-
-        # Save the final image
-        final_img.save(img_path)
-
-        return (filename, None)
-
-    except FileNotFoundError:
-        return (None, f"Error: Image not found for character '{char}'")
-    except UnidentifiedImageError:
-        return (None, "Error: Unable to identify image")
-    except ValueError as e:
-        return (None, f"Error: Invalid value - {str(e)}")
-    except Exception as e:
-        return (None, f"An unexpected error occurred: {str(e)}")
+    return str(image_path), None
