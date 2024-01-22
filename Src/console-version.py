@@ -82,7 +82,6 @@ def generate_and_display_image(text, font, color):
         if error_message_generate:
             print(f"Error: {error_message_generate}")
         else:
-            print(f"\nImage saved as: {filename}")
             print(f"\nYou can find the image on your desktop: \n{image_path}")
 
     except Exception as e:
