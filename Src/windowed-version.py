@@ -160,7 +160,7 @@ class MetalSlugFontReborn(QMainWindow):
         build_info_layout.addWidget(QLabel("Version: 1.x.x (Dev)"))
         build_info_layout.addWidget(QLabel("Pyinstaller: 6.3.0"))
         build_info_layout.addWidget(QLabel("PyQt6: 6.6.1"))
-        build_info_layout.addWidget(QLabel("Build date: Dec 27 2023"))
+        build_info_layout.addWidget(QLabel("Build date: Dev"))
 
         os_info_box = QGroupBox("Operating System")
         os_info_layout = QVBoxLayout()
