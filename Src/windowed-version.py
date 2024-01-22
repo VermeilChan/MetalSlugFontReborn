@@ -128,6 +128,9 @@ class MetalSlugFontReborn(QMainWindow):
         font = int(self.font_combobox.currentText())
         color = self.color_combobox.currentText()
 
+        if font == 5:
+            text = text.upper()
+
         ImageGenerator.generate_and_display_image(text, font, color)
 
     def show_about_dialog(self):
