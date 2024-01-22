@@ -21,6 +21,7 @@
 
 - **Blue**: ![Font 4 Blue](Markdown/Examples/Font-4/Font-4-Color-Blue.png)
 - **Orange 1**: ![Font 4 Orange 1](Markdown/Examples/Font-4/Font-4-Color-Orange-1.png)
+- **Yellow**: ![Font 4 Yellow](Markdown/Examples/Font-4/Font-4-Color-Yellow.png)
 
 ### Font 5
 
