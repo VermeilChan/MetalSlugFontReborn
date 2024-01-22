@@ -1,8 +1,8 @@
 from platform import system, version, release, architecture
-
 from PyQt6.QtGui import QIcon, QPixmap
 from PyQt6.QtWidgets import (
     QApplication,
+    QMessageBox,
     QMainWindow,
     QHBoxLayout,
     QVBoxLayout,
@@ -14,7 +14,6 @@ from PyQt6.QtWidgets import (
     QDialog,
     QLabel,
 )
-
 from main import generate_filename, generate_image, get_font_paths
 
 VALID_COLORS_BY_FONT = {
@@ -25,50 +24,32 @@ VALID_COLORS_BY_FONT = {
     5: ["Orange-1"]
 }
 
-class InfoPopup(QDialog):
-    def __init__(self, title, message, ICON_PATH):
-        super().__init__()
-
-        self.setWindowTitle(title)
-        self.setWindowIcon(QIcon(ICON_PATH))
-
-        layout = QVBoxLayout()
-
-        label = QLabel(message)
-        layout.addWidget(label)
-
-        ok_button = QPushButton('OK')
-        ok_button.clicked.connect(self.accept)
-        layout.addWidget(ok_button)
-
-        self.setLayout(layout)
-
 class ImageGenerator:
-    ICON_PATH = "Assets/Icons/Raubtier.ico"
+    icon_path = "Assets/Icons/Raubtier.ico"
 
     @staticmethod
     def generate_and_display_image(text, font, color):
         try:
             if not text.strip():
                 error_message = "\nInput text is empty. Please enter some text.\n"
-                InfoPopup("Error", error_message, ImageGenerator.ICON_PATH).exec()
+                QMessageBox.critical(None, "MetalSlugFontReborn", error_message)
                 return
 
             filename = generate_filename(text)
             font_paths = get_font_paths(font, color)
 
-            img_path, error_message_generate = generate_image(text, filename, font_paths)
+            image_path, error_message_generate = generate_image(text, filename, font_paths)
 
             if error_message_generate:
                 error_message = f"Error: {error_message_generate}"
-                InfoPopup("Error", error_message, ImageGenerator.ICON_PATH).exec()
+                QMessageBox.critical(None, "Error", error_message)
             else:
-                success_message = f"Image saved as: \n{img_path}"
-                InfoPopup("Success", success_message, ImageGenerator.ICON_PATH).exec()
+                success_message = f"Image saved as:\n\n{image_path}\n"
+                QMessageBox.information(None, "Success", success_message)
 
         except (FileNotFoundError, Exception) as e:
             error_message_generate = str(e)
-            InfoPopup("Error", error_message_generate, ImageGenerator.ICON_PATH).exec()
+            QMessageBox.critical(None, "Error", error_message_generate)
 
 class MetalSlugFontReborn(QMainWindow):
     def __init__(self):
@@ -76,7 +57,7 @@ class MetalSlugFontReborn(QMainWindow):
 
         self.setWindowTitle("MetalSlugFontReborn")
 
-        self.setWindowIcon(QIcon(ImageGenerator.ICON_PATH))
+        self.setWindowIcon(QIcon(ImageGenerator.icon_path))
 
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
@@ -188,6 +169,7 @@ class MetalSlugFontReborn(QMainWindow):
 def main():
     app = QApplication([])
     app.setStyle('Fusion')
+    app.setWindowIcon(QIcon(ImageGenerator.icon_path))
     window = MetalSlugFontReborn()
     window.show()
     app.exec()

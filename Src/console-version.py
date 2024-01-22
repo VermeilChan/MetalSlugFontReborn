@@ -25,19 +25,21 @@ def select_font_and_color():
         try:
             font = int(font_input)
             if 1 <= font <= 5:
-                valid_colors = VALID_COLORS_BY_FONT.get(font, [])
-                print("\nAvailable colors: " + " | ".join(valid_colors))
-                color_input = input("\nChoose a color: ")
+                while True:
+                    valid_colors = VALID_COLORS_BY_FONT.get(font, [])
+                    print("\nAvailable colors: " + " | ".join(valid_colors))
+                    color_input = input("\nChoose a color: ")
 
-                if color_input.lower() == 'exit':
-                    print('\nClosing...\n')
-                    sys.exit(0)
+                    if color_input.lower() == 'exit':
+                        print('\nClosing...\n')
+                        sys.exit(0)
 
-                color = color_input.title()
-                if color in valid_colors:
-                    return font, color
+                    color = color_input.title()
+                    if color in valid_colors:
+                        return font, color
 
-                print("\nInvalid color. Please choose a valid color.\n")
+                    print("\nInvalid color. Please choose a valid color.\n")
+
             else:
                 print("\nInvalid input. Please choose a font between 1 and 5.\n")
 
@@ -45,16 +47,19 @@ def select_font_and_color():
             print("\nInvalid input. Please enter a valid number.\n")
 
 def ask_to_check_supported_characters():
-    check_supported = input("Do you want to check the supported characters? [Y/n]: ").lower()
+    while True:
+        check_supported = input("Do you want to check the supported characters? [Y/n]: ").lower()
 
-    if check_supported == 'y':
-        with open("Documentation/SUPPORTED.txt", "r", encoding="utf-8") as supported_file:
-            content = supported_file.read()
-            print(f"{content}\nNote:\nSome characters may not load due to font limitations or terminal compatibility.\nYou can open SUPPORTED.txt if it doesn't work properly\n")
-    elif check_supported == 'n':
-        print("\nYou can check them later if you want in SUPPORTED.txt\n")
-    else:
-        print("\nInvalid input.\n")
+        if check_supported == 'y':
+            with open("Documentation/SUPPORTED.txt", "r", encoding="utf-8") as supported_file:
+                content = supported_file.read()
+                print(f"{content}\nNote:\nSome characters may not load due to font limitations or terminal compatibility.\nYou can open SUPPORTED.txt if it doesn't work properly\n")
+            break
+        elif check_supported == 'n':
+            print("\nYou can check them later if you want in SUPPORTED.txt\n")
+            break
+        else:
+            print("\nInvalid input. Please enter 'Y' or 'n'.\n")
 
 def generate_and_display_image(text, font, color):
     if text.lower() == 'exit':
