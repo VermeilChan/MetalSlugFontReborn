@@ -95,6 +95,8 @@ class MetalSlugFontReborn(QMainWindow):
         about_action = help_menu.addAction("About")
         about_action.triggered.connect(self.show_about_dialog)
 
+        self.setMaximumSize(self.size())
+
     def on_font_change(self):
         font = int(self.font_combobox.currentText())
         valid_colors = VALID_COLORS_BY_FONT.get(font, [])
@@ -141,10 +143,10 @@ class MetalSlugFontReborn(QMainWindow):
         build_info_box = QGroupBox("Build Information")
         build_info_layout = QVBoxLayout()
 
-        build_info_layout.addWidget(QLabel("Version: 1.6.8 ()"))
+        build_info_layout.addWidget(QLabel("Version: 1.6.9 (Dev)"))
         build_info_layout.addWidget(QLabel("Pyinstaller: 6.3.0"))
         build_info_layout.addWidget(QLabel("PyQt6: 6.6.1"))
-        build_info_layout.addWidget(QLabel("Build date: Jun 22 2024"))
+        build_info_layout.addWidget(QLabel("Build date: Jan XX 2024"))
 
         os_info_box = QGroupBox("Operating System")
         os_info_layout = QVBoxLayout()
