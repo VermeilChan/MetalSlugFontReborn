@@ -12,37 +12,36 @@ VALID_COLORS_BY_FONT = {
 def display_intro_message():
     print("\nYou can check the supported characters in SUPPORTED.txt.")
 
-def get_user_input():
-    return input("Enter the text you want to generate (type 'exit' to close): ")
+def get_user_input(prompt):
+    return input(prompt).strip()
 
 def get_valid_input(prompt, valid_values):
     while True:
-        user_input = input(prompt)
+        user_input = get_user_input(prompt)
         if user_input.lower() == 'exit':
             sys.exit('Closing...')
         elif user_input in valid_values:
-            return user_input
+            return user_input.title()
         else:
             print(f"Invalid input. Please choose from {', '.join(valid_values)}.")
 
 def select_font():
-    valid_fonts = [str(i) for i in range(1, 6)]
+    valid_fonts = map(str, range(1, 6))
     return int(get_valid_input("\nChoose a font from 1 to 5: ", valid_fonts))
 
 def select_color(font):
     valid_colors = VALID_COLORS_BY_FONT.get(font, [])
-    return get_valid_input(f"Available colors: {', '.join(valid_colors)}\nChoose a color: ", valid_colors).title()
+    return get_valid_input(f"Available colors: {', '.join(valid_colors)}\nChoose a color: ", valid_colors)
 
 def generate_and_display_image(text, font, color):
     if text.lower() == 'exit':
         sys.exit('Closing...')
 
-    if not text.strip():
+    if not text:
         print("Input text is empty. Please enter some text.")
         return
 
-    if font == 5:
-        text = text.upper()
+    text = text.upper() if font == 5 else text
 
     try:
         filename = generate_filename(text)
@@ -65,7 +64,7 @@ def main():
 
     try:
         while True:
-            text = get_user_input()
+            text = get_user_input("Enter the text you want to generate (type 'exit' to close): ")
             generate_and_display_image(text, font, color)
     except KeyboardInterrupt:
         sys.exit('Closing...')
