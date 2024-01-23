@@ -29,7 +29,6 @@ def select_font_and_color():
                 return font, color
             else:
                 print("Invalid input. Please choose a font between 1 and 5.")
-
         except ValueError:
             print("Invalid input. Please enter a valid number.")
 
@@ -51,13 +50,16 @@ def ask_to_check_supported_characters():
     check_supported = input("Do you want to check the supported characters? [Y/n]: ").lower()
 
     if check_supported == 'y':
-        with open("Documentation/SUPPORTED.txt", "r", encoding="utf-8") as supported_file:
-            content = supported_file.read()
-            print(f"{content}\nNote:\nSome characters may not load due to terminal compatibility.\nYou can open SUPPORTED.txt if it doesn't work properly")
+        print_supported_characters()
     elif check_supported != 'n':
         print("Invalid input. Defaulting to 'n'.")
 
     print("You can check them later if you want in SUPPORTED.txt")
+
+def print_supported_characters():
+    with open("Documentation/SUPPORTED.txt", "r", encoding="utf-8") as supported_file:
+        content = supported_file.read()
+        print(f"{content}\nNote:\nSome characters may not load due to terminal compatibility.\nYou can open SUPPORTED.txt if it doesn't work properly")
 
 def generate_and_display_image(text, font, color):
     if text.lower() == 'exit':
