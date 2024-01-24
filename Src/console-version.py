@@ -23,7 +23,7 @@ def get_valid_input(prompt, valid_values):
         elif user_input in valid_values:
             return user_input.title()
         else:
-            print(f"Invalid input. Please choose from {', '.join(valid_values)}.")
+            print(f"Invalid input. Please choose from 1 to 5")
 
 def select_font():
     valid_fonts = map(str, range(1, 6))
@@ -38,8 +38,7 @@ def generate_and_display_image(text, font, color):
         sys.exit('Closing...')
 
     if not text:
-        print("Input text is empty. Please enter some text.")
-        return
+        return print("Input text is empty. Please enter some text.")
 
     text = text.upper() if font == 5 else text
 
