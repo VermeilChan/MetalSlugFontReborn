@@ -29,7 +29,9 @@ jobs:
         pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "Extra/versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;."  "Src/windowed-version.py"
 
     - name: Move Assets folder
-      run: mv _internal/Assets MetalSlugFontReborn/
+      run: |
+        mv dist/MetalSlugFontReborn/_internal/Assets dist/MetalSlugFontReborn/
+      shell: bash
 
     - name: Upload MetalSlugFontReborn
       uses: actions/upload-artifact@v4.3.0
