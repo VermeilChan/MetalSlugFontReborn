@@ -31,7 +31,7 @@ class ImageGenerator:
     def generate_and_display_image(text, font, color):
         try:
             if not text.strip():
-                error_message = "\nInput text is empty. Please enter some text.\n"
+                error_message = "Input text is empty. Please enter some text."
                 QMessageBox.critical(None, "MetalSlugFontReborn", error_message)
                 return
 
@@ -42,14 +42,14 @@ class ImageGenerator:
 
             if error_message_generate:
                 error_message = f"Error: {error_message_generate}"
-                QMessageBox.critical(None, "Error", error_message)
+                QMessageBox.critical(None, "MetalSlugFontReborn", error_message)
             else:
                 success_message = f"Image saved as:\n\n{image_path}\n"
-                QMessageBox.information(None, "Success", success_message)
+                QMessageBox.information(None, "MetalSlugFontReborn", success_message)
 
         except (FileNotFoundError, Exception) as e:
             error_message_generate = str(e)
-            QMessageBox.critical(None, "Error", error_message_generate)
+            QMessageBox.critical(None, "MetalSlugFontReborn", error_message_generate)
 
 class MetalSlugFontReborn(QMainWindow):
     def __init__(self):
@@ -111,8 +111,7 @@ class MetalSlugFontReborn(QMainWindow):
         font = int(self.font_combobox.currentText())
         color = self.color_combobox.currentText()
 
-        if font == 5:
-            text = text.upper()
+        text = text.upper() if font == 5 else text
 
         ImageGenerator.generate_and_display_image(text, font, color)
 
