@@ -1,0 +1,38 @@
+name: Build MetalSlugFontReborn GUI
+
+on:
+  push:
+    branches:
+      - Development
+    paths:
+      - '.github/workflows/build.yml'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4.1.1
+
+    - name: Set up Python
+      uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.12.1
+
+    - name: Install dependencies
+      run: |
+        pip install pillow PyQt6 pyinstaller
+
+    - name: Build MetalSlugFontReborn
+      run: |
+        pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "Extra/versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;."  "Src/windowed-version.py"
+
+    - name: Move Assets folder
+      run: mv _internal/Assets MetalSlugFontReborn/
+
+    - name: Upload MetalSlugFontReborn
+      uses: actions/upload-artifact@v4.3.0
+      with:
+        name: MetalSlugFontReborn-GUI-Nightly
+        path: dist/MetalSlugFontReborn
