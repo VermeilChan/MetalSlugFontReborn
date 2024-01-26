@@ -1,12 +1,12 @@
 /*!
- * jQuery JavaScript Library v4.0.0-pre+c98597e.dirty
+ * jQuery JavaScript Library v4.0.0-pre+805cdb4.dirty
  * https://jquery.com/
  *
  * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2023-12-02T05:09Z
+ * Date: 2024-01-23T03:54Z
  */
 ( function( global, factory ) {
 
@@ -105,17 +105,18 @@ function DOMEval( code, node, doc ) {
 		script = doc.createElement( "script" );
 
 	script.text = code;
-	if ( node ) {
-		for ( i in preservedScriptAttributes ) {
-			if ( node[ i ] ) {
-				script[ i ] = node[ i ];
-			}
+	for ( i in preservedScriptAttributes ) {
+		if ( node && node[ i ] ) {
+			script[ i ] = node[ i ];
 		}
 	}
-	doc.head.appendChild( script ).parentNode.removeChild( script );
+
+	if ( doc.head.appendChild( script ).parentNode ) {
+		script.parentNode.removeChild( script );
+	}
 }
 
-var version = "4.0.0-pre+c98597e.dirty",
+var version = "4.0.0-pre+805cdb4.dirty",
 
 	rhtmlSuffix = /HTML$/i,
 
@@ -588,9 +589,6 @@ var rtrimCSS = new RegExp(
 var identifier = "(?:\\\\[\\da-fA-F]{1,6}" + whitespace +
 	"?|\\\\[^\\r\\n\\f]|[\\w-]|[^\0-\\x7f])+";
 
-var booleans = "checked|selected|async|autofocus|autoplay|controls|" +
-	"defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped";
-
 var rleadingCombinator = new RegExp( "^" + whitespace + "*([>+~]|" +
 	whitespace + ")" + whitespace + "*" );
 
@@ -872,6 +870,201 @@ function toSelector( tokens ) {
 	return selector;
 }
 
+// Multifunctional method to get and set values of a collection
+// The value/s can optionally be executed if it's a function
+function access( elems, fn, key, value, chainable, emptyGet, raw ) {
+	var i = 0,
+		len = elems.length,
+		bulk = key == null;
+
+	// Sets many values
+	if ( toType( key ) === "object" ) {
+		chainable = true;
+		for ( i in key ) {
+			access( elems, fn, i, key[ i ], true, emptyGet, raw );
+		}
+
+	// Sets one value
+	} else if ( value !== undefined ) {
+		chainable = true;
+
+		if ( typeof value !== "function" ) {
+			raw = true;
+		}
+
+		if ( bulk ) {
+
+			// Bulk operations run against the entire set
+			if ( raw ) {
+				fn.call( elems, value );
+				fn = null;
+
+			// ...except when executing function values
+			} else {
+				bulk = fn;
+				fn = function( elem, _key, value ) {
+					return bulk.call( jQuery( elem ), value );
+				};
+			}
+		}
+
+		if ( fn ) {
+			for ( ; i < len; i++ ) {
+				fn(
+					elems[ i ], key, raw ?
+						value :
+						value.call( elems[ i ], i, fn( elems[ i ], key ) )
+				);
+			}
+		}
+	}
+
+	if ( chainable ) {
+		return elems;
+	}
+
+	// Gets
+	if ( bulk ) {
+		return fn.call( elems );
+	}
+
+	return len ? fn( elems[ 0 ], key ) : emptyGet;
+}
+
+// Only count HTML whitespace
+// Other whitespace should count in values
+// https://infra.spec.whatwg.org/#ascii-whitespace
+var rnothtmlwhite = /[^\x20\t\r\n\f]+/g;
+
+jQuery.fn.extend( {
+	attr: function( name, value ) {
+		return access( this, jQuery.attr, name, value, arguments.length > 1 );
+	},
+
+	removeAttr: function( name ) {
+		return this.each( function() {
+			jQuery.removeAttr( this, name );
+		} );
+	}
+} );
+
+jQuery.extend( {
+	attr: function( elem, name, value ) {
+		var ret, hooks,
+			nType = elem.nodeType;
+
+		// Don't get/set attributes on text, comment and attribute nodes
+		if ( nType === 3 || nType === 8 || nType === 2 ) {
+			return;
+		}
+
+		// Fallback to prop when attributes are not supported
+		if ( typeof elem.getAttribute === "undefined" ) {
+			return jQuery.prop( elem, name, value );
+		}
+
+		// Attribute hooks are determined by the lowercase version
+		// Grab necessary hook if one is defined
+		if ( nType !== 1 || !jQuery.isXMLDoc( elem ) ) {
+			hooks = jQuery.attrHooks[ name.toLowerCase() ];
+		}
+
+		if ( value !== undefined ) {
+			if ( value === null ) {
+				jQuery.removeAttr( elem, name );
+				return;
+			}
+
+			if ( hooks && "set" in hooks &&
+				( ret = hooks.set( elem, value, name ) ) !== undefined ) {
+				return ret;
+			}
+
+			elem.setAttribute( name, value );
+			return value;
+		}
+
+		if ( hooks && "get" in hooks && ( ret = hooks.get( elem, name ) ) !== null ) {
+			return ret;
+		}
+
+		ret = elem.getAttribute( name );
+
+		// Non-existent attributes return null, we normalize to undefined
+		return ret == null ? undefined : ret;
+	},
+
+	attrHooks: {},
+
+	removeAttr: function( elem, value ) {
+		var name,
+			i = 0,
+
+			// Attribute names can contain non-HTML whitespace characters
+			// https://html.spec.whatwg.org/multipage/syntax.html#attributes-2
+			attrNames = value && value.match( rnothtmlwhite );
+
+		if ( attrNames && elem.nodeType === 1 ) {
+			while ( ( name = attrNames[ i++ ] ) ) {
+				elem.removeAttribute( name );
+			}
+		}
+	}
+} );
+
+// Support: IE <=11+
+// An input loses its value after becoming a radio
+if ( isIE ) {
+	jQuery.attrHooks.type = {
+		set: function( elem, value ) {
+			if ( value === "radio" && nodeName( elem, "input" ) ) {
+				var val = elem.value;
+				elem.setAttribute( "type", value );
+				if ( val ) {
+					elem.value = val;
+				}
+				return value;
+			}
+		}
+	};
+}
+
+// HTML boolean attributes have special behavior:
+// we consider the lowercase name to be the only valid value, so
+// getting (if the attribute is present) normalizes to that, as does
+// setting to any non-`false` value (and setting to `false` removes the attribute).
+// See https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes
+jQuery.each( (
+	"checked selected async autofocus autoplay controls defer disabled " +
+	"hidden ismap loop multiple open readonly required scoped"
+).split( " " ), function( _i, name ) {
+	jQuery.attrHooks[ name ] = {
+		get: function( elem ) {
+			var ret,
+				isXML = jQuery.isXMLDoc( elem ),
+				lowercaseName = name.toLowerCase();
+
+			if ( !isXML ) {
+				ret = elem.getAttribute( name ) != null ?
+					lowercaseName :
+					null;
+			}
+			return ret;
+		},
+
+		set: function( elem, value, name ) {
+			if ( value === false ) {
+
+				// Remove boolean attributes when set to false
+				jQuery.removeAttr( elem, name );
+			} else {
+				elem.setAttribute( name, name );
+			}
+			return name;
+		}
+	};
+} );
+
 // CSS string/identifier serialization
 // https://drafts.csswg.org/cssom/#common-serializing-idioms
 var rcssescape = /([\0-\x1f\x7f]|^-?\d)|^-$|[^\x80-\uFFFF\w-]/g;
@@ -1012,7 +1205,6 @@ var i,
 	ridentifier = new RegExp( "^" + identifier + "$" ),
 
 	matchExpr = jQuery.extend( {
-		bool: new RegExp( "^(?:" + booleans + ")$", "i" ),
 
 		// For use in libraries implementing .is()
 		// We use this for POS matching in `select`
@@ -2758,11 +2950,6 @@ jQuery.each( {
 	};
 } );
 
-// Only count HTML whitespace
-// Other whitespace should count in values
-// https://infra.spec.whatwg.org/#ascii-whitespace
-var rnothtmlwhite = /[^\x20\t\r\n\f]+/g;
-
 // Convert String-formatted options into Object-formatted ones
 function createOptions( options ) {
 	var object = {};
@@ -3471,67 +3658,6 @@ if ( document.readyState !== "loading" ) {
 	window.addEventListener( "load", completed );
 }
 
-// Multifunctional method to get and set values of a collection
-// The value/s can optionally be executed if it's a function
-function access( elems, fn, key, value, chainable, emptyGet, raw ) {
-	var i = 0,
-		len = elems.length,
-		bulk = key == null;
-
-	// Sets many values
-	if ( toType( key ) === "object" ) {
-		chainable = true;
-		for ( i in key ) {
-			access( elems, fn, i, key[ i ], true, emptyGet, raw );
-		}
-
-	// Sets one value
-	} else if ( value !== undefined ) {
-		chainable = true;
-
-		if ( typeof value !== "function" ) {
-			raw = true;
-		}
-
-		if ( bulk ) {
-
-			// Bulk operations run against the entire set
-			if ( raw ) {
-				fn.call( elems, value );
-				fn = null;
-
-			// ...except when executing function values
-			} else {
-				bulk = fn;
-				fn = function( elem, _key, value ) {
-					return bulk.call( jQuery( elem ), value );
-				};
-			}
-		}
-
-		if ( fn ) {
-			for ( ; i < len; i++ ) {
-				fn(
-					elems[ i ], key, raw ?
-						value :
-						value.call( elems[ i ], i, fn( elems[ i ], key ) )
-				);
-			}
-		}
-	}
-
-	if ( chainable ) {
-		return elems;
-	}
-
-	// Gets
-	if ( bulk ) {
-		return fn.call( elems );
-	}
-
-	return len ? fn( elems[ 0 ], key ) : emptyGet;
-}
-
 // Matches dashed string for camelizing
 var rdashAlpha = /-([a-z])/g;
 
@@ -3617,7 +3743,7 @@ Data.prototype = {
 				cache[ camelCase( prop ) ] = data[ prop ];
 			}
 		}
-		return cache;
+		return value;
 	},
 	get: function( owner, key ) {
 		return key === undefined ?
@@ -3893,7 +4019,7 @@ jQuery.extend( {
 			// Speed up dequeue by getting out quickly if this is just a lookup
 			if ( data ) {
 				if ( !queue || Array.isArray( data ) ) {
-					queue = dataPriv.access( elem, type, jQuery.makeArray( data ) );
+					queue = dataPriv.set( elem, type, jQuery.makeArray( data ) );
 				} else {
 					queue.push( data );
 				}
@@ -3940,7 +4066,7 @@ jQuery.extend( {
 	// Not public - generate a queueHooks object, or return the current one
 	_queueHooks: function( elem, type ) {
 		var key = type + "queueHooks";
-		return dataPriv.get( elem, key ) || dataPriv.access( elem, key, {
+		return dataPriv.get( elem, key ) || dataPriv.set( elem, key, {
 			empty: jQuery.Callbacks( "once memory" ).add( function() {
 				dataPriv.remove( elem, [ type + "queue", key ] );
 			} )
@@ -4484,7 +4610,7 @@ function domManip( collection, args, callback, ignored ) {
 				for ( i = 0; i < hasScripts; i++ ) {
 					node = scripts[ i ];
 					if ( rscriptType.test( node.type || "" ) &&
-						!dataPriv.access( node, "globalEval" ) &&
+						!dataPriv.get( node, "globalEval" ) &&
 						jQuery.contains( doc, node ) ) {
 
 						if ( node.src && ( node.type || "" ).toLowerCase()  !== "module" ) {
@@ -5368,34 +5494,26 @@ function manipulationTarget( elem, content ) {
 }
 
 function cloneCopyEvent( src, dest ) {
-	var i, l, type, pdataOld, udataOld, udataCur, events;
+	var type, i, l,
+		events = dataPriv.get( src, "events" );
 
 	if ( dest.nodeType !== 1 ) {
 		return;
 	}
 
 	// 1. Copy private data: events, handlers, etc.
-	if ( dataPriv.hasData( src ) ) {
-		pdataOld = dataPriv.get( src );
-		events = pdataOld.events;
-
-		if ( events ) {
-			dataPriv.remove( dest, "handle events" );
-
-			for ( type in events ) {
-				for ( i = 0, l = events[ type ].length; i < l; i++ ) {
-					jQuery.event.add( dest, type, events[ type ][ i ] );
-				}
+	if ( events ) {
+		dataPriv.remove( dest, "handle events" );
+		for ( type in events ) {
+			for ( i = 0, l = events[ type ].length; i < l; i++ ) {
+				jQuery.event.add( dest, type, events[ type ][ i ] );
 			}
 		}
 	}
 
 	// 2. Copy user data
 	if ( dataUser.hasData( src ) ) {
-		udataOld = dataUser.access( src );
-		udataCur = jQuery.extend( {}, udataOld );
-
-		dataUser.set( dest, udataCur );
+		dataUser.set( dest, jQuery.extend( {}, dataUser.get( src ) ) );
 	}
 }
 
@@ -6559,7 +6677,7 @@ function defaultPrefilter( elem, props, opts ) {
 					hidden = dataShow.hidden;
 				}
 			} else {
-				dataShow = dataPriv.access( elem, "fxshow", { display: restoreDisplay } );
+				dataShow = dataPriv.set( elem, "fxshow", { display: restoreDisplay } );
 			}
 
 			// Store hidden/visible for toggle so `.stop().toggle()` "reverses"
@@ -7049,127 +7167,6 @@ jQuery.fn.delay = function( time, type ) {
 		};
 	} );
 };
-
-jQuery.fn.extend( {
-	attr: function( name, value ) {
-		return access( this, jQuery.attr, name, value, arguments.length > 1 );
-	},
-
-	removeAttr: function( name ) {
-		return this.each( function() {
-			jQuery.removeAttr( this, name );
-		} );
-	}
-} );
-
-jQuery.extend( {
-	attr: function( elem, name, value ) {
-		var ret, hooks,
-			nType = elem.nodeType;
-
-		// Don't get/set attributes on text, comment and attribute nodes
-		if ( nType === 3 || nType === 8 || nType === 2 ) {
-			return;
-		}
-
-		// Fallback to prop when attributes are not supported
-		if ( typeof elem.getAttribute === "undefined" ) {
-			return jQuery.prop( elem, name, value );
-		}
-
-		// Attribute hooks are determined by the lowercase version
-		// Grab necessary hook if one is defined
-		if ( nType !== 1 || !jQuery.isXMLDoc( elem ) ) {
-			hooks = jQuery.attrHooks[ name.toLowerCase() ];
-		}
-
-		if ( value !== undefined ) {
-			if ( value === null ) {
-				jQuery.removeAttr( elem, name );
-				return;
-			}
-
-			if ( hooks && "set" in hooks &&
-				( ret = hooks.set( elem, value, name ) ) !== undefined ) {
-				return ret;
-			}
-
-			elem.setAttribute( name, value );
-			return value;
-		}
-
-		if ( hooks && "get" in hooks && ( ret = hooks.get( elem, name ) ) !== null ) {
-			return ret;
-		}
-
-		ret = elem.getAttribute( name );
-
-		// Non-existent attributes return null, we normalize to undefined
-		return ret == null ? undefined : ret;
-	},
-
-	attrHooks: {},
-
-	removeAttr: function( elem, value ) {
-		var name,
-			i = 0,
-
-			// Attribute names can contain non-HTML whitespace characters
-			// https://html.spec.whatwg.org/multipage/syntax.html#attributes-2
-			attrNames = value && value.match( rnothtmlwhite );
-
-		if ( attrNames && elem.nodeType === 1 ) {
-			while ( ( name = attrNames[ i++ ] ) ) {
-				elem.removeAttribute( name );
-			}
-		}
-	}
-} );
-
-// Support: IE <=11+
-// An input loses its value after becoming a radio
-if ( isIE ) {
-	jQuery.attrHooks.type = {
-		set: function( elem, value ) {
-			if ( value === "radio" && nodeName( elem, "input" ) ) {
-				var val = elem.value;
-				elem.setAttribute( "type", value );
-				if ( val ) {
-					elem.value = val;
-				}
-				return value;
-			}
-		}
-	};
-}
-
-jQuery.each( jQuery.expr.match.bool.source.match( /\w+/g ), function( _i, name ) {
-	jQuery.attrHooks[ name ] = {
-		get: function( elem ) {
-			var ret,
-				isXML = jQuery.isXMLDoc( elem ),
-				lowercaseName = name.toLowerCase();
-
-			if ( !isXML ) {
-				ret = elem.getAttribute( name ) != null ?
-					lowercaseName :
-					null;
-			}
-			return ret;
-		},
-
-		set: function( elem, value, name ) {
-			if ( value === false ) {
-
-				// Remove boolean attributes when set to false
-				jQuery.removeAttr( elem, name );
-			} else {
-				elem.setAttribute( name, name );
-			}
-			return name;
-		}
-	};
-} );
 
 var rfocusable = /^(?:input|select|textarea|button)$/i,
 	rclickable = /^(?:a|area)$/i;
