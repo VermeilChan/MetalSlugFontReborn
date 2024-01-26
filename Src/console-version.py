@@ -10,7 +10,9 @@ VALID_COLORS_BY_FONT = {
 }
 
 def display_intro_message():
-    print("\nYou can check the supported characters in SUPPORTED.txt.")
+    print("\nMetalSlugFontReborn")
+    print("You can check the supported characters in SUPPORTED.txt.")
+    print("Type 'exit' to close the program.")
 
 def get_user_input(prompt):
     return input(prompt).strip()
@@ -23,11 +25,11 @@ def get_valid_input(prompt, valid_values):
         elif user_input in valid_values:
             return user_input.title()
         else:
-            print(f"Invalid input. Please choose from 1 to 5")
+            print("Invalid input. Please try again.")
 
 def select_font():
     valid_fonts = map(str, range(1, 6))
-    return int(get_valid_input("\nChoose a font from 1 to 5: ", valid_fonts))
+    return int(get_valid_input("\nChoose a font (1-5): ", valid_fonts))
 
 def select_color(font):
     valid_colors = VALID_COLORS_BY_FONT.get(font, [])
@@ -48,12 +50,12 @@ def generate_and_display_image(text, font, color):
         image_path, error_message_generate = generate_image(text, filename, font_paths)
 
         if error_message_generate:
-            print(f"Error: {error_message_generate}")
+            print(f"Error generating image: {error_message_generate}")
         else:
-            print(f"You can find the image on your desktop:\n{image_path}")
+            print(f"You can find the generated image here: {image_path}")
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"An error occurred: {e}")
 
 def main():
     display_intro_message()
@@ -63,7 +65,7 @@ def main():
 
     try:
         while True:
-            text = get_user_input("Enter the text you want to generate (type 'exit' to close): ")
+            text = get_user_input("Enter the text you want to generate: ")
             generate_and_display_image(text, font, color)
     except KeyboardInterrupt:
         sys.exit('Closing...')
