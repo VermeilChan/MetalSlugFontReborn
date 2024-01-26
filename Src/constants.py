@@ -69,4 +69,5 @@ SPECIAL_CHARACTERS = {
     '¥': 'Yen',
     '♪': 'Musical-Note',
     '︷': 'Up-Arrow',
+    '✖': 'Cross',
 }
