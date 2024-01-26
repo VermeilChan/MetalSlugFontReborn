@@ -3,25 +3,25 @@ MetalSlugFontReborn Character Support
 Font 1 Support
 - Letters: Lowercase and Uppercase
 - Numbers: 0 to 9
-- Symbols: , * {} () ^ : $ = ! > - ∞ < # % . + & ? " ; / ~ _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ⋆ ★ ☞
+- Symbols: , * {} () ^ : $ = ! > - ∞ < # % . + & ? " ; / ~ _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ⋆ ★ ☞ ✖
 - Colors: Blue, Orange 1 and Orange 2
 
 Font 2 Support
 - Letters: Lowercase and Uppercase
 - Numbers: 0 to 9
-- Symbols: , = ︷ ! - . + & ? / ♪ Ⅰ Ⅱ Ⅲ Ⅳ Ⅴ
+- Symbols: , = ︷ ! - . + & ? / ♪ Ⅰ Ⅱ Ⅲ Ⅳ Ⅴ ✖
 - Colors: Blue, Orange 1 and Orange 2
 
 Font 3 Support
 - Letters: Lowercase and Uppercase
 - Numbers: 0 to 9
-- Symbols: ' {} () : , = ! > - < . + ? " ; / _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶
+- Symbols: ' {} () : , = ! > - < . + ? " ; / _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ✖
 - Colors: Blue, Orange 1
 
 Font 4 Support
 - Letters: Lowercase and Uppercase
 - Numbers: 0 to 9
-- Symbols: ' * {} () ^ : $ = ! > - < # % . + & ? " ; / ~ _ ¥ ⛶ © ♥ ▲ ▼ ◀ ▶
+- Symbols: ' * {} () ^ : $ = ! > - < # % . + & ? " ; / ~ _ ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ✖
 - Colors: Blue, Orange 1 and Yellow
 
 Font 5 Support
