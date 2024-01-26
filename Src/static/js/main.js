@@ -19,10 +19,16 @@ $(document).ready(function () {
                 break;
 
             case '3':
-            case '4':
                 colorOptions = `
                     <option value="Blue">Blue</option>
                     <option value="Orange-1">Orange 1</option>`;
+                break;
+
+            case '4':
+                colorOptions = `
+                    <option value="Blue">Blue</option>
+                    <option value="Orange-1">Orange 1</option>
+                    <option value="Yellow">Yellow</option>`;
                 break;
 
             case '5':
