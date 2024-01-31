@@ -28,7 +28,7 @@ def get_valid_input(prompt, valid_values):
             print("Invalid input. Please try again.")
 
 def select_font():
-    valid_fonts = map(str, range(1, 6))
+    valid_fonts = list(map(str, range(1, 6)))
     return int(get_valid_input("\nChoose a font (1-5): ", valid_fonts))
 
 def select_color(font):
