@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for
 from flask_sslify import SSLify
-from main import ImageGeneration, CharacterNotFound
+from flask import Flask, render_template, request, redirect, url_for
+from main import generate_image, CharacterNotFound
 
 App = Flask(__name__)
 sslify = SSLify(App)
@@ -25,10 +25,11 @@ def form():
             font = int(request.form['font'])
             color = request.form['color']
 
-            image = ImageGeneration(text, font, color)
-            image_url = image.generate_image()
+            text = text.upper() if font == 5 else text
 
-            return redirect(url_for('result', output=image_url.replace('src', ''), state=image.state))
+            image_url = generate_image(text, font, color)
+
+            return redirect(url_for('result', output=image_url.replace('src', ''), state=True))
 
         except CharacterNotFound as error:
             return render_template('index.html', error=f"Error: {error}")
