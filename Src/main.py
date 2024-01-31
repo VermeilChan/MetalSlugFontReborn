@@ -1,12 +1,11 @@
+from uuid import uuid4
 from pathlib import Path
-from secrets import choice
-from string import ascii_letters, digits
 from PIL import Image
 from constants import SPECIAL_CHARACTERS
 
 def generate_filename(_):
-    random_characters = ''.join(choice(ascii_letters + digits) for _ in range(15))
-    return f"{random_characters}.png"
+    unique_id = uuid4()
+    return f"{unique_id}.png"
 
 def get_font_paths(font, color):
     base_path = Path('Assets') / 'Fonts' / f'Font-{font}' / f'Font-{font}-{color}'
@@ -17,9 +16,10 @@ def get_character_image_path(character, font_paths):
 
     if character.isspace():
         return None
-    if character.isalpha():
-        folder = 'Lower-Case' if character.islower() else 'Upper-Case'
-        character_image_path = CHARACTERS_FOLDER / folder / f"{character}.png"
+    elif character.islower():
+        character_image_path = CHARACTERS_FOLDER / 'Lower-Case' / f"{character}.png"
+    elif character.isupper():
+        character_image_path = CHARACTERS_FOLDER / 'Upper-Case' / f"{character}.png"
     elif character.isdigit():
         character_image_path = NUMBERS_FOLDER / f"{character}.png"
     else:
@@ -32,7 +32,7 @@ def get_or_create_character_image(character, font_paths):
         return Image.new("RGBA", (30, 1), (0, 0, 0, 0))
 
     character_image_path = get_character_image_path(character, font_paths)
-    if character_image_path is None or not character_image_path.is_file():
+    if character_image_path is None:
         raise FileNotFoundError(f"Unsupported character '{character}'")
 
     return Image.open(character_image_path)
