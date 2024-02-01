@@ -29,54 +29,43 @@ class ImageGenerator:
 
     @staticmethod
     def generate_and_display_image(text, font, color):
-        try:
-            if not text.strip():
-                error_message = "Input text is empty. Please enter some text."
-                QMessageBox.critical(None, "MetalSlugFontReborn", error_message)
-                return
+        if not text.strip():
+            QMessageBox.critical(None, "MetalSlugFontReborn", "Input text is empty. Please enter some text.")
+            return
 
+        try:
             filename = generate_filename(text)
             font_paths = get_font_paths(font, color)
-
             image_path, error_message_generate = generate_image(text, filename, font_paths)
 
             if error_message_generate:
-                error_message = f"Error: {error_message_generate}"
-                QMessageBox.critical(None, "MetalSlugFontReborn", error_message)
+                QMessageBox.critical(None, "MetalSlugFontReborn", f"Error: {error_message_generate}")
             else:
-                success_message = f"Image saved as:\n\n{image_path}\n"
-                QMessageBox.information(None, "MetalSlugFontReborn", success_message)
-
-        except (FileNotFoundError, Exception) as e:
-            error_message_generate = str(e)
-            QMessageBox.critical(None, "MetalSlugFontReborn", error_message_generate)
+                QMessageBox.information(None, "MetalSlugFontReborn", f"Image saved as:\n\n{image_path}\n")
+        except Exception as e:
+            QMessageBox.critical(None, "MetalSlugFontReborn", str(e))
 
 class MetalSlugFontReborn(QMainWindow):
     def __init__(self):
         super().__init__()
-
         self.setWindowTitle("MetalSlugFontReborn")
-
         self.setWindowIcon(QIcon(ImageGenerator.icon_path))
 
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout(central_widget)
 
-        text_label = QLabel("Text to Generate:")
-        layout.addWidget(text_label)
+        layout.addWidget(QLabel("Text to Generate:"))
         self.text_entry = QLineEdit()
         self.text_entry.setMinimumWidth(600)
         layout.addWidget(self.text_entry)
 
-        font_label = QLabel("Select Font:")
-        layout.addWidget(font_label)
+        layout.addWidget(QLabel("Select Font:"))
         self.font_combobox = QComboBox()
         self.font_combobox.addItems(map(str, sorted(VALID_COLORS_BY_FONT.keys())))
         layout.addWidget(self.font_combobox)
 
-        color_label = QLabel("Select Color:")
-        layout.addWidget(color_label)
+        layout.addWidget(QLabel("Select Color:"))
         self.color_combobox = QComboBox()
         layout.addWidget(self.color_combobox)
 
@@ -86,7 +75,6 @@ class MetalSlugFontReborn(QMainWindow):
 
         self.color_combobox.setEnabled(False)
         self.font_combobox.currentIndexChanged.connect(self.on_font_change)
-
         self.on_font_change()
 
         menubar = self.menuBar()
@@ -142,21 +130,16 @@ class MetalSlugFontReborn(QMainWindow):
         build_info_box = QGroupBox("Build Information")
         build_info_layout = QVBoxLayout()
 
-        build_info_layout.addWidget(QLabel("Version: 1.6.9 (Dev)"))
+        build_info_layout.addWidget(QLabel("Version: 1.6.10 (Dev)"))
         build_info_layout.addWidget(QLabel("Pyinstaller: 6.3.0"))
         build_info_layout.addWidget(QLabel("PyQt6: 6.6.1"))
-        build_info_layout.addWidget(QLabel("Build date: Jan XX 2024"))
+        build_info_layout.addWidget(QLabel("Build date: Feb 1 2024"))
 
         os_info_box = QGroupBox("Operating System")
         os_info_layout = QVBoxLayout()
 
-        os_name = system()
-        os_version = version()
-        os_release = release()
-        os_architecture = architecture()[0]
-
-        os_info_layout.addWidget(QLabel(f"OS: {os_name} {os_release} ({os_architecture})"))
-        os_info_layout.addWidget(QLabel(f"Version: {os_version}"))
+        os_info_layout.addWidget(QLabel(f"OS: {system()} {release()} ({architecture()[0]})"))
+        os_info_layout.addWidget(QLabel(f"Version: {version()}"))
 
         os_info_box.setLayout(os_info_layout)
         layout.addWidget(os_info_box)
