@@ -53,7 +53,7 @@ If you have a GitHub account and have found this repository helpful, please cons
 - Supports uppercase and lowercase alphabets (A-Z, a-z), numbers (0-9), symbols, and colors.
 - Easy-to-use user interface with both GUI and command line support.
 
-For additional details, please refer to [SUPPORTED.md](Documentation/SUPPORTED.md).
+For additional details, please refer to the [documentation](Documentation/SUPPORTED.md).
 
 ## Requirements
 
@@ -61,7 +61,7 @@ Before installing MetalSlugFontReborn, ensure that your system meets the followi
 
 | **Operating System**    | **Versions**                                                     |
 |-----------------------  |------------------------------------------------------------------|
-| **Windows**             | 11, 10, (8.1 CLI)                                                |
+| **Windows**             | 11, 10, 8.1 (GUI), 11 & 10 (CLI)                                 |
 | **GNU/Linux**           | Debian 12/11, Ubuntu 22.04.3, Fedora 39/38, Arch Linux, OpenSUSE |
 | **MacOS**               | Currently not supported.  Use [WineHQ](https://www.winehq.org/)  |
 
@@ -75,15 +75,13 @@ _Additional space required for generating images._
 _GUI: Graphical User Interface_<br>
 _CLI: Command Line Interface_
 
-**Note:** The GUI version of MetalSlugFontReborn requires Windows 11 or 10, while the CLI version is compatible with 8.1 or later.
-
 ## Preview Fonts
 
-See different font examples [EXAMPLE.md](Documentation/EXAMPLE.md).
+See examples of the images generated [here](Documentation/EXAMPLE.md).
 
 ## MetalSlugFontReborn Guide
 
-To install and use MetalSlugFontReborn, refer to the documentation in [SELECT.md](Documentation/SELECT.md)
+To install and use MetalSlugFontReborn, refer to the documentation in [here](Documentation/SELECT.md)
 
 ## How to Contribute
 
@@ -101,11 +99,11 @@ This project is licensed under the [GNU General Public License v3.0](LICENSE).
 I want to say a big thank you to the people and groups who helped me.
 
 - [SNK Corporation](https://www.snk-corp.co.jp): Used some of their assets.
-- [SikroxMemer](https://github.com/SikroxMemer): Helped build the program and web app.
-- [Division 六](https://6th-divisions-den.com): Provided fonts 1 to 4 assets.
-- [GussPrint](https://www.spriters-resource.com/submitter/Gussprint): Contributed assets for font 5.
-- [BinRich](https://discord.com/users/477459550904254464): Provided diacritic marks.
-- [PyInstaller](https://pyinstaller.org/en/stable): Converted Python code to exe.
+- [SikroxMemer](https://github.com/SikroxMemer): for assisting in the development of the program and webapp.
+- [Division 六](https://6th-divisions-den.com): for providing assets for fonts 1 to 4.
+- [GussPrint](https://www.spriters-resource.com/submitter/Gussprint): for providing assets for font 5.
+- [BinRich](https://discord.com/users/477459550904254464): for providing diacritic marks.
+- [PyInstaller](https://pyinstaller.org/en/stable): for converting Python code to an executable file.
 - [PyQt6](https://www.riverbankcomputing.com): Used for the graphical interface.
 - [Pillow](https://python-pillow.org): Used for image processing.
 - [UPX](https://upx.github.io): Compressed files for a smaller size.
