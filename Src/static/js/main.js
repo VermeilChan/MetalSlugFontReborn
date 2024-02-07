@@ -1,10 +1,12 @@
-$(document).ready(function () {
-    const $font = $('#font');
-    const $color = $('#color');
+document.addEventListener("DOMContentLoaded", function () {
+    const fontSelect = document.getElementById('font');
+    const colorSelect = document.getElementById('color');
 
-    $font.change(function () {
-        updateColorOptions($font.val());
-    });
+    if (fontSelect) {
+        fontSelect.addEventListener('change', function () {
+            updateColorOptions(fontSelect.value);
+        });
+    }
 
     function updateColorOptions(fontValue) {
         let colorOptions = '';
@@ -39,14 +41,7 @@ $(document).ready(function () {
                 return;
         }
 
-        $color.html(colorOptions);
-    }
-
-    if (navigator.userAgent.indexOf("Firefox") != -1) {
-        $("*").css({
-            "scrollbar-color": "#1f1f1f #353535",
-            "scrollbar-width": "18px"
-        });
+        colorSelect.innerHTML = colorOptions;
     }
 
     const isHomePage = window.location.pathname === '/';

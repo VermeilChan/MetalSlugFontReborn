@@ -1,172 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 body {
+    background-color: #1e1e1e;
+    color: #ffffff;
     font-family: 'Roboto', sans-serif;
-    color: #fff;
-    background: url('./background/background-1.webp') center/cover;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    animation: fadeIn 0.8s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-h1, h2 {
-    margin-bottom: 1rem;
-    transition: color 0.3s ease-in-out;
-}
-
-h1, h2, form, input[type="text"], input[type="submit"], #font, #color, .error, #download_button, #download_button a {
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-h1, h2 {
-    color: #fff;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-input[type="text"],
-input[type="submit"],
-#font,
-#color {
-    background-color: #1f1f1f;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    border: none;
-    border-radius: 8px;
-    width: 100%;
-    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out;
-    color: #fff;
-}
-
-input[type="text"]:focus,
-#font:focus,
-#color:focus {
-    background-color: #1f1f1f;
-    color: #fff;
-    transform: scale(1.02);
-}
-
-input[type="submit"],
-#download_button {
-    background-color: #d32f2f;
-    color: #fff;
-    cursor: pointer;
-}
-
-input[type="submit"]:hover,
-#download_button:hover {
-    background-color: #b71c1c;
-}
-
-.error-message {
-    color: #FFBF00;
-    margin-top: 1rem;
-    transition: color 0.3s ease-in-out;
-}
-
-.error-message:hover {
-    color: #f1d274;
-}
-
-@media (max-width: 600px) {
-    input[type="text"],
-    #font,
-    #color {
-        width: 100%;
-    }
-}
-
-.header-image {
-    width: 150px;
-    height: auto;
-    display: block;
+    max-width: 800px;
     margin: 0 auto;
-}
-
-#download_button {
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    margin-top: 20px;
-    border: none;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 200px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out;
-}
-
-#download_button a {
-    color: #fff;
-    text-decoration: none;
-}
-
-#download_button:active {
-    color: #fff;
-    text-decoration: none;
-}
-
-#download_button:hover {
-    background-color: #b71c1c;
-}
-
-.button-container {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-}
-
-.main {
-    display: flex;
-}
-
-a:link {
-    color: #d32f2f;
-}
-
-a:visited {
-    color: #3391ff;
+    padding: 20px;
 }
 
 .icons-container {
-    position: fixed;
-    top: 30px;
-    left: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.icons {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    background-color: rgba(31, 31, 31, 0.5);
-    padding: 10px;
-    border-radius: 8px;
-    transition: background-color 0.3s ease-in-out;
-    align-items: center;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 5px;
+    border-radius: 5px;
 }
 
 .tooltip {
@@ -176,48 +30,99 @@ a:visited {
 
 .tooltip .tooltiptext {
     visibility: hidden;
-    width: max-content;
-    background-color: #1f1f1f;
+    width: 120px;
+    background-color: #333;
     color: #fff;
     text-align: center;
-    border-radius: 4px;
-    padding: 8px;
+    border-radius: 6px;
+    padding: 5px;
     position: absolute;
     z-index: 1;
     top: 150%;
     left: 50%;
-    transform: translateX(-50%);
+    margin-left: -60px;
     opacity: 0;
-    transition: opacity 0.3s, transform 0.3s;
+    transition: opacity 0.3s;
 }
 
 .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
-    transform: translate(-50%, -5px);
 }
 
-.icons:hover {
-    background-color: rgba(31, 31, 31, 1);
+.header-image {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;
 }
 
-::-webkit-scrollbar {
-    width: 18px;
-    height: 18px;
+h1 {
+    text-align: center;
+    font-size: 36px;
 }
 
-::-webkit-scrollbar-thumb {
-    background-color: #1f1f1f;
+form {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background-color: #1f1f1f;
+input[type="text"],
+select {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    border: none;
+    background-color: #333;
+    color: #fff;
 }
 
-::-webkit-scrollbar-track {
-    background-color: #353535;
+input[type="submit"] {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-::-webkit-scrollbar-track:hover {
-    background-color: #353535;
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+section {
+    text-align: center;
+}
+
+.error-message {
+    color: #ff6b6b;
+}
+
+#download_button {
+    text-align: center;
+    margin: 20px auto;
+}
+
+#download_button a {
+    text-decoration: none;
+    color: #fff;
+    background-color: #4CAF50;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+#download_button a:hover {
+    background-color: #45a049;
+}
+
+#support {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#support a {
+    color: #4CAF50;
+}
+
+#support a:hover {
+    text-decoration: underline;
 }

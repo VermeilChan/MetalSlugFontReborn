@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-    {% extends 'head.html' %}
+    <link rel="stylesheet" href="{{ url_for('static' , filename='css/result.css') }}"/>
+    <link rel="icon" href="{{url_for('static' , filename='assets/icons/favicon.ico')}}" type="image/x-icon">
+    <script src="{{url_for('static' , filename='js/main.js')}}"></script>
     {% block head %}
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Result - MetalSlugFontReborn</title>

@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-    {% extends 'head.html' %}
+    <link rel="stylesheet" href="{{ url_for('static' , filename='css/style.css') }}"/>
+    <link rel="icon" href="{{url_for('static' , filename='assets/icons/favicon.ico')}}" type="image/x-icon">
+    <script src="{{url_for('static' , filename='js/main.js')}}"></script>
     {% block head %}
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +14,7 @@
 
         <meta property="og:title" content="MetalSlugFontReborn">
         <meta property="og:description" content="A tool for creating images with the Metal Slug font.">
-        <meta property="og:image" content="{{ url_for('static', filename='assets/icon/silly.png') }}">
+        <meta property="og:image" content="{{ url_for('static', filename='assets/icons/logo.png') }}">
         <meta property="og:url" content="https://vermeil.pythonanywhere.com/">
     {% endblock %}
 </head>
@@ -23,14 +25,14 @@
             <div class="icons">
                 <div class="tooltip">
                     <a href="https://github.com/VermeilChan/MetalSlugFontReborn" target="_blank" rel="noopener noreferrer">
-                        <img src="../static/assets/icon/github.svg" alt="GitHub" class="social-icon">
+                        <img src="../static/assets/icons/github.svg" alt="GitHub" class="social-icon">
                     </a>
                     <span class="tooltiptext">Source Code</span>
                 </div>
             </div>
         </div>
 
-        <img src="{{ url_for('static', filename='assets/icon/Raubtier.webp') }}" alt="Raubtier" class="header-image">
+        <img src="{{ url_for('static', filename='assets/icons/Raubtier.webp') }}" alt="Raubtier" class="header-image">
         <h1>MetalSlugFontReborn</h1>
 
         <form id="form" action="/" method="post">
