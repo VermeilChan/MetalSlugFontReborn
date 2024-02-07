@@ -97,23 +97,6 @@ section {
     color: #ff6b6b;
 }
 
-#download_button {
-    text-align: center;
-    margin: 20px auto;
-}
-
-#download_button a {
-    text-decoration: none;
-    color: #fff;
-    background-color: #4CAF50;
-    padding: 10px 20px;
-    border-radius: 5px;
-}
-
-#download_button a:hover {
-    background-color: #45a049;
-}
-
 #support {
     text-align: center;
     margin-top: 20px;
