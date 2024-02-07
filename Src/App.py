@@ -1,9 +1,7 @@
-from flask_sslify import SSLify
 from flask import Flask, render_template, request, redirect, url_for
 from main import generate_image, CharacterNotFound
 
 App = Flask(__name__)
-sslify = SSLify(App)
 
 @App.route('/')
 def index():
