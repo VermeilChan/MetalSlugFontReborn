@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 body {
     background-color: #1e1e1e;
     color: #ffffff;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -26,7 +28,8 @@ h1 {
 }
 
 #download_button {
-    display: inline-block;
+    text-align: center;
+    margin: 20px auto;
 }
 
 #download_button a {
@@ -35,7 +38,6 @@ h1 {
     background-color: #4CAF50;
     padding: 10px 20px;
     border-radius: 5px;
-    display: block;
 }
 
 #download_button a:hover {
