@@ -3,49 +3,30 @@ document.addEventListener("DOMContentLoaded", function () {
     const colorSelect = document.getElementById('color');
 
     if (fontSelect) {
-        fontSelect.addEventListener('change', function () {
-            updateColorOptions(fontSelect.value);
-        });
+        fontSelect.addEventListener('change', updateColorOptions);
     }
 
-    function updateColorOptions(fontValue) {
-        let colorOptions = '';
+    function updateColorOptions() {
+        const fontValue = fontSelect.value;
+        const colorMap = {
+            '1': ['Blue', 'Orange-1', 'Orange-2'],
+            '2': ['Blue', 'Orange-1', 'Orange-2'],
+            '3': ['Blue', 'Orange-1'],
+            '4': ['Blue', 'Orange-1', 'Yellow'],
+            '5': ['Orange-1']
+        };
 
-        switch (fontValue) {
-            case '1':
-            case '2':
-                colorOptions = `
-                    <option value="Blue">Blue</option>
-                    <option value="Orange-1">Orange 1</option>
-                    <option value="Orange-2">Orange 2</option>`;
-                break;
-
-            case '3':
-                colorOptions = `
-                    <option value="Blue">Blue</option>
-                    <option value="Orange-1">Orange 1</option>`;
-                break;
-
-            case '4':
-                colorOptions = `
-                    <option value="Blue">Blue</option>
-                    <option value="Orange-1">Orange 1</option>
-                    <option value="Yellow">Yellow</option>`;
-                break;
-
-            case '5':
-                colorOptions = `<option value="Orange-1">Orange 1</option>`;
-                break;
-
-            default:
-                return;
-        }
+        const colors = colorMap[fontValue] || [];
+        const colorOptions = colors.map(color => `<option value="${color}">${color}</option>`).join('');
 
         colorSelect.innerHTML = colorOptions;
     }
 
     const isHomePage = window.location.pathname === '/';
-    if (performance.getEntriesByType("navigation")[0].type === "reload" && !isHomePage) {
+    const isResultPage = window.location.pathname === '/result';
+    const isReload = performance.getEntriesByType("navigation")[0]?.type === "reload";
+
+    if (isReload && !isHomePage && isResultPage) {
         window.location.href = "/";
     }
 });
