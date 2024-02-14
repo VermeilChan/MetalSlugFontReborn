@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from main import generate_image, CharacterNotFound
+from main import generate_image
 
 App = Flask(__name__)
 
@@ -29,11 +29,11 @@ def form():
 
             return redirect(url_for('result', output=image_url.replace('src', ''), state=True))
 
-        except CharacterNotFound as error:
-            return render_template('index.html', error=f"Error: {error}")
+        except FileNotFoundError as error:
+            return render_template('index.html', error=f"Error: {error}", error_type='FileNotFoundError')
 
         except Exception as error:
-            return render_template('index.html', error=f"Unexpected error: {error}")
+            return render_template('index.html', error=f"Error: {error}")
 
     return render_template('index.html', error="POST METHOD NOT AVAILABLE")
 
