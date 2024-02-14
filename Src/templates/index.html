@@ -59,14 +59,16 @@
             {% if error %}
                 <p class="error-message">
                     {{ error }}
-                    Check the supported characters <a href='/support'>here</a>.
+                    {% if error_type == 'FileNotFoundError' %}
+                        Check the supported characters <a href='/support'>here</a>.
+                    {% endif %}
                 </p>
             {% else %}
                 {% if state %}
                     <img id="image" src="{{ output }}" alt="Image"/>
                 {% endif %}
             {% endif %}
-        </section>
+        </section>        
 
         {% if state %}
             <button id="download_button">
