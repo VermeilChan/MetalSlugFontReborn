@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-    <link rel="stylesheet" href="{{ url_for('static' , filename='css/style.css') }}"/>
-    <link rel="icon" href="{{url_for('static' , filename='assets/icons/favicon.ico')}}" type="image/x-icon">
-    <script src="{{url_for('static' , filename='js/main.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+    <link rel="icon" href="{{ url_for('static', filename='assets/icons/favicon.ico') }}" type="image/x-icon">
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     {% block head %}
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +15,7 @@
         <meta property="og:title" content="MetalSlugFontReborn">
         <meta property="og:description" content="A tool for creating images with the Metal Slug font.">
         <meta property="og:image" content="{{ url_for('static', filename='assets/icons/logo.png') }}">
-        <meta property="og:url" content="https://vermeil.pythonanywhere.com/">
+        <meta property="og:url" content="https://vermeil.pythonanywhere.com">
     {% endblock %}
 </head>
 <body>
@@ -25,7 +25,7 @@
             <div class="icons">
                 <div class="tooltip">
                     <a href="https://github.com/VermeilChan/MetalSlugFontReborn" target="_blank" rel="noopener noreferrer">
-                        <img src="../static/assets/icons/github.svg" alt="GitHub" class="social-icon">
+                        <img src="{{ url_for('static', filename='assets/icons/github.svg') }}" alt="GitHub" class="social-icon">
                     </a>
                     <span class="tooltiptext">Source Code</span>
                 </div>
@@ -63,14 +63,14 @@
                 </p>
             {% else %}
                 {% if state %}
-                    <img id="image" src="{{output}}" alt="Image"/>
+                    <img id="image" src="{{ output }}" alt="Image"/>
                 {% endif %}
             {% endif %}
         </section>
 
         {% if state %}
             <button id="download_button">
-                <a href="{{output}}" download="{{output}}">Download</a>
+                <a href="{{ output }}" download="{{ output }}">Download</a>
             </button>
         {% endif %}
 

@@ -1,28 +1,24 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-    <link rel="stylesheet" href="{{ url_for('static' , filename='css/result.css') }}"/>
-    <link rel="icon" href="{{url_for('static' , filename='assets/icons/favicon.ico')}}" type="image/x-icon">
-    <script src="{{url_for('static' , filename='js/main.js')}}"></script>
-    {% block head %}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Result - MetalSlugFontReborn</title>
-    {% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}"/>
+    <link rel="icon" href="{{ url_for('static', filename='assets/icons/favicon.ico') }}" type="image/x-icon">
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result - MetalSlugFontReborn</title>
 </head>
 <body>
-    {% block body %}
     <div class="container">
         <h1>Result</h1>
 
         {% if state %}
-            <img id="image" src="{{output}}" alt="Image"/>
+            <img id="image" src="{{ output }}" alt="Image"/>
             <button id="download_button">
-                <a href="{{output}}" download="{{output}}">Download</a>
+                <a href="{{ output }}" download>Download</a>
             </button>
         {% else %}
             <p>No result available. Please go back to the <a href="/">home page</a>.</p>
         {% endif %}
     </div>
-    {% endblock %}
 </body>
 </html>
