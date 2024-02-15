@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from main import generate_image
+from main import generate_image, generate_filename, get_font_paths
 
 App = Flask(__name__)
 
@@ -25,9 +25,12 @@ def form():
 
             text = text.upper() if font == 5 else text
 
-            image_url = generate_image(text, font, color)
+            font_paths = get_font_paths(font, color)
 
-            return redirect(url_for('result', output=image_url.replace('src', ''), state=True))
+            filename = generate_filename()
+            image_url, _ = generate_image(text, filename, font_paths)
+
+            return redirect(url_for('result', output=image_url, state=True))
 
         except FileNotFoundError as error:
             return render_template('index.html', error=f"Error: {error}", error_type='FileNotFoundError')
