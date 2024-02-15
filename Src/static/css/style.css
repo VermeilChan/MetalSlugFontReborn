@@ -98,8 +98,11 @@ section {
 }
 
 #support {
+    position: fixed;
     text-align: center;
-    margin-top: 170px;
+    top: 650px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 #support a {

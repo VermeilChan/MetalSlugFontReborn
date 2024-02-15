@@ -1,21 +1,21 @@
 from flask import Flask, render_template, request, redirect, url_for
 from main import generate_image, generate_filename, get_font_paths
 
-App = Flask(__name__)
+app = Flask(__name__)
 
-@App.route('/')
+@app.route('/')
 def index():
     return render_template('index.html')
 
-@App.route('/support')
+@app.route('/support')
 def supported():
     return render_template('supported.html')
 
-@App.route('/examples')
+@app.route('/examples')
 def examples():
     return render_template('examples.html')
 
-@App.route('/', methods=['POST'])
+@app.route('/', methods=['POST'])
 def form():
     if request.method == "POST":
         try:
@@ -40,10 +40,10 @@ def form():
 
     return render_template('index.html', error="POST METHOD NOT AVAILABLE")
 
-@App.route('/result')
+@app.route('/result')
 def result():
     output = request.args.get('output')
     return render_template('result.html', output=output)
 
 if __name__ == "__main__":
-    App.run()
+    app.run()
