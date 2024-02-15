@@ -69,18 +69,12 @@
                     <img id="image" src="{{ output }}" alt="Image"/>
                 {% endif %}
             {% endif %}
-        </section>        
-
-        {% if state %}
-            <button id="download_button">
-                <a href="{{ output }}" download="{{ output }}">Download</a>
-            </button>
-        {% endif %}
+        </section>
 
         <section id="support">
             <p>Check out the list of <a href="/support">supported characters</a> here.</p>
-            <p>Or if you want to see how they look, you can view some <a href="/examples">examples</a> here.</p>
-        </section>        
+            <p>If you want to see how they look, you can view some <a href="/examples">examples</a> here.</p>
+        </section>                
     </div>
     {% endblock %}
 </body>
