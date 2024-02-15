@@ -5,7 +5,7 @@ App = Flask(__name__)
 
 @App.route('/')
 def index():
-    return render_template('index.html', state=False)
+    return render_template('index.html')
 
 @App.route('/support')
 def supported():
@@ -30,7 +30,7 @@ def form():
             filename = generate_filename()
             image_url, _ = generate_image(text, filename, font_paths)
 
-            return redirect(url_for('result', output=image_url, state=True))
+            return redirect(url_for('result', output=image_url))
 
         except FileNotFoundError as error:
             return render_template('index.html', error=f"Error: {error}", error_type='FileNotFoundError')
@@ -43,8 +43,7 @@ def form():
 @App.route('/result')
 def result():
     output = request.args.get('output')
-    state = request.args.get('state')
-    return render_template('result.html', output=output, state=state)
+    return render_template('result.html', output=output)
 
 if __name__ == "__main__":
     App.run()
