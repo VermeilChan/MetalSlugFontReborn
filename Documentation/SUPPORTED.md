@@ -1,6 +1,6 @@
 # MetalSlugFontReborn Character Support
 
-This guide lists the characters and colors supported by MetalSlugFontReborn across its five different fonts.
+Note: _While the characters listed here may be supported by the font, the functionality to fully utilize them might not have been implemented yet._
 
 ## Font 1 Support
 

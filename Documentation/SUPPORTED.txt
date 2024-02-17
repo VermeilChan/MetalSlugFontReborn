@@ -1,5 +1,7 @@
 MetalSlugFontReborn Character Support
 
+Note: While the characters listed here may be supported by the font, the functionality to fully utilize them might not have been implemented yet.
+
 Font 1 Support
 - Letters: Lowercase and Uppercase
 - Numbers: 0 to 9
