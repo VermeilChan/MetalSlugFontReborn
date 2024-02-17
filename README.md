@@ -61,7 +61,7 @@ Before installing MetalSlugFontReborn, ensure that your system meets the followi
 
 | **Operating System**    | **Versions**                                                     |
 |-----------------------  |------------------------------------------------------------------|
-| **Windows**             | 11, 10, 8.1 (GUI), 11 & 10 (CLI)                                 |
+| **Windows**             | 11 & 10 (GUI), 11, 10, 8.1 (CLI)                                 |
 | **GNU/Linux**           | Debian 12/11, Ubuntu 22.04.3, Fedora 39/38, Arch Linux, OpenSUSE |
 | **MacOS**               | Currently not supported.  Use [WineHQ](https://www.winehq.org/)  |
 
@@ -77,11 +77,11 @@ _CLI: Command Line Interface_
 
 ## Preview Fonts
 
-See examples of the images generated [here](Documentation/EXAMPLE.md).
+See examples of the [images generated](Documentation/EXAMPLE.md).
 
 ## MetalSlugFontReborn Guide
 
-To install and use MetalSlugFontReborn, refer to the documentation in [here](Documentation/SELECT.md)
+To install and use MetalSlugFontReborn, refer to the [documentation](Documentation/SELECT.md).
 
 ## How to Contribute
 

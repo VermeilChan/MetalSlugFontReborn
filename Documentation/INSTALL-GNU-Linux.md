@@ -1,7 +1,6 @@
 # **GNU/Linux:**
 
-1. **Download MetalSlugFontReborn:**
-   - Download the latest stable release from [here](https://github.com/VermeilChan/MetalSlugFontReborn/releases).
+1. Get the latest release of [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn/releases/latest).
 
    ![Download MetalSlugFontReborn](Markdown/Guide/Download-Program.png)
 
@@ -32,7 +31,7 @@
       ```
 
 3. **Select a Font:**
-   - Upon opening MetalSlugFontReborn, choose your desired font and color, you can preview them in [EXAMPLE.md](Documentation/EXAMPLE.md).
+   - Upon opening MetalSlugFontReborn, choose your desired font and color, you can [preview](Documentation/EXAMPLE.md).
 
    ![MetalSlugFontReborn](Markdown/Guide/GNU-Linux/MetalSlugFontReborn.png)
 
