@@ -104,6 +104,5 @@ I want to say a big thank you to the people and groups who helped me.
 - [GussPrint](https://www.spriters-resource.com/submitter/Gussprint): for providing assets for font 5.
 - [BinRich](https://discord.com/users/477459550904254464): for providing diacritic marks.
 - [PyInstaller](https://pyinstaller.org/en/stable): for converting Python code to an executable file.
-- [PyQt6](https://www.riverbankcomputing.com): Used for the graphical interface.
+- [PySide6](https://doc.qt.io/qtforpython-6/): Used for the graphical interface.
 - [Pillow](https://python-pillow.org): Used for image processing.
-- [UPX](https://upx.github.io): Compressed files for a smaller size.
