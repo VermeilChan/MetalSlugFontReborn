@@ -1,6 +1,6 @@
 from platform import system, version, release, architecture
-from PyQt6.QtGui import QIcon, QPixmap
-from PyQt6.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap
+from PySide6.QtWidgets import (
     QApplication,
     QMessageBox,
     QMainWindow,
@@ -131,8 +131,8 @@ class MetalSlugFontReborn(QMainWindow):
         build_info_layout = QVBoxLayout()
 
         build_info_layout.addWidget(QLabel("Version: 1.7.0 (Dev)"))
-        build_info_layout.addWidget(QLabel("Pyinstaller: 6.3.0"))
-        build_info_layout.addWidget(QLabel("PyQt6: 6.6.1"))
+        build_info_layout.addWidget(QLabel("Pyinstaller: 6.4.0"))
+        build_info_layout.addWidget(QLabel("PySide6: 6.6.2"))
         build_info_layout.addWidget(QLabel("Build date: Feb XX 2024"))
 
         os_info_box = QGroupBox("Operating System")
