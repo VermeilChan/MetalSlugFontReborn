@@ -16,8 +16,8 @@ remove_images() {
     echo "Time taken to remove images: $duration seconds"
 }
 
-wsgi_directory="/home/Vermeil/MetalSlugFontReborn/Src/static/Generated-Images/"
-local_directory="Src/static/Generated-Images/"
+wsgi_directory="/home/Vermeil/MetalSlugFontReborn/Src/static/generated-images/"
+local_directory="Src/static/generated-images/"
 
 remove_images "$wsgi_directory"
 remove_images "$local_directory"

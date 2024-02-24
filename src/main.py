@@ -8,8 +8,8 @@ def generate_filename():
     return f"{unique_id}.png"
 
 def get_font_paths(font, color):
-    base_path = os.path.join('src', 'static', 'assets', 'fonts', f'Font-{font}', f'Font-{font}-{color}')
-    return [os.path.join(base_path, folder) for folder in ['Letters', 'Numbers', 'Symbols']]
+    base_path = os.path.join('src', 'static', 'assets', 'fonts', f'font-{font}', f'font-{font}-{color}')
+    return [os.path.join(base_path, folder) for folder in ['letters', 'numbers', 'symbols']]
 
 def get_character_image_path(character, font_paths):
     CHARACTERS_FOLDER, NUMBERS_FOLDER, SYMBOLS_FOLDER = font_paths
@@ -17,9 +17,9 @@ def get_character_image_path(character, font_paths):
     if character.isspace():
         return None
     elif character.islower():
-        character_image_path = os.path.join(CHARACTERS_FOLDER, 'Lower-Case', f"{character}.png")
+        character_image_path = os.path.join(CHARACTERS_FOLDER, 'lower-case', f"{character}.png")
     elif character.isupper():
-        character_image_path = os.path.join(CHARACTERS_FOLDER, 'Upper-Case', f"{character}.png")
+        character_image_path = os.path.join(CHARACTERS_FOLDER, 'upper-case', f"{character}.png")
     elif character.isdigit():
         character_image_path = os.path.join(NUMBERS_FOLDER, f"{character}.png")
     else:
@@ -52,12 +52,12 @@ def generate_image(text, filename, font_paths):
         final_image.paste(character_image, (x_position, y_position))
         x_position += character_image.width
 
-    image_directory = os.path.join('src', 'static', 'Generated-Images')
+    image_directory = os.path.join('src', 'static', 'generated-images')
     os.makedirs(image_directory, exist_ok=True)
 
     image_path = os.path.join(image_directory, filename)
     final_image.save(image_path)
 
-    image_url = f'/static/Generated-Images/{filename}'
+    image_url = f'static/generated-images/{filename}'
 
     return image_url, None
