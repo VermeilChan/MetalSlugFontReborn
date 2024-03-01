@@ -8,7 +8,7 @@
    - Extract `MetalSlugFontReborn-X.X.X-x64-GNU-Linux.7z`.
 
 3. **Install Dependencies:**
-   - Navigate to the `MetalSlugFontReborn-X.X.X-x64-GNU-Linux` folder in the terminal.
+   - Navigate to the `MetalSlugFontReborn` folder in the terminal.
    - Run the following command:
       ```sh
       bash Install-Deps.sh
@@ -31,7 +31,7 @@
       ```
 
 3. **Select a Font:**
-   - Upon opening MetalSlugFontReborn, choose your desired font and color, you can [preview](Documentation/EXAMPLE.md).
+   - Upon opening MetalSlugFontReborn, choose your desired font and color, you can [preview](Documentation/EXAMPLE.md) here.
 
    ![MetalSlugFontReborn](Markdown/Guide/GNU-Linux/MetalSlugFontReborn.png)
 

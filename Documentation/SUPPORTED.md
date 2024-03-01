@@ -1,6 +1,6 @@
 # MetalSlugFontReborn Character Support
 
-Note: _While the characters listed here may be supported by the font, the functionality to fully utilize them might not have been implemented yet._
+Note: _While the characters listed here may be supported by the font, the functionality to use them might not have been implemented yet :)._
 
 ## Font 1 Support
 

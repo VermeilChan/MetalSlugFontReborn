@@ -6,11 +6,11 @@
 
 **Extract and Run MetalSlugFontReborn:**
    - Locate and extract `MetalSlugFontReborn-X.X.X-x64-Win.7z`.
-   - Go to the `MetalSlugFontReborn-X.X.X-x64-win` folder.
+   - Go to the `MetalSlugFontReborn` folder.
    - Run `MetalSlugFontReborn.exe`.
 
 3. **Select a Font:**
-   - Upon opening MetalSlugFontReborn, choose your desired font and color, you can [preview](Documentation/EXAMPLE.md).
+   - Upon opening MetalSlugFontReborn, choose your desired font and color, you can [preview](Documentation/EXAMPLE.md) here.
 
    ![MetalSlugFontReborn](Markdown/Guide/Windows/MetalSlugFontReborn.png)
 
