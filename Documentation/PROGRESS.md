@@ -4,8 +4,8 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 ## Current Status
 
-- **Version**: 1.7.0 (Stable Release)
-- **Release Date**: 2024-02-XX
+- **Version**: 1.7.0 (In Development)
+- **Release Date**: 2024-03-XX
 - **Project Link**: [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn)
 - **Maintainer**: VermeilChan
 
@@ -32,3 +32,7 @@ This document provides an overview of the latest updates, milestones, and upcomi
 - **Milestone 5: Improved Symbol Support**
   - **Date Achieved**: 2024-01-21
   - **Description**: Expanded symbol support to cover a wider range of characters.
+
+- **Milestone 6: Reworked Webapp**
+  - **Date Achieved**: 2024-02-24
+  - **Description**: Rewrote the core features of MetalSlugFontReborn webapp version, improving performance, functionality, and compatibility. The rework includes support for Progressive Web App (PWA), making the application accessible a wider range of platforms.
