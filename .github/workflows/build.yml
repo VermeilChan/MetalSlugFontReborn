@@ -39,3 +39,4 @@ jobs:
       with:
         name: MetalSlugFontReborn-GUI-Nightly
         path: dist/MetalSlugFontReborn
+        compression-level: 9
