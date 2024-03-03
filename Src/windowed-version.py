@@ -1,4 +1,6 @@
 from platform import system, version, release, architecture
+from semantic_version import Version
+from requests import get, RequestException
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import (
     QApplication,
@@ -45,6 +47,48 @@ class ImageGenerator:
         except Exception as e:
             QMessageBox.critical(None, "MetalSlugFontReborn", str(e))
 
+class UpdaterDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Updater")
+        self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
+
+        layout = QVBoxLayout()
+
+        self.status_label = QLabel("Checking for updates...")
+        layout.addWidget(self.status_label)
+
+        self.setLayout(layout)
+
+        self.check_for_updates()
+
+    def check_for_updates(self):
+        owner = "VermeilChan"
+        repo = "MetalSlugFontReborn"
+        url = f"https://api.github.com/repos/{owner}/{repo}/releases/latest"
+
+        try:
+            response = get(url)
+            response.raise_for_status()
+            latest_release = response.json()
+
+            tag_name = "1.7.0"
+            latest_version_str = latest_release['tag_name']
+            latest_version_str = latest_version_str.lstrip('v')
+            latest_version = Version(latest_version_str)
+            current_version = Version(tag_name)
+
+            if latest_version == current_version:
+                self.status_label.setText("You are already using the latest version.")
+            elif latest_version > current_version:
+                self.status_label.setText(f"A new version (v{latest_version}) is available!")
+            else:
+                self.status_label.setText("Your version is newer than the latest version.")
+
+        except RequestException as e:
+            self.status_label.setText("Failed to check for updates.")
+            print(f"Error: {e}")
+
 class MetalSlugFontReborn(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -83,7 +127,14 @@ class MetalSlugFontReborn(QMainWindow):
         about_action = help_menu.addAction("About")
         about_action.triggered.connect(self.show_about_dialog)
 
+        self.updater_action = help_menu.addAction("Check for Updates")
+        self.updater_action.triggered.connect(self.open_updater)
+
         self.setMaximumSize(self.size())
+
+    def open_updater(self):
+        updater_dialog = UpdaterDialog(self)
+        updater_dialog.exec()
 
     def on_font_change(self):
         font = int(self.font_combobox.currentText())
