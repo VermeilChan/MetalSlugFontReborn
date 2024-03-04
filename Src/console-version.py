@@ -1,7 +1,7 @@
 import sys
 from main import generate_filename, generate_image, get_font_paths
 
-VALID_COLORS_BY_FONT = {
+valid_colors_by_font = {
     1: ["Blue", "Orange-1", "Orange-2"],
     2: ["Blue", "Orange-1", "Orange-2"],
     3: ["Blue", "Orange-1"],
@@ -9,17 +9,17 @@ VALID_COLORS_BY_FONT = {
     5: ["Orange-1"]
 }
 
-def display_intro_message():
+def display_welcome_message():
     print("\nMetalSlugFontReborn v1.7.0")
     print("You can check the supported characters in SUPPORTED.txt.")
     print("Type 'exit' to close the program.")
 
-def get_user_input(prompt):
+def get_input(prompt):
     return input(prompt).strip()
 
 def get_valid_input(prompt, valid_values):
     while True:
-        user_input = get_user_input(prompt)
+        user_input = input(prompt)
         if user_input.lower() == 'exit':
             sys.exit('Closing...')
         elif user_input in valid_values:
@@ -28,29 +28,31 @@ def get_valid_input(prompt, valid_values):
             print("Invalid input. Please try again.")
 
 def select_font():
-    valid_fonts = list(map(str, range(1, 6)))
-    return int(get_valid_input("\nChoose a font (1-5): ", valid_fonts))
+    valid_font_numbers = [str(num) for num in range(1, 6)]
+    user_choice = int(get_valid_input("\nChoose a font (1-5): ", valid_font_numbers))
+    return user_choice
 
 def select_color(font):
-    valid_colors = VALID_COLORS_BY_FONT.get(font, [])
-    return get_valid_input(f"Available colors: {', '.join(valid_colors)}\nChoose a color: ", valid_colors)
+    valid_colors = valid_colors_by_font.get(font, [])
+    available_colors = ', '.join(valid_colors)
+    return get_valid_input(f"Available colors: {available_colors}\nChoose a color: ", valid_colors)
 
-def generate_and_display_image(text, font, color):
-    if text.lower() == 'exit':
+def generate_and_display_image(input_text, selected_font, selected_color):
+    if input_text.lower() == 'exit':
         sys.exit('Closing...')
 
-    if not text:
+    if not input_text:
         return print("Input text is empty. Please enter some text.")
 
-    text = text.upper() if font == 5 else text
+    text = input_text.upper() if selected_font == 5 else input_text
 
     try:
         filename = generate_filename(text)
-        font_paths = get_font_paths(font, color)
-        image_path, error_message_generate = generate_image(text, filename, font_paths)
+        font_paths = get_font_paths(selected_font, selected_color)
+        image_path, error_message = generate_image(text, filename, font_paths)
 
-        if error_message_generate:
-            print(f"Error generating image: {error_message_generate}")
+        if error_message:
+            print(f"Error generating image: {error_message}")
         else:
             print(f"You can find the generated image here: {image_path}")
 
@@ -58,15 +60,15 @@ def generate_and_display_image(text, font, color):
         print(f"An error occurred: {e}")
 
 def main():
-    display_intro_message()
+    display_welcome_message()
 
-    font = select_font()
-    color = select_color(font)
+    selected_font = select_font()
+    selected_color = select_color(selected_font)
 
     try:
         while True:
-            text = get_user_input("Enter the text you want to generate: ")
-            generate_and_display_image(text, font, color)
+            user_input = get_input("Enter the text you want to generate: ")
+            generate_and_display_image(user_input, selected_font, selected_color)
     except KeyboardInterrupt:
         sys.exit('Closing...')
 

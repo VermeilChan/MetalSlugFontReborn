@@ -27,21 +27,21 @@ VALID_COLORS_BY_FONT = {
 }
 
 class ImageGenerator:
-    icon_path = "Assets/Icons/Raubtier.ico"
+    ICON_PATH = "Assets/Icons/Raubtier.ico"
 
     @staticmethod
-    def generate_and_display_image(text, font, color):
-        if not text.strip():
+    def generate_and_display_image(input_text, selected_font, selected_color):
+        if not input_text.strip():
             QMessageBox.critical(None, "MetalSlugFontReborn", "Input text is empty. Please enter some text.")
             return
 
         try:
-            filename = generate_filename(text)
-            font_paths = get_font_paths(font, color)
-            image_path, error_message_generate = generate_image(text, filename, font_paths)
+            file_name = generate_filename(input_text)
+            font_paths = get_font_paths(selected_font, selected_color)
+            image_path, error_message = generate_image(input_text, file_name, font_paths)
 
-            if error_message_generate:
-                QMessageBox.critical(None, "MetalSlugFontReborn", f"Error: {error_message_generate}")
+            if error_message:
+                QMessageBox.critical(None, "MetalSlugFontReborn", f"Error: {error_message}")
             else:
                 QMessageBox.information(None, "MetalSlugFontReborn", f"Image saved as:\n\n{image_path}\n")
         except Exception as e:
@@ -51,13 +51,11 @@ class UpdaterDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Updater")
-        self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
+        self.setWindowIcon(QIcon(ImageGenerator.ICON_PATH))
 
         layout = QVBoxLayout()
-
         self.status_label = QLabel("Checking for updates...")
         layout.addWidget(self.status_label)
-
         self.setLayout(layout)
 
         self.check_for_updates()
@@ -71,12 +69,9 @@ class UpdaterDialog(QDialog):
             response = get(url)
             response.raise_for_status()
             latest_release = response.json()
-
-            tag_name = "1.7.0"
-            latest_version_str = latest_release['tag_name']
-            latest_version_str = latest_version_str.lstrip('v')
+            latest_version_str = latest_release['tag_name'].lstrip('v')
             latest_version = Version(latest_version_str)
-            current_version = Version(tag_name)
+            current_version = Version("1.7.0")
 
             if latest_version == current_version:
                 self.status_label.setText("You are already using the latest version.")
@@ -84,16 +79,14 @@ class UpdaterDialog(QDialog):
                 self.status_label.setText(f"A new version (v{latest_version}) is available!")
             else:
                 self.status_label.setText("Your version is newer than the latest version.")
-
-        except RequestException as e:
+        except RequestException:
             self.status_label.setText("Failed to check for updates.")
-            print(f"Error: {e}")
 
 class MetalSlugFontReborn(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("MetalSlugFontReborn")
-        self.setWindowIcon(QIcon(ImageGenerator.icon_path))
+        self.setWindowIcon(QIcon(ImageGenerator.ICON_PATH))
 
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
@@ -127,8 +120,8 @@ class MetalSlugFontReborn(QMainWindow):
         about_action = help_menu.addAction("About")
         about_action.triggered.connect(self.show_about_dialog)
 
-        self.updater_action = help_menu.addAction("Check for Updates")
-        self.updater_action.triggered.connect(self.open_updater)
+        updater_action = help_menu.addAction("Check for Updates")
+        updater_action.triggered.connect(self.open_updater)
 
         self.setMaximumSize(self.size())
 
@@ -137,8 +130,8 @@ class MetalSlugFontReborn(QMainWindow):
         updater_dialog.exec()
 
     def on_font_change(self):
-        font = int(self.font_combobox.currentText())
-        valid_colors = VALID_COLORS_BY_FONT.get(font, [])
+        font_index = int(self.font_combobox.currentText())
+        valid_colors = VALID_COLORS_BY_FONT.get(font_index, [])
         self.color_combobox.clear()
         self.color_combobox.addItems(valid_colors)
         self.color_combobox.setEnabled(bool(valid_colors))
@@ -147,12 +140,12 @@ class MetalSlugFontReborn(QMainWindow):
 
     def generate_and_display_image(self):
         text = self.text_entry.text()
-        font = int(self.font_combobox.currentText())
+        font_index = int(self.font_combobox.currentText())
         color = self.color_combobox.currentText()
 
-        text = text.upper() if font == 5 else text
+        text = text.upper() if font_index == 5 else text
 
-        ImageGenerator.generate_and_display_image(text, font, color)
+        ImageGenerator.generate_and_display_image(text, font_index, color)
 
     def show_about_dialog(self):
         about_dialog = QDialog(self)
@@ -204,7 +197,7 @@ class MetalSlugFontReborn(QMainWindow):
 def main():
     app = QApplication([])
     app.setStyle('Fusion')
-    app.setWindowIcon(QIcon(ImageGenerator.icon_path))
+    app.setWindowIcon(QIcon(ImageGenerator.ICON_PATH))
     window = MetalSlugFontReborn()
     window.show()
     app.exec()
