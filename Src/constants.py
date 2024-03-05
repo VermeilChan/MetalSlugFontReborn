@@ -1,4 +1,4 @@
-SPECIAL_CHARACTERS = {
+special_characters = {
     # 'ȧ': 'A-1',
     # 'ä': 'A-2',
     # 'ā': 'A-3',
