@@ -1,3 +1,4 @@
+import datetime
 from platform import system, version, release, architecture
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import (
@@ -130,10 +131,10 @@ class MetalSlugFontReborn(QMainWindow):
         build_info_box = QGroupBox("Build Information")
         build_info_layout = QVBoxLayout()
 
-        build_info_layout.addWidget(QLabel("Version: 1.7.0 (Dev)"))
-        build_info_layout.addWidget(QLabel("Pyinstaller: 6.4.0"))
+        build_info_layout.addWidget(QLabel("Version: 1.7.0"))
+        build_info_layout.addWidget(QLabel("Pyinstaller: 6.5.0"))
         build_info_layout.addWidget(QLabel("PySide6: 6.6.2"))
-        build_info_layout.addWidget(QLabel("Build date: Feb XX 2024"))
+        build_info_layout.addWidget(QLabel(f"Build date: {datetime.datetime.now().strftime('%b %d %Y')}"))
 
         os_info_box = QGroupBox("Operating System")
         os_info_layout = QVBoxLayout()
