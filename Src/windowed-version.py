@@ -1,4 +1,3 @@
-import datetime
 from platform import system, version, release, architecture
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import (
@@ -17,7 +16,7 @@ from PySide6.QtWidgets import (
 )
 from main import generate_filename, generate_image, get_font_paths
 
-VALID_COLORS_BY_FONT = {
+valid_colors_by_font = {
     1: ["Blue", "Orange-1", "Orange-2"],
     2: ["Blue", "Orange-1", "Orange-2"],
     3: ["Blue", "Orange-1"],
@@ -25,7 +24,7 @@ VALID_COLORS_BY_FONT = {
     5: ["Orange-1"]
 }
 
-class ImageGenerator:
+class image_generator:
     icon_path = "Assets/Icons/Raubtier.ico"
 
     @staticmethod
@@ -42,15 +41,15 @@ class ImageGenerator:
             if error_message_generate:
                 QMessageBox.critical(None, "MetalSlugFontReborn", f"Error: {error_message_generate}")
             else:
-                QMessageBox.information(None, "MetalSlugFontReborn", f"Image saved as:\n\n{image_path}\n")
+                QMessageBox.information(None, "MetalSlugFontReborn", f"Successfully generated image :D\n\nFile saved as:\n\n{image_path}\n")
         except Exception as e:
             QMessageBox.critical(None, "MetalSlugFontReborn", str(e))
 
-class MetalSlugFontReborn(QMainWindow):
+class metalslugfontreborn(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("MetalSlugFontReborn")
-        self.setWindowIcon(QIcon(ImageGenerator.icon_path))
+        self.setWindowIcon(QIcon(image_generator.icon_path))
 
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
@@ -63,7 +62,7 @@ class MetalSlugFontReborn(QMainWindow):
 
         layout.addWidget(QLabel("Select Font:"))
         self.font_combobox = QComboBox()
-        self.font_combobox.addItems(map(str, sorted(VALID_COLORS_BY_FONT.keys())))
+        self.font_combobox.addItems(map(str, sorted(valid_colors_by_font.keys())))
         layout.addWidget(self.font_combobox)
 
         layout.addWidget(QLabel("Select Color:"))
@@ -88,7 +87,7 @@ class MetalSlugFontReborn(QMainWindow):
 
     def on_font_change(self):
         font = int(self.font_combobox.currentText())
-        valid_colors = VALID_COLORS_BY_FONT.get(font, [])
+        valid_colors = valid_colors_by_font.get(font, [])
         self.color_combobox.clear()
         self.color_combobox.addItems(valid_colors)
         self.color_combobox.setEnabled(bool(valid_colors))
@@ -102,7 +101,7 @@ class MetalSlugFontReborn(QMainWindow):
 
         text = text.upper() if font == 5 else text
 
-        ImageGenerator.generate_and_display_image(text, font, color)
+        image_generator.generate_and_display_image(text, font, color)
 
     def show_about_dialog(self):
         about_dialog = QDialog(self)
@@ -128,15 +127,15 @@ class MetalSlugFontReborn(QMainWindow):
         top_left_layout.addLayout(metadata_layout)
         layout.addLayout(top_left_layout)
 
-        build_info_box = QGroupBox("Build Information")
+        build_info_box = QGroupBox("Build Information:")
         build_info_layout = QVBoxLayout()
 
-        build_info_layout.addWidget(QLabel("Version: 1.7.0"))
+        build_info_layout.addWidget(QLabel("Version: 1.7.0 (Dev)"))
         build_info_layout.addWidget(QLabel("Pyinstaller: 6.5.0"))
         build_info_layout.addWidget(QLabel("PySide6: 6.6.2"))
-        build_info_layout.addWidget(QLabel(f"Build date: {datetime.datetime.now().strftime('%b %d %Y')}"))
+        build_info_layout.addWidget(QLabel(f"Build date: Dev"))
 
-        os_info_box = QGroupBox("Operating System")
+        os_info_box = QGroupBox("Operating System:")
         os_info_layout = QVBoxLayout()
 
         os_info_layout.addWidget(QLabel(f"OS: {system()} {release()} ({architecture()[0]})"))
@@ -154,8 +153,8 @@ class MetalSlugFontReborn(QMainWindow):
 def main():
     app = QApplication([])
     app.setStyle('Fusion')
-    app.setWindowIcon(QIcon(ImageGenerator.icon_path))
-    window = MetalSlugFontReborn()
+    app.setWindowIcon(QIcon(image_generator.icon_path))
+    window = metalslugfontreborn()
     window.show()
     app.exec()
 

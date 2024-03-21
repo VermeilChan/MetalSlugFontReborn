@@ -1,7 +1,7 @@
 import sys
 from main import generate_filename, generate_image, get_font_paths
 
-VALID_COLORS_BY_FONT = {
+valid_colors_by_font = {
     1: ["Blue", "Orange-1", "Orange-2"],
     2: ["Blue", "Orange-1", "Orange-2"],
     3: ["Blue", "Orange-1"],
@@ -10,7 +10,8 @@ VALID_COLORS_BY_FONT = {
 }
 
 def display_intro_message():
-    print("\nMetalSlugFontReborn v1.7.0")
+    print("\nMetalSlugFontReborn v1.7.0 (Dev)")
+    print("Maintained by VermeilChan\n")
     print("You can check the supported characters in SUPPORTED.txt.")
     print("Type 'exit' to close the program.")
 
@@ -32,7 +33,7 @@ def select_font():
     return int(get_valid_input("\nChoose a font (1-5): ", valid_fonts))
 
 def select_color(font):
-    valid_colors = VALID_COLORS_BY_FONT.get(font, [])
+    valid_colors = valid_colors_by_font.get(font, [])
     return get_valid_input(f"Available colors: {', '.join(valid_colors)}\nChoose a color: ", valid_colors)
 
 def generate_and_display_image(text, font, color):

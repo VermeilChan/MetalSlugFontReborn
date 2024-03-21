@@ -1,0 +1,42 @@
+name: Build MetalSlugFontReborn mac
+
+on:
+  push:
+    branches:
+      - Development
+    paths:
+      - '.github/workflows/build.yml'
+
+jobs:
+  build:
+    runs-on: macos-14-large
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4.1.1
+
+    - name: Set up Python
+      uses: actions/setup-python@v5.0.0
+      with:
+        python-version: 3.12.2
+        architecture: x64
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Build MetalSlugFontReborn
+      run: |
+        pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;."  "Src/windowed-version.py"
+
+    - name: Move Assets folder
+      run: |
+        mv dist/MetalSlugFontReborn/_internal/Assets dist/MetalSlugFontReborn/
+      shell: bash
+
+    - name: Upload MetalSlugFontReborn
+      uses: actions/upload-artifact@v4.3.1
+      with:
+        name: MetalSlugFontReborn-Dev
+        path: dist/MetalSlugFontReborn
+        compression-level: 9
