@@ -100,7 +100,7 @@ I want to say a big thank you to the people and groups who helped me.
 
 - [SNK Corporation](https://www.snk-corp.co.jp): Used some of their assets.
 - [SikroxMemer](https://github.com/SikroxMemer): for assisting in the development of the program and webapp.
-- [Division 六](https://6th-divisions-den.com): for providing assets for fonts 1 to 4.
+- [Division 六](https://6th-divisions-den.com): inspiring me to create the program in the first place and providing assets for fonts 1 to 4.
 - [GussPrint](https://www.spriters-resource.com/submitter/Gussprint): for providing assets for font 5.
 - [BinRich](https://discord.com/users/477459550904254464): for providing diacritic marks.
 - [PyInstaller](https://pyinstaller.org/en/stable): for converting Python code to an executable file.
