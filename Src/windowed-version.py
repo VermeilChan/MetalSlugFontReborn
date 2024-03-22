@@ -1,27 +1,14 @@
 from platform import system, version, release, architecture
 from PySide6.QtGui import QIcon, QPixmap
-from PySide6.QtWidgets import (
-    QApplication,
-    QMessageBox,
-    QMainWindow,
-    QHBoxLayout,
-    QVBoxLayout,
-    QPushButton,
-    QLineEdit,
-    QGroupBox,
-    QComboBox,
-    QWidget,
-    QDialog,
-    QLabel,
-)
+from PySide6.QtWidgets import QApplication, QMessageBox, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QGroupBox, QComboBox, QWidget, QDialog, QLabel
 from main import generate_filename, generate_image, get_font_paths
 
 valid_colors_by_font = {
-    1: ["Blue", "Orange-1", "Orange-2"],
-    2: ["Blue", "Orange-1", "Orange-2"],
-    3: ["Blue", "Orange-1"],
-    4: ["Blue", "Orange-1", "Yellow"],
-    5: ["Orange-1"]
+    1: ["Blue", "Orange", "Gold"],
+    2: ["Blue", "Orange", "Gold"],
+    3: ["Blue", "Orange"],
+    4: ["Blue", "Orange", "Yellow"],
+    5: ["Orange"]
 }
 
 class image_generator:
