@@ -39,4 +39,3 @@ jobs:
       with:
         name: MetalSlugFontReborn-Dev
         path: dist/MetalSlugFontReborn
-        compression-level: 9
