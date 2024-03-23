@@ -62,13 +62,13 @@ Before installing MetalSlugFontReborn, ensure that your system meets the followi
 | **Operating System**    | **Versions**                                                     |
 |-----------------------  |------------------------------------------------------------------|
 | **Windows**             | 11 & 10 (GUI), 11, 10, 8.1 (CLI)                                 |
-| **GNU/Linux**           | Debian 12/11, Ubuntu 22.04.3, Fedora 39/38, Arch Linux, OpenSUSE |
+| **GNU/Linux**           | Debian 12/11, Ubuntu 22.04.4, Fedora 39/38, Arch Linux, OpenSUSE |
 | **MacOS**               | Currently not supported.  Use [WineHQ](https://www.winehq.org/)  |
 
 | **Version**             | **RAM Usage**        | **Disk Space**       |
 |-----------------------  |----------------------|----------------------|
-| **GUI Version**         | 50MB                 | 100MB                |
-| **CLI Version**         | 20MB                 | 30MB                 |
+| **GUI Version**         | 50MB                 | 130MB                |
+| **CLI Version**         | 40MB                 | 30MB                 |
 
 _Additional space required for generating images._
 
@@ -77,11 +77,11 @@ _CLI: Command Line Interface_
 
 ## Preview Fonts
 
-See examples of the [images generated](Documentation/EXAMPLE.md).
+See examples of the [images generated](Documentation/EXAMPLE.md) here.
 
 ## MetalSlugFontReborn Guide
 
-To install and use MetalSlugFontReborn, refer to the [documentation](Documentation/SELECT.md).
+To install and use MetalSlugFontReborn, refer to the [documentation](Documentation/SELECT.md) here.
 
 ## How to Contribute
 
