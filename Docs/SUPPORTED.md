@@ -1,6 +1,6 @@
 # MetalSlugFontReborn Character Support
 
-Note: _While the characters listed here may be supported by the font, the functionality to use them might not have been implemented yet :)._
+Here you can find which characters MetalSlugFontReborn supports.
 
 ## Font 1 Support
 
@@ -13,7 +13,7 @@ Note: _While the characters listed here may be supported by the font, the functi
 
 - **Letters:** Lowercase and Uppercase
 - **Numbers:** 0 to 9
-- **Symbols:** , = ︷ ! - . + & ? / ♪ Ⅰ Ⅱ Ⅲ Ⅳ Ⅴ ✖
+- **Symbols:** , = ︷ ! - . + & ? / ♪ ✖
 - **Colors:** Blue, Orange 1 and Orange 2
 
 ## Font 3 Support
@@ -36,3 +36,7 @@ Note: _While the characters listed here may be supported by the font, the functi
 - **Numbers:** 1 to 9
 - **Symbols:** ! ?
 - **Colors:** Orange 1
+
+# Unsupported Characters
+
+- **Symbols:** ȧ ä ā á à â ã í ü ū ú ė ë é ê ö ō ó ô Ⅰ Ⅱ Ⅲ Ⅳ Ⅴ

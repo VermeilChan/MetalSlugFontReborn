@@ -2,7 +2,7 @@
 
 1. Get the latest release of [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn/releases/latest).
 
-   ![Download MetalSlugFontReborn](Markdown/Guide/Download-Program.png)
+   ![Download MetalSlugFontReborn](Markdown/Docs/Download-Program.png)
 
 **Extract and Run MetalSlugFontReborn:**
    - Locate and extract `MetalSlugFontReborn-X.X.X-x64-Win.7z`.
@@ -10,9 +10,9 @@
    - Run `MetalSlugFontReborn.exe`.
 
 3. **Select a Font:**
-   - Upon opening MetalSlugFontReborn, choose your desired font and color, you can [preview](Documentation/EXAMPLE.md) here.
+   - Upon opening MetalSlugFontReborn, choose your desired font and color, you can [preview](EXAMPLES.md) here.
 
-   ![MetalSlugFontReborn](Markdown/Guide/Windows/MetalSlugFontReborn.png)
+   ![MetalSlugFontReborn](Markdown/Docs/Windows/MetalSlugFontReborn.png)
 
 4. **Input Your Text:**
    - Enter the text you want to convert to the metal slug font.

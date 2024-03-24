@@ -1,11 +1,9 @@
-# **GNU/Linux:**
+# **Linux:**
 
 1. Get the latest release of [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn/releases/latest).
 
-   ![Download MetalSlugFontReborn](Markdown/Guide/Download-Program.png)
-
 2. **Extract the Archive:**
-   - Extract `MetalSlugFontReborn-X.X.X-x64-GNU-Linux.7z`.
+   - Extract `MetalSlugFontReborn-X.X.X-x64-Linux.tar.gz`.
 
 3. **Install Dependencies:**
    - Navigate to the `MetalSlugFontReborn` folder in the terminal.
@@ -31,9 +29,9 @@
       ```
 
 3. **Select a Font:**
-   - Upon opening MetalSlugFontReborn, choose your desired font and color, you can [preview](Documentation/EXAMPLE.md) here.
+   - Upon opening MetalSlugFontReborn, choose your desired font and color, you can [preview](EXAMPLES.md) here.
 
-   ![MetalSlugFontReborn](Markdown/Guide/GNU-Linux/MetalSlugFontReborn.png)
+   ![MetalSlugFontReborn](Markdown/Docs/Linux/MetalSlugFontReborn.png)
 
 4. **Input Your Text:**
    - Enter the text you want to convert to the metal slug font.

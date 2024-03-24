@@ -5,7 +5,7 @@ This document provides an overview of the latest updates, milestones, and upcomi
 ## Current Status
 
 - **Version**: 1.7.0 (In Development)
-- **Release Date**: 2024-03-XX
+- **Release Date**: 2024-XX-XX
 - **Project Link**: [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn)
 - **Maintainer**: VermeilChan
 
@@ -36,3 +36,7 @@ This document provides an overview of the latest updates, milestones, and upcomi
 - **Milestone 6: Reworked Webapp**
   - **Date Achieved**: 2024-02-24
   - **Description**: Rewrote the core features of MetalSlugFontReborn webapp version, improving performance, functionality, and compatibility. The rework includes support for Progressive Web App (PWA), making the application accessible a wider range of platforms.
+
+- **Milestone 7: CLI Autocompletion**
+  - **Date Achieved**: 2024-03-22
+  - **Description**: Added autocompletion support for the CLI version.
