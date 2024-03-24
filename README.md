@@ -2,31 +2,31 @@
 
 <p align="center">
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/graphs/contributors">
-    <img alt="Contributors" src="https://img.shields.io/github/contributors/VermeilChan/MetalSlugFontReborn?color=green&style=flat-square" />
+    <img alt="Contributors" src="https://img.shields.io/github/contributors/VermeilChan/MetalSlugFontReborn?color=green" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/releases">
-    <img alt="Latest Release" src="https://img.shields.io/github/release/VermeilChan/MetalSlugFontReborn?color=blue&style=flat-square" />
+    <img alt="Latest Release" src="https://img.shields.io/github/release/VermeilChan/MetalSlugFontReborn?color=blue" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/releases">
-    <img alt="Downloads" src="https://img.shields.io/github/downloads/VermeilChan/MetalSlugFontReborn/total?color=orange&style=flat-square" />
+    <img alt="Downloads" src="https://img.shields.io/github/downloads/VermeilChan/MetalSlugFontReborn/total?color=orange" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/blob/Development/LICENSE">
-    <img alt="License" src="https://img.shields.io/github/license/VermeilChan/MetalSlugFontReborn?color=purple&style=flat-square" />
+    <img alt="License" src="https://img.shields.io/github/license/VermeilChan/MetalSlugFontReborn?color=purple" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/issues">
-    <img alt="Open Issues" src="https://img.shields.io/github/issues/VermeilChan/MetalSlugFontReborn?color=red&style=flat-square" />
+    <img alt="Open Issues" src="https://img.shields.io/github/issues/VermeilChan/MetalSlugFontReborn?color=red" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/pulls">
-    <img alt="Open Pull Requests" src="https://img.shields.io/github/issues-pr/VermeilChan/MetalSlugFontReborn?color=yellow&style=flat-square" />
+    <img alt="Open Pull Requests" src="https://img.shields.io/github/issues-pr/VermeilChan/MetalSlugFontReborn?color=yellow" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/commits/Development">
-    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/VermeilChan/MetalSlugFontReborn?color=darkcyan&style=flat-square" />
+    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/VermeilChan/MetalSlugFontReborn?color=darkcyan" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn">
-    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/VermeilChan/MetalSlugFontReborn?color=yellowgreen&style=flat-square" />
+    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/VermeilChan/MetalSlugFontReborn?color=yellowgreen" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn">
-    <img alt="GitHub forks" src="https://img.shields.io/github/forks/VermeilChan/MetalSlugFontReborn?color=lightcoral&style=flat-square" />
+    <img alt="GitHub forks" src="https://img.shields.io/github/forks/VermeilChan/MetalSlugFontReborn?color=lightcoral" />
   </a>
 </p>
 
@@ -53,7 +53,7 @@ If you have a GitHub account and have found this repository helpful, please cons
 - Supports uppercase and lowercase alphabets (A-Z, a-z), numbers (0-9), symbols, and colors.
 - Easy-to-use user interface with both GUI and command line support.
 
-For additional details, please refer to the [documentation](Documentation/SUPPORTED.md).
+For additional details, please refer to the [docs](Docs/SUPPORTED.md).
 
 ## Requirements
 
@@ -77,11 +77,11 @@ _CLI: Command Line Interface_
 
 ## Preview Fonts
 
-See examples of the [images generated](Documentation/EXAMPLE.md) here.
+See examples of the [images generated](Docs/EXAMPLE.md) here.
 
 ## MetalSlugFontReborn Guide
 
-To install and use MetalSlugFontReborn, refer to the [documentation](Documentation/SELECT.md) here.
+To install and use MetalSlugFontReborn, refer to the [docs](Docs/SELECT.md) here.
 
 ## How to Contribute
 
