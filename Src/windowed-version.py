@@ -16,15 +16,14 @@ class image_generator:
 
     @staticmethod
     def generate_and_display_image(text, font, color):
-        if not text.strip():
-            QMessageBox.critical(None, "MetalSlugFontReborn", "Input text is empty. Please enter some text.")
-            return
-
         try:
             filename = generate_filename(text)
             font_paths = get_font_paths(font, color)
             image_path, error_message_generate = generate_image(text, filename, font_paths)
 
+            if not text.strip():
+                QMessageBox.critical(None, "MetalSlugFontReborn", "Input text is empty. Please enter some text.")
+                return
             if error_message_generate:
                 QMessageBox.critical(None, "MetalSlugFontReborn", f"Error: {error_message_generate}")
             else:
