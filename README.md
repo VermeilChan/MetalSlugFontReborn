@@ -77,11 +77,11 @@ _CLI: Command Line Interface_
 
 ## Preview Fonts
 
-See examples of the [images generated](Docs/EXAMPLE.md) here.
+See examples of the [images generated](Docs/EXAMPLES.md) here.
 
 ## MetalSlugFontReborn Guide
 
-To install and use MetalSlugFontReborn, refer to the [docs](Docs/SELECT.md) here.
+To install and use MetalSlugFontReborn, refer to the [docs](Docs/INSTALL.md) here.
 
 ## How to Contribute
 
