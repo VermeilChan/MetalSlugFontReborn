@@ -1,5 +1,5 @@
 from pathlib import Path
-import json
+from json import load, dump
 from platform import system, version, release, architecture
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import QApplication, QMessageBox, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QGroupBox, QComboBox, QWidget, QDialog, QLabel, QFileDialog
@@ -90,12 +90,12 @@ class MetalSlugFontReborn(QMainWindow):
         about_action = help_menu.addAction("About")
         about_action.triggered.connect(self.show_about_dialog)
 
-        theme_menu = menubar.addMenu("Theme")
+        theme_menu = menubar.addMenu("Themes")
 
-        fusion_action = theme_menu.addAction("Fusion")
+        fusion_action = theme_menu.addAction("Fusion (Cross Platform)")
         fusion_action.triggered.connect(lambda: self.set_theme("Fusion"))
 
-        windows_action = theme_menu.addAction("Windows")
+        windows_action = theme_menu.addAction("Windows (Windows Only)")
         windows_action.triggered.connect(lambda: self.set_theme("Windows"))
 
         self.setMaximumSize(self.size())
@@ -128,21 +128,23 @@ class MetalSlugFontReborn(QMainWindow):
     def set_theme(theme_name):
         if theme_name:
             QApplication.setStyle(theme_name)
+            MetalSlugFontReborn.save_theme(theme_name)
         else:
             QApplication.setStyle(QApplication.style())
 
     @staticmethod
     def save_theme(theme_name):
         with open('config.json', 'w', encoding='utf-8') as f:
-            json.dump({"Theme": theme_name}, f)
+            dump({"Theme": theme_name}, f)
 
-    def load_theme(self):
+    @staticmethod
+    def load_theme():
         try:
             with open('config.json', 'r', encoding='utf-8') as f:
-                data = json.load(f)
+                data = load(f)
                 theme_name = data.get('Theme')
                 if theme_name:
-                    self.set_theme(theme_name)
+                    MetalSlugFontReborn.set_theme(theme_name)
         except FileNotFoundError:
             pass
 
