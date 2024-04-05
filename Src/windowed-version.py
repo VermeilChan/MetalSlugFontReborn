@@ -124,7 +124,8 @@ class MetalSlugFontReborn(QMainWindow):
         if save_location:
             self.save_location_entry.setText(save_location)
 
-    def set_theme(self, theme_name):
+    @staticmethod
+    def set_theme(theme_name):
         if theme_name:
             QApplication.setStyle(theme_name)
         else:
@@ -137,7 +138,8 @@ class MetalSlugFontReborn(QMainWindow):
         else:
             QApplication.setStyle(QApplication.style())
 
-    def save_theme(self, theme_name):
+    @staticmethod
+    def save_theme(theme_name):
         with open('config.json', 'w', encoding='utf-8') as f:
             json.dump({"Theme": theme_name}, f)
 
