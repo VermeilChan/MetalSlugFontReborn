@@ -37,7 +37,7 @@ def get_or_create_character_image(character, font_paths):
 
     return Image.open(character_image_path)
 
-def generate_image(text, filename, font_paths):
+def generate_image(text, filename, font_paths, save_location):
     font_images = {c: get_or_create_character_image(c, font_paths) for c in set(text)}
 
     total_width = sum(font_images[c].width for c in text)
@@ -52,7 +52,7 @@ def generate_image(text, filename, font_paths):
         final_image.paste(character_image, (x_position, y_position))
         x_position += character_image.width
 
-    image_path = Path.home() / 'Desktop' / filename
+    image_path = Path(save_location) / filename
     final_image.save(image_path, optimize=True)
 
     return str(image_path), None

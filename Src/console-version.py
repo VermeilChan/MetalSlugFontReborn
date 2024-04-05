@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 from main import generate_filename, generate_image, get_font_paths
@@ -9,6 +10,12 @@ valid_colors_by_font = {
     3: ["Blue", "Orange"],
     4: ["Blue", "Orange", "Yellow"],
     5: ["Orange"]
+}
+
+default_save_locations = {
+    'Desktop': Path.home() / 'Desktop',
+    'Downloads': Path.home() / 'Downloads',
+    'Documents': Path.home() / 'Documents'
 }
 
 def display_intro_message():
@@ -38,7 +45,13 @@ def select_color(font):
     valid_colors = valid_colors_by_font.get(font, [])
     return get_valid_input(f"Available colors: {', '.join(valid_colors)}\nChoose a color: ", valid_colors)
 
-def generate_and_display_image(text, font, color):
+def select_save_location():
+    default_locations = list(default_save_locations.keys())
+    save_location_prompt = f"Select save location:\n{'/'.join(default_locations)}: "
+    save_location = get_valid_input(save_location_prompt, default_locations)
+    return default_save_locations[save_location]
+
+def generate_and_display_image(text, font, color, save_location):
     if text.lower() == 'exit':
         sys.exit('Closing...')
 
@@ -50,7 +63,7 @@ def generate_and_display_image(text, font, color):
     try:
         filename = generate_filename(text)
         font_paths = get_font_paths(font, color)
-        image_path, error_message_generate = generate_image(text, filename, font_paths)
+        image_path, error_message_generate = generate_image(text, filename, font_paths, save_location)
 
         if error_message_generate:
             print(f"Error generating image: {error_message_generate}")
@@ -65,11 +78,12 @@ def main():
 
     font = select_font()
     color = select_color(font)
+    save_location = select_save_location()
 
     try:
         while True:
             text = prompt("Enter the text you want to generate: ")
-            generate_and_display_image(text, font, color)
+            generate_and_display_image(text, font, color, save_location)
     except KeyboardInterrupt:
         sys.exit('Closing...')
 
