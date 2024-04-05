@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 from platform import system, version, release, architecture
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import QApplication, QMessageBox, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QGroupBox, QComboBox, QWidget, QDialog, QLabel, QFileDialog
@@ -41,6 +42,7 @@ class MetalSlugFontReborn(QMainWindow):
         super().__init__()
         self.setWindowTitle("MetalSlugFontReborn")
         self.setWindowIcon(QIcon(ImageGenerator.icon_path))
+        self.load_theme()
 
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
@@ -127,6 +129,27 @@ class MetalSlugFontReborn(QMainWindow):
             QApplication.setStyle(theme_name)
         else:
             QApplication.setStyle(QApplication.style())
+
+    def set_theme(self, theme_name):
+        if theme_name:
+            QApplication.setStyle(theme_name)
+            self.save_theme(theme_name)
+        else:
+            QApplication.setStyle(QApplication.style())
+
+    def save_theme(self, theme_name):
+        with open('config.json', 'w', encoding='utf-8') as f:
+            json.dump({"Theme": theme_name}, f)
+
+    def load_theme(self):
+        try:
+            with open('config.json', 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                theme_name = data.get('Theme')
+                if theme_name:
+                    self.set_theme(theme_name)
+        except FileNotFoundError:
+            pass
 
     def show_about_dialog(self):
         about_dialog = QDialog(self)
