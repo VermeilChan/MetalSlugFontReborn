@@ -68,8 +68,17 @@ cd MetalSlugFontReborn
 - Install required packages
 
 ```sh
-# DEPENDS ON YOUR DISTRIBUTION
-sudo apt install python3 python3-pip python3-venv
+# Debian/Ubuntu
+sudo apt install python3 python3-pip python3-venv git -y
+
+# Fedora
+sudo dnf install python3 python3-pip python3-virtualenv git -y
+
+# Arch Linux
+sudo pacman -S python3 python-pip python-virtualenv git --noconfirm
+
+# OpenSUSE
+sudo zypper install python3 python3-pip python3-virtualenv git
 ```
 
 - Create a virtual environment and activate it
