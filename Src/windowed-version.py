@@ -64,15 +64,13 @@ class MetalSlugFontReborn(QMainWindow):
         generate_button.clicked.connect(self.generate_and_display_image)
         layout.addWidget(generate_button)
 
-        # Adding Image Save Location label and entry field
         self.save_location_label = QLabel("Image Save Location:")
         self.save_location_entry = QLineEdit()
         self.save_location_entry.setReadOnly(True)
-        
-        # Setting the visibility of save_location_label and save_location_entry to False
+
         self.save_location_label.setVisible(False)
         self.save_location_entry.setVisible(False)
-        
+
         layout.addWidget(self.save_location_label)
         layout.addWidget(self.save_location_entry)
 
@@ -89,6 +87,14 @@ class MetalSlugFontReborn(QMainWindow):
 
         about_action = help_menu.addAction("About")
         about_action.triggered.connect(self.show_about_dialog)
+
+        theme_menu = menubar.addMenu("Theme")
+
+        fusion_action = theme_menu.addAction("Fusion")
+        fusion_action.triggered.connect(lambda: self.set_theme("Fusion"))
+
+        windows_action = theme_menu.addAction("Windows")
+        windows_action.triggered.connect(lambda: self.set_theme("Windows"))
 
         self.setMaximumSize(self.size())
 
@@ -115,6 +121,12 @@ class MetalSlugFontReborn(QMainWindow):
         save_location = QFileDialog.getExistingDirectory(self, "Select Save Location", str(Path.home() / "Desktop"))
         if save_location:
             self.save_location_entry.setText(save_location)
+
+    def set_theme(self, theme_name):
+        if theme_name:
+            QApplication.setStyle(theme_name)
+        else:
+            QApplication.setStyle(QApplication.style())
 
     def show_about_dialog(self):
         about_dialog = QDialog(self)
@@ -165,7 +177,6 @@ class MetalSlugFontReborn(QMainWindow):
 
 def main():
     app = QApplication([])
-    app.setStyle('Fusion')
     app.setWindowIcon(QIcon(ImageGenerator.icon_path))
     window = MetalSlugFontReborn()
     window.show()
