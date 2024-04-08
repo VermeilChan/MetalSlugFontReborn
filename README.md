@@ -62,8 +62,10 @@ Before installing MetalSlugFontReborn, ensure that your system meets the followi
 | **Operating System**    | **Versions**                                                     |
 |-----------------------  |------------------------------------------------------------------|
 | **Windows**             | 11 & 10 (GUI), 11, 10, 8.1 (CLI)                                 |
-| **GNU/Linux**           | Debian 12/11, Ubuntu 22.04.4, Fedora 39/38, Arch Linux, OpenSUSE |
+| **GNU/Linux**           | Debian 12, Ubuntu 22.04.4, Fedora 39, Arch Linux, OpenSUSE       |
 | **MacOS**               | Currently not supported.  Use [WineHQ](https://www.winehq.org/)  |
+
+_Older Versions Might Work Too :)_
 
 | **Version**             | **RAM Usage**        | **Disk Space**       |
 |-----------------------  |----------------------|----------------------|
