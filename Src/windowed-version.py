@@ -92,10 +92,10 @@ class MetalSlugFontReborn(QMainWindow):
 
         theme_menu = menubar.addMenu("Themes")
 
-        fusion_action = theme_menu.addAction("Fusion (Cross Platform)")
+        fusion_action = theme_menu.addAction("Fusion")
         fusion_action.triggered.connect(lambda: self.set_theme("Fusion"))
 
-        windows_action = theme_menu.addAction("Windows (Windows Only)")
+        windows_action = theme_menu.addAction("Windows")
         windows_action.triggered.connect(lambda: self.set_theme("Windows"))
 
         self.setMaximumSize(self.size())
