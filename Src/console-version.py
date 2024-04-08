@@ -13,9 +13,11 @@ valid_colors_by_font = {
 }
 
 save_locations = {
+    'Home': Path.home(),
     'Desktop': Path.home() / 'Desktop',
     'Downloads': Path.home() / 'Downloads',
-    'Documents': Path.home() / 'Documents'
+    'Documents': Path.home() / 'Documents',
+    'Pictures': Path.home() / 'Pictures',
 }
 
 def display_intro_messages():
