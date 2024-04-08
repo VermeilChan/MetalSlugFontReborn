@@ -62,6 +62,10 @@ class MetalSlugFontReborn(QMainWindow):
         self.color_combobox = QComboBox()
         layout.addWidget(self.color_combobox)
 
+        browse_button = QPushButton("Browse", self)
+        browse_button.clicked.connect(self.browse_save_location)
+        layout.addWidget(browse_button)
+
         generate_button = QPushButton("Generate and Save Image", self)
         generate_button.clicked.connect(self.generate_and_display_image)
         layout.addWidget(generate_button)
@@ -75,10 +79,6 @@ class MetalSlugFontReborn(QMainWindow):
 
         layout.addWidget(self.save_location_label)
         layout.addWidget(self.save_location_entry)
-
-        browse_button = QPushButton("Browse", self)
-        browse_button.clicked.connect(self.browse_save_location)
-        layout.addWidget(browse_button)
 
         self.color_combobox.setEnabled(False)
         self.font_combobox.currentIndexChanged.connect(self.on_font_change)
@@ -120,7 +120,13 @@ class MetalSlugFontReborn(QMainWindow):
         ImageGenerator.generate_and_display_message(text, font, color, save_location)
 
     def browse_save_location(self):
-        save_location = QFileDialog.getExistingDirectory(self, "Select Save Location", str(Path.home() / "Desktop"))
+        if not self.save_location_entry.text():
+            default_save_location = str(Path.home() / "Desktop")
+        else:
+            default_save_location = self.save_location_entry.text()
+            
+        save_location = QFileDialog.getExistingDirectory(self, "Select Save Location", default_save_location)
+        
         if save_location:
             self.save_location_entry.setText(save_location)
 
