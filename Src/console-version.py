@@ -12,13 +12,13 @@ valid_colors_by_font = {
     5: ["Orange"]
 }
 
-default_save_locations = {
+save_locations = {
     'Desktop': Path.home() / 'Desktop',
     'Downloads': Path.home() / 'Downloads',
     'Documents': Path.home() / 'Documents'
 }
 
-def display_intro_message():
+def display_intro_messages():
     print("\nMetalSlugFontReborn v1.7.0 (Dev)")
     print("Maintained by VermeilChan")
     print("GPL-3.0 Licensed")
@@ -46,10 +46,10 @@ def select_color(font):
     return get_valid_input(f"Available colors: {', '.join(valid_colors)}\nChoose a color: ", valid_colors)
 
 def select_save_location():
-    default_locations = list(default_save_locations.keys())
+    default_locations = list(save_locations.keys())
     save_location_prompt = f"Select save location:\n{'/'.join(default_locations)}: "
     save_location = get_valid_input(save_location_prompt, default_locations)
-    return default_save_locations[save_location]
+    return save_locations[save_location]
 
 def generate_and_display_image(text, font, color, save_location):
     if text.lower() == 'exit':
@@ -74,7 +74,7 @@ def generate_and_display_image(text, font, color, save_location):
         print(f"An error occurred: {e}")
 
 def main():
-    display_intro_message()
+    display_intro_messages()
 
     font = select_font()
     color = select_color(font)
