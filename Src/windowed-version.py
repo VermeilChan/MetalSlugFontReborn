@@ -44,6 +44,8 @@ class MetalSlugFontReborn(QMainWindow):
         self.setWindowIcon(QIcon(ImageGenerator.icon_path))
         self.load_theme()
 
+        self.default_save_location = str(Path.home() / "Desktop")
+
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout(central_widget)
@@ -73,6 +75,7 @@ class MetalSlugFontReborn(QMainWindow):
         self.save_location_label = QLabel("Image Save Location:")
         self.save_location_entry = QLineEdit()
         self.save_location_entry.setReadOnly(True)
+        self.save_location_entry.setText(self.default_save_location)
 
         self.save_location_label.setVisible(False)
         self.save_location_entry.setVisible(False)
@@ -120,13 +123,7 @@ class MetalSlugFontReborn(QMainWindow):
         ImageGenerator.generate_and_display_message(text, font, color, save_location)
 
     def browse_save_location(self):
-        if not self.save_location_entry.text():
-            default_save_location = str(Path.home() / "Desktop")
-        else:
-            default_save_location = self.save_location_entry.text()
-            
-        save_location = QFileDialog.getExistingDirectory(self, "Select Save Location", default_save_location)
-        
+        save_location = QFileDialog.getExistingDirectory(self, "Select Save Location", self.default_save_location)
         if save_location:
             self.save_location_entry.setText(save_location)
 
