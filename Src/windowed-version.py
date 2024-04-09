@@ -165,7 +165,7 @@ class MetalSlugFontReborn(QMainWindow):
         top_left_layout.addWidget(icon_label)
 
         metadata_layout = QVBoxLayout()
-        metadata_layout.addWidget(QLabel("MetalSlugFontReborn (64-bit)"))
+        metadata_layout.addWidget(QLabel(f"MetalSlugFontReborn ({architecture()[0]})"))
         metadata_layout.addWidget(QLabel("GPL-3.0 License"))
 
         github_link_label = QLabel('<a href="https://github.com/VermeilChan/MetalSlugFontReborn">GitHub Repository</a>')
@@ -181,13 +181,19 @@ class MetalSlugFontReborn(QMainWindow):
         build_info_layout.addWidget(QLabel("Version: 1.7.0 (Dev)"))
         build_info_layout.addWidget(QLabel("Pyinstaller: 6.5.0"))
         build_info_layout.addWidget(QLabel("PySide6: 6.6.3.1"))
+        build_info_layout.addWidget(QLabel("Pillow: 10.3.0"))
         build_info_layout.addWidget(QLabel("Build date: Dev"))
 
         os_info_box = QGroupBox("Operating System:")
         os_info_layout = QVBoxLayout()
 
-        os_info_layout.addWidget(QLabel(f"OS: {system()} {release()} ({architecture()[0]})"))
-        os_info_layout.addWidget(QLabel(f"Version: {version()}"))
+        if system() == 'Linux':
+            pretty_name, version_str = get_linux_os_info()
+            os_info_layout.addWidget(QLabel(f"OS: {pretty_name}"))
+            os_info_layout.addWidget(QLabel(f"Version: {version_str}"))
+        elif system() == 'Windows':
+            os_info_layout.addWidget(QLabel(f"OS: {system()} {release()}"))
+            os_info_layout.addWidget(QLabel(f"Version: {version()}"))
 
         os_info_box.setLayout(os_info_layout)
         layout.addWidget(os_info_box)
@@ -197,6 +203,14 @@ class MetalSlugFontReborn(QMainWindow):
 
         about_dialog.setLayout(layout)
         about_dialog.exec()
+
+def get_linux_os_info():
+    with open('/etc/os-release', 'r') as file:
+        os_info = {}
+        for line in file:
+            key, value = line.strip().split('=')
+            os_info[key] = value.strip('"')
+    return os_info.get('PRETTY_NAME', 'OS information not available'), os_info.get('VERSION', 'Version information not available')
 
 def main():
     app = QApplication([])
