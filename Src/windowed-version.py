@@ -178,7 +178,7 @@ class MetalSlugFontReborn(QMainWindow):
         build_info_box = QGroupBox("Build Information:")
         build_info_layout = QVBoxLayout()
 
-        build_info_layout.addWidget(QLabel("Version: 1.7.0 (Dev)"))
+        build_info_layout.addWidget(QLabel("Version: 1.8.0 (Dev)"))
         build_info_layout.addWidget(QLabel("Pyinstaller: 6.5.0"))
         build_info_layout.addWidget(QLabel("PySide6: 6.6.3.1"))
         build_info_layout.addWidget(QLabel("Pillow: 10.3.0"))
