@@ -3,7 +3,7 @@
 1. Get the latest release of [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn/releases/latest).
 
 2. **Extract the Archive:**
-   - Extract `MetalSlugFontReborn-X.X.X-x64-Linux.tar.gz`.
+   - Extract `MetalSlugFontReborn-vX.X.X-Linux-x64-Qt-Console.tar.gz`.
 
 3. **Install Dependencies:**
    - Navigate to the `MetalSlugFontReborn` folder in the terminal.
