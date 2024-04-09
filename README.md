@@ -40,8 +40,8 @@ If you have a GitHub account and have found this repository helpful, please cons
 
 - [Features](#features)
 - [Requirements](#requirements)
+- [Get MetalSlugFontReborn](#get-metalslugfontreborn)
 - [Preview Fonts](#preview-fonts)
-- [MetalSlugFontReborn Guide](#metalslugfontreborn-guide)
 - [How to Contribute](#how-to-contribute)
 - [License](#license)
 - [Credits](#credits)
@@ -51,39 +51,36 @@ If you have a GitHub account and have found this repository helpful, please cons
 
 - Easily transform text into images using the Metal Slug font.
 - Supports uppercase and lowercase alphabets (A-Z, a-z), numbers (0-9), symbols, and colors.
-- Easy-to-use user interface with both GUI and command line support.
+- Easy-to-use user interface with both GUI and CLI support.
 
-For additional details, please refer to the [docs](Docs/SUPPORTED.md).
+For additional details, please refer to the [docs](Docs/SUPPORTED.md) here.
 
 ## Requirements
 
 Before installing MetalSlugFontReborn, ensure that your system meets the following requirements:
 
-| **Operating System** | **Versions**                                                    |
-|----------------------|-----------------------------------------------------------------|
-| **Windows**          | 11 & 10 (GUI), 11, 10, 8.1 (CLI)                                |
-| **GNU/Linux**        | Debian 12.5, Ubuntu 22.04.4, Fedora 39, Arch Linux, OpenSUSE    |
-| **MacOS**            | Currently not supported.  Use [WineHQ](https://www.winehq.org/) |
+| Operating System | OS Versions                                                      |
+|------------------|------------------------------------------------------------------|
+| Windows          | 11 & 10 (Qt) x64, 11, 10, 8.1 (Console) x64                      |
+| GNU/Linux        | Debian 12.5, Ubuntu 22.04.4, Fedora 39, Arch Linux, OpenSUSE x64 |
+| MacOS            | Currently not supported. Use [WineHQ](https://www.winehq.org/)   |
 
 _Older Versions Might Work Too :)_
 
-| **Version**     | **RAM Usage** | **Disk Space** |
-|-----------------|---------------|----------------|
-| **GUI Version** | 50MB          | 130MB          |
-| **CLI Version** | 40MB          | 30MB           |
+| Version         | RAM Usage | Disk Space |
+|-----------------|-----------|------------|
+| Qt Version      | 50MB      | 130MB      |
+| Console Version | 40MB      | 30MB       |
 
 _Additional space required for generating images._
 
-_GUI: Graphical User Interface_<br>
-_CLI: Command Line Interface_
+## Get MetalSlugFontReborn
+
+To download and use MetalSlugFontReborn, refer to the [docs](Docs/INSTALL.md) here.
 
 ## Preview Fonts
 
 See examples of the [images generated](Docs/EXAMPLES.md) here.
-
-## MetalSlugFontReborn Guide
-
-To install and use MetalSlugFontReborn, refer to the [docs](Docs/INSTALL.md) here.
 
 ## How to Contribute
 
@@ -98,13 +95,16 @@ This project is licensed under the [GNU General Public License v3.0](LICENSE).
 
 ## Credits
 
-I want to say a big thank you to the people and groups who helped me.
+I want to say a big thank you to the individuals who helped me.
 
 - [SNK Corporation](https://www.snk-corp.co.jp): Used some of their assets.
 - [SikroxMemer](https://github.com/SikroxMemer): for assisting in the development of the program and webapp.
 - [Division 六](https://6th-divisions-den.com): inspiring me to create the program in the first place and providing assets for fonts 1 to 4.
 - [GussPrint](https://www.spriters-resource.com/submitter/Gussprint): for providing assets for font 5.
 - [BinRich](https://discord.com/users/477459550904254464): for providing diacritic marks.
-- [PyInstaller](https://pyinstaller.org/en/stable): for converting Python code to an executable file.
-- [PySide6](https://doc.qt.io/qtforpython-6/): Used for the graphical interface.
-- [Pillow](https://python-pillow.org): Used for image processing.
+
+- Third-party libraries
+
+- [PySide6](https://doc.qt.io/qtforpython-6/)
+- [Pillow](https://python-pillow.org)
+- [PyInstaller](https://pyinstaller.org/en/stable)
