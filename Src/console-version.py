@@ -17,7 +17,7 @@ save_locations = {
     'Desktop': Path.home() / 'Desktop',
     'Downloads': Path.home() / 'Downloads',
     'Documents': Path.home() / 'Documents',
-    'Pictures': Path.home() / 'Pictures',
+    'Pictures': Path.home() / 'Pictures'
 }
 
 def display_intro_messages():
@@ -49,7 +49,7 @@ def select_color(font):
 
 def select_save_location():
     default_locations = list(save_locations.keys())
-    save_location_prompt = f"Select save location:\n{'/'.join(default_locations)}: "
+    save_location_prompt = f"Select save location:\n{', '.join(default_locations)}: "
     save_location = get_valid_input(save_location_prompt, default_locations)
     return save_locations[save_location]
 
