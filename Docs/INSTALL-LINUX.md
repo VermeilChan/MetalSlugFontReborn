@@ -2,6 +2,8 @@
 
 1. Get the latest release of [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn/releases/latest).
 
+   ![Download MetalSlugFontReborn](Markdown/Docs/Download.png)
+
 2. **Extract the Archive:**
    - Extract `MetalSlugFontReborn-vX.X.X-Linux-x64-Qt-Console.tar.gz`.
 
@@ -30,8 +32,14 @@
 
 3. **Select a Font:**
    - Upon opening MetalSlugFontReborn, choose your desired font and color, you can [preview](EXAMPLES.md) here.
+   
+  Qt Version:
 
-   ![MetalSlugFontReborn](Markdown/Docs/Linux/MetalSlugFontReborn.png)
+ ![MetalSlugFontReborn](Markdown/Docs/Linux/MetalSlugFontReborn-Qt.png)
+
+  Console Version:
+
+  ![MetalSlugFontReborn](Markdown/Docs/Linux/MetalSlugFontReborn-Console.png)
 
 4. **Input Your Text:**
    - Enter the text you want to convert to the metal slug font.
