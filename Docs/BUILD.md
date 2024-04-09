@@ -38,13 +38,13 @@ pip install -r requirements.txt
 
 ```sh
 # GUI VERSION
-pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;."  "Src/windowed-version.py"
+pyinstaller --noconfirm --onedir --windowed --icon "Assets\Icons\Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;." --add-data "Docs/SUPPORTED.txt;."  "Src\windowed-version.py"
 
 # CLI VERSION
-pyinstaller --noconfirm --onedir --console --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;." "Src/console-version.py"
+pyinstaller --noconfirm --onedir --console --icon "Assets\Icons\Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/console-version.py"
 ```
 
-- Move the `Assets` out of `_internal` to `dist/MetalSlugFontReborn`.
+- Move the `Assets` folder and SUPPORTED.txt out of `_internal` to `dist/MetalSlugFontReborn`.
 - Run the program: `dist/MetalSlugFontReborn/MetalSlugFontReborn.exe`.
 
 ## Linux
@@ -98,14 +98,14 @@ pip install -r requirements.txt
 
 ```sh
 # GUI VERSION
-pyinstaller --noconfirm --onedir --windowed --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/constants.py:." --add-data "Src/main.py:."  "Src/windowed-version.py"
+pyinstaller --noconfirm --onedir --windowed --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/constants.py:." --add-data "Src/main.py:." --add-data "Docs/SUPPORTED.txt:."  "Src\windowed-version.py"
 
 # CLI VERSION
-pyinstaller --noconfirm --onedir --console --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/constants.py:." --add-data "Src/main.py:." "Src/console-version.py"
+pyinstaller --noconfirm --onedir --console --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/constants.py:." --add-data "Src/main.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/console-version.py"
 ```
 
-- Move the `Assets` out of `_internal` to `dist/MetalSlugFontReborn`.
-- Run the program: `dist/MetalSlugFontReborn/MetalSlugFontReborn.exe`.
+- Move the `Assets` folder and SUPPORTED.txt out of `_internal` to `dist/MetalSlugFontReborn`.
+- Run the Linux executable: `dist/MetalSlugFontReborn/MetalSlugFontReborn`.
 
 ## macOS
 
