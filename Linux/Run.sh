@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd ..
 echo "MetalSlugFontReborn Runner"
 
 source .venv/bin/activate
@@ -10,7 +11,7 @@ while true; do
     echo "2. Run the console version"
     echo "3. Exit"
 
-    read -p "Enter your choice (1, 2, or 3): " choice
+    read -p "Enter your choice 1 to 3): " choice
 
     case $choice in
         1)
