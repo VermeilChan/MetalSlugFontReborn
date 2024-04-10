@@ -4,7 +4,7 @@
 
 ### Requirements
 
-- [Python](https://www.python.org/downloads/).
+- [Python 3.9+](https://www.python.org/downloads/).
 - [Git](https://gitforwindows.org/).
 
 ### Steps
