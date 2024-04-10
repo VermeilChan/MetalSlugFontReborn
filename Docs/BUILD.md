@@ -9,6 +9,8 @@
 
 ### Steps
 
+- Install [Git](https://gitforwindows.org/)
+
 - Clone the repository
 
 ```sh
@@ -38,10 +40,10 @@ pip install -r requirements.txt
 
 ```sh
 # GUI VERSION
-pyinstaller --noconfirm --onedir --windowed --icon "Assets\Icons\Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;." --add-data "Docs/SUPPORTED.txt;."  "Src\windowed-version.py"
+pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/windowed-version.py"
 
 # CLI VERSION
-pyinstaller --noconfirm --onedir --console --icon "Assets\Icons\Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/console-version.py"
+pyinstaller --noconfirm --onedir --console --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/console-version.py"
 ```
 
 - Move the `Assets` folder and SUPPORTED.txt out of `_internal` to `dist/MetalSlugFontReborn`.
@@ -52,6 +54,22 @@ pyinstaller --noconfirm --onedir --console --icon "Assets\Icons\Raubtier.ico" --
 _Note: Some distributions require other packages to be installed._
 
 ### Steps
+
+- Install Git
+
+```sh
+# Debian/Ubuntu
+sudo apt install git
+
+# Fedora
+sudo dnf install git
+
+# Arch Linux
+sudo pacman -S git
+
+# OpenSUSE
+sudo zypper git
+```
 
 - Clone the repository
 
@@ -69,16 +87,16 @@ cd MetalSlugFontReborn
 
 ```sh
 # Debian/Ubuntu
-sudo apt install python3 python3-pip python3-venv git -y
+sudo apt install python3 python3-pip python3-venv -y
 
 # Fedora
-sudo dnf install python3 python3-pip python3-virtualenv git -y
+sudo dnf install python3 python3-pip python3-virtualenv -y
 
 # Arch Linux
-sudo pacman -S python3 python-pip python-virtualenv git --noconfirm
+sudo pacman -S python3 python-pip python-virtualenv --noconfirm
 
 # OpenSUSE
-sudo zypper install python3 python3-pip python3-virtualenv git
+sudo zypper install python3 python3-pip python3-virtualenv
 ```
 
 - Create a virtual environment and activate it
@@ -98,7 +116,7 @@ pip install -r requirements.txt
 
 ```sh
 # GUI VERSION
-pyinstaller --noconfirm --onedir --windowed --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/constants.py:." --add-data "Src/main.py:." --add-data "Docs/SUPPORTED.txt:."  "Src\windowed-version.py"
+pyinstaller --noconfirm --onedir --windowed --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/constants.py:." --add-data "Src/main.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/windowed-version.py"
 
 # CLI VERSION
 pyinstaller --noconfirm --onedir --console --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/constants.py:." --add-data "Src/main.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/console-version.py"
