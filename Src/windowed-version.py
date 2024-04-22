@@ -179,8 +179,8 @@ class MetalSlugFontReborn(QMainWindow):
         build_info_layout = QVBoxLayout()
 
         build_info_layout.addWidget(QLabel("Version: 1.8.0 (Dev)"))
-        build_info_layout.addWidget(QLabel("Pyinstaller: 6.5.0"))
-        build_info_layout.addWidget(QLabel("PySide6: 6.6.3.1"))
+        build_info_layout.addWidget(QLabel("Pyinstaller: 6.6.0"))
+        build_info_layout.addWidget(QLabel("PySide6: 6.7.0"))
         build_info_layout.addWidget(QLabel("Pillow: 10.3.0"))
         build_info_layout.addWidget(QLabel("Build date: Dev"))
 
@@ -188,7 +188,7 @@ class MetalSlugFontReborn(QMainWindow):
         os_info_layout = QVBoxLayout()
 
         if system() == 'Linux':
-            pretty_name, version_str = get_linux_os_info()
+            pretty_name, version_str = linux_info()
             os_info_layout.addWidget(QLabel(f"OS: {pretty_name}"))
             os_info_layout.addWidget(QLabel(f"Version: {version_str}"))
         elif system() == 'Windows':
@@ -204,7 +204,7 @@ class MetalSlugFontReborn(QMainWindow):
         about_dialog.setLayout(layout)
         about_dialog.exec()
 
-def get_linux_os_info():
+def linux_info():
     with open('/etc/os-release', 'r') as file:
         os_info = {}
         for line in file:
