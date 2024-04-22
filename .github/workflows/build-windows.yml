@@ -5,7 +5,7 @@ on:
     branches:
       - Development
     paths:
-      - '.github/workflows/build.yml'
+      - '.github/workflows/build-windows.yml'
 
 jobs:
   build:
