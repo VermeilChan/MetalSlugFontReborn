@@ -33,7 +33,7 @@ def get_or_create_character_image(character, font_paths):
 
     character_image_path = get_character_image_path(character, font_paths)
     if not character_image_path or not character_image_path.is_file():
-        raise FileNotFoundError(f"Unsupported character '{character}'")
+        raise FileNotFoundError(f"The character '{character}' is not supported, please check SUPPORTED.txt")
 
     return Image.open(character_image_path)
 
