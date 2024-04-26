@@ -45,7 +45,6 @@ If you have a GitHub account and have found this repository helpful, please cons
 - [How to Contribute](#how-to-contribute)
 - [License](#license)
 - [Credits](#credits)
-- [Contact](#contact)
 
 ## Features
 
