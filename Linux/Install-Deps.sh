@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd ..
+
 echo "MetalSlugFontReborn dependencies installer"
 echo "This script will download the required dependencies for MetalSlugFontReborn."
 
@@ -30,13 +31,16 @@ case $package_manager in
 esac
 
 echo "Creating and activating a virtual environment..."
+
 python3 -m venv .venv
 source .venv/bin/activate
 
 echo "Installing Python packages from requirements.txt..."
+
 pip install -r requirements.txt
 
 echo "Deactivating the virtual environment..."
+
 deactivate
 
 cat <<EOF
