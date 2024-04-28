@@ -21,9 +21,6 @@ class ImageGenerator:
         if not text.strip():
             QMessageBox.critical(None, "MetalSlugFontReborn", "Input text is empty. Please enter some text.")
             return
-        if not save_location:
-            QMessageBox.critical(None, "MetalSlugFontReborn", "Please select a save location for the image.")
-            return
 
         try:
             filename = generate_filename(text)
@@ -34,7 +31,8 @@ class ImageGenerator:
                 QMessageBox.critical(None, "MetalSlugFontReborn", f"Error: {error_message_generate}")
             else:
                 QMessageBox.information(None, "MetalSlugFontReborn", f"Successfully generated image :D\n\nFile saved as:\n\n{image_path}\n")
-        except Exception as e:
+
+        except FileNotFoundError as e:
             QMessageBox.critical(None, "MetalSlugFontReborn", str(e))
 
 class MetalSlugFontReborn(QMainWindow):
@@ -98,9 +96,6 @@ class MetalSlugFontReborn(QMainWindow):
         fusion_action = theme_menu.addAction("Fusion")
         fusion_action.triggered.connect(lambda: self.set_theme("Fusion"))
 
-        windows_action = theme_menu.addAction("Windows")
-        windows_action.triggered.connect(lambda: self.set_theme("Windows"))
-
         self.setMaximumSize(self.size())
 
     def on_font_change(self):
@@ -148,6 +143,7 @@ class MetalSlugFontReborn(QMainWindow):
                 theme_name = data.get('Theme')
                 if theme_name:
                     MetalSlugFontReborn.set_theme(theme_name)
+
         except FileNotFoundError:
             pass
 
@@ -178,11 +174,11 @@ class MetalSlugFontReborn(QMainWindow):
         build_info_box = QGroupBox("Build Information:")
         build_info_layout = QVBoxLayout()
 
-        build_info_layout.addWidget(QLabel("Version: 1.8.0 (Dev)"))
+        build_info_layout.addWidget(QLabel("Version: 1.9.0 (Dev)"))
         build_info_layout.addWidget(QLabel("Pyinstaller: 6.6.0"))
         build_info_layout.addWidget(QLabel("PySide6: 6.7.0"))
         build_info_layout.addWidget(QLabel("Pillow: 10.3.0"))
-        build_info_layout.addWidget(QLabel("Build date: Dev"))
+        build_info_layout.addWidget(QLabel("Build date: N\A"))
 
         os_info_box = QGroupBox("Operating System:")
         os_info_layout = QVBoxLayout()
