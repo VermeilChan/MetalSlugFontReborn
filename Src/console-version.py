@@ -21,7 +21,7 @@ save_locations = {
 }
 
 def display_intro_messages():
-    print("\nMetalSlugFontReborn v1.8.0 (Dev)")
+    print("\nMetalSlugFontReborn v1.9.0 (Dev)")
     print("Maintained by VermeilChan")
     print("GPL-3.0 Licensed")
     print("https://github.com/VermeilChan/MetalSlugFontReborn\n")
