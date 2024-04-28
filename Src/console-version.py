@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
-from main import generate_filename, generate_image, get_font_paths
+from image_generation import generate_filename, generate_image, get_font_paths
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
