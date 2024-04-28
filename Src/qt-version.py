@@ -3,7 +3,7 @@ from json import load, dump
 from platform import system, version, release, architecture
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import QApplication, QMessageBox, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QGroupBox, QComboBox, QWidget, QDialog, QLabel, QFileDialog
-from main import generate_filename, generate_image, get_font_paths
+from image_generation import generate_filename, generate_image, get_font_paths
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
