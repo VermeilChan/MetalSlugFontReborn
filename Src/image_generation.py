@@ -1,7 +1,7 @@
 from uuid import uuid4
 from pathlib import Path
 from PIL import Image
-from constants import special_characters
+from special_characters import special_characters
 
 def generate_filename(_):
     unique_id = uuid4().hex
