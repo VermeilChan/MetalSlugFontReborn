@@ -49,7 +49,7 @@ If you have a GitHub account and have found this repository helpful, please cons
 ## Features
 
 - Easily transform text into images using the Metal Slug font.
-- Supports uppercase and lowercase alphabets (A-Z, a-z), numbers (0-9), symbols, and colors.
+- Supports uppercase and lowercase letters (A-Z, a-z), digits (0-9), symbols, and multiple colors.
 - Easy-to-use user interface with both GUI and CLI support.
 
 For additional details, please refer to the [docs](Docs/SUPPORTED.md) here.
@@ -102,8 +102,9 @@ I want to say a big thank you to the individuals who helped me.
 - [GussPrint](https://www.spriters-resource.com/submitter/Gussprint): for providing assets for font 5.
 - [BinRich](https://discord.com/users/477459550904254464): for providing diacritic marks.
 
-- Third-party libraries
+### Third-party libraries
 
 - [PySide6](https://doc.qt.io/qtforpython-6/)
 - [Pillow](https://python-pillow.org)
 - [PyInstaller](https://pyinstaller.org/en/stable)
+- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/)
