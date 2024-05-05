@@ -40,10 +40,10 @@ pip install -r requirements.txt
 
 ```sh
 # GUI VERSION
-pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/windowed-version.py"
+pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
 
 # CLI VERSION
-pyinstaller --noconfirm --onedir --console --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/console-version.py"
+pyinstaller --noconfirm --onedir --console --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/console-version.py"
 ```
 
 - Move the `Assets` folder and SUPPORTED.txt out of `_internal` to `dist/MetalSlugFontReborn`.
@@ -86,6 +86,8 @@ cd MetalSlugFontReborn
 - Install required packages
 
 ```sh
+# Python 3.9+
+
 # Debian/Ubuntu
 sudo apt install python3 python3-pip python3-venv -y
 
@@ -116,10 +118,10 @@ pip install -r requirements.txt
 
 ```sh
 # GUI VERSION
-pyinstaller --noconfirm --onedir --windowed --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/constants.py:." --add-data "Src/main.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/windowed-version.py"
+pyinstaller --noconfirm --onedir --windowed --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
 
 # CLI VERSION
-pyinstaller --noconfirm --onedir --console --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/constants.py:." --add-data "Src/main.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/console-version.py"
+pyinstaller --noconfirm --onedir --console --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/console-version.py"
 ```
 
 - Move the `Assets` folder and SUPPORTED.txt out of `_internal` to `dist/MetalSlugFontReborn`.
@@ -127,4 +129,4 @@ pyinstaller --noconfirm --onedir --console --name "MetalSlugFontReborn" --clean 
 
 ## macOS
 
-- Idk :(
+- Not Supported :(
