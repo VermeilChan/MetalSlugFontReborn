@@ -20,11 +20,11 @@ save_locations = {
     'Pictures': Path.home() / 'Pictures'
 }
 
-def display_intro_messages():
+def startup_message():
     print("\nMetalSlugFontReborn v1.9.0 (Dev)")
     print("Maintained by VermeilChan")
     print("GPL-3.0 Licensed")
-    print("https://github.com/VermeilChan/MetalSlugFontReborn\n")
+    print("Repository: https://github.com/VermeilChan/MetalSlugFontReborn\n")
     print("You can check the supported characters in SUPPORTED.txt.")
     print("Type 'exit' or press CTRL+C to close the program.")
 
@@ -76,7 +76,7 @@ def generate_and_display_image(text, font, color, save_location):
         print(f"An error occurred: {e}")
 
 def main():
-    display_intro_messages()
+    startup_message()
 
     font = select_font()
     color = select_color(font)
