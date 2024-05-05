@@ -17,7 +17,7 @@ while true; do
     case $choice in
         1)
             echo "Running the Qt version..."
-            python Src/windowed-version.py
+            python Src/qt-version.py
             ;;
         2)
             echo "Running the console version..."
