@@ -184,9 +184,9 @@ class MetalSlugFontReborn(QMainWindow):
         os_info_layout = QVBoxLayout()
 
         if system() == 'Linux':
-            pretty_name, version_str = linux_info()
+            pretty_name, distro_version = linux_info()
             os_info_layout.addWidget(QLabel(f"OS: {pretty_name}"))
-            os_info_layout.addWidget(QLabel(f"Version: {version_str}"))
+            os_info_layout.addWidget(QLabel(f"Version: {distro_version}"))
         elif system() == 'Windows':
             os_info_layout.addWidget(QLabel(f"OS: {system()} {release()}"))
             os_info_layout.addWidget(QLabel(f"Version: {version()}"))
