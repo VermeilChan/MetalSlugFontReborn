@@ -1,4 +1,6 @@
 special_characters = {
+# UNSUPPORTED CHARACTERS
+
     # 'ȧ': 'A-1',
     # 'ä': 'A-2',
     # 'ā': 'A-3',
@@ -26,16 +28,18 @@ special_characters = {
     # 'Ⅲ': 'Three',
     # 'Ⅳ': 'Four',
     # 'Ⅴ': 'Five',
+
+# SUPPORTED CHARACTERS
     '!': 'Exclamation',
     '?': 'Question',
     "'": 'Apostrophe',
     '*': 'Asterisk',
-    ')': 'Bracket-Left',
-    '}': 'Bracket-Left-2',
-    ']': 'Bracket-Left-3',
-    '(': 'Bracket-Right',
-    '{': 'Bracket-Right-2',
-    '[': 'Bracket-Right-3',
+    '(': 'Bracket-Left',
+    '{': 'Bracket-Left-2',
+    '[': 'Bracket-Left-3',
+    ')': 'Bracket-Right',
+    '}': 'Bracket-Right-2',
+    ']': 'Bracket-Right-3',
     '^': 'Caret',
     ':': 'Colon',
     '$': 'Dollar',
