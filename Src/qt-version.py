@@ -4,6 +4,7 @@ from platform import system, version, release, architecture
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import QApplication, QMessageBox, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QGroupBox, QComboBox, QWidget, QDialog, QLabel, QFileDialog
 from image_generation import generate_filename, generate_image, get_font_paths
+from themes import light_mode, dark_mode
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
@@ -17,23 +18,30 @@ class ImageGenerator:
     icon_path = "Assets/Icons/Raubtier.ico"
 
     @staticmethod
-    def generate_and_display_message(text, font, color, save_location):
+    def generate_and_display_message(text, font, color, save_location, parent=None):
         if not text.strip():
-            QMessageBox.critical(None, "MetalSlugFontReborn", "Input text is empty. Please enter some text.")
+            QMessageBox.critical(parent, "MetalSlugFontReborn", "Input text is empty. Please enter some text.")
             return
 
         try:
             filename = generate_filename(text)
             font_paths = get_font_paths(font, color)
-            image_path, error_message_generate = generate_image(text, filename, font_paths, save_location)
+            image_path_str, error_message_generate = generate_image(text, filename, font_paths, save_location)
 
             if error_message_generate:
-                QMessageBox.critical(None, "MetalSlugFontReborn", f"Error: {error_message_generate}")
+                QMessageBox.critical(parent, "MetalSlugFontReborn", f"Error: {error_message_generate}")
             else:
-                QMessageBox.information(None, "MetalSlugFontReborn", f"Successfully generated image :D\n\nFile saved as:\n\n{image_path}\n")
+                image_path = Path(image_path_str)
+                image_name = image_path.name
+                success_message = (
+                    f"Successfully generated image :)\n"
+                    f"Image name: {image_name}\n"
+                    f"Image path: \n{image_path}"
+                )
+                QMessageBox.information(parent, "MetalSlugFontReborn", success_message)
 
         except FileNotFoundError as e:
-            QMessageBox.critical(None, "MetalSlugFontReborn", str(e))
+            QMessageBox.critical(parent, "MetalSlugFontReborn", str(e))
 
 class MetalSlugFontReborn(QMainWindow):
     def __init__(self):
@@ -55,7 +63,7 @@ class MetalSlugFontReborn(QMainWindow):
 
         layout.addWidget(QLabel("Select Font:"))
         self.font_combobox = QComboBox()
-        self.font_combobox.addItems(map(str, sorted(valid_colors_by_font.keys())))
+        self.font_combobox.addItems(list(map(str, sorted(valid_colors_by_font.keys()))))
         layout.addWidget(self.font_combobox)
 
         layout.addWidget(QLabel("Select Color:"))
@@ -96,6 +104,12 @@ class MetalSlugFontReborn(QMainWindow):
         fusion_action = theme_menu.addAction("Fusion")
         fusion_action.triggered.connect(lambda: self.set_theme("Fusion"))
 
+        light_action = theme_menu.addAction("Light Mode")
+        light_action.triggered.connect(lambda: self.set_theme("Light"))
+
+        dark_action = theme_menu.addAction("Dark Mode")
+        dark_action.triggered.connect(lambda: self.set_theme("Dark"))
+
         self.setMaximumSize(self.size())
 
     def on_font_change(self):
@@ -111,7 +125,7 @@ class MetalSlugFontReborn(QMainWindow):
         text = self.text_entry.text()
         font = int(self.font_combobox.currentText())
         color = self.color_combobox.currentText()
-        save_location = self.save_location_entry.text()  
+        save_location = self.save_location_entry.text()
 
         text = text.upper() if font == 5 else text
 
@@ -124,9 +138,17 @@ class MetalSlugFontReborn(QMainWindow):
 
     @staticmethod
     def set_theme(theme_name):
-        if theme_name:
-            QApplication.setStyle(theme_name)
-            MetalSlugFontReborn.save_theme(theme_name)
+        if theme_name == "Light":
+            palette = light_mode()
+            QApplication.setPalette(palette)
+            MetalSlugFontReborn.save_theme("Light")
+        elif theme_name == "Dark":
+            palette = dark_mode()
+            QApplication.setPalette(palette)
+            MetalSlugFontReborn.save_theme("Dark")
+        elif theme_name == "Fusion":
+            QApplication.setStyle("Fusion")
+            MetalSlugFontReborn.save_theme("Fusion")
         else:
             QApplication.setStyle(QApplication.style())
 
@@ -140,10 +162,15 @@ class MetalSlugFontReborn(QMainWindow):
         try:
             with open('config.json', 'r', encoding='utf-8') as f:
                 data = load(f)
-                theme_name = data.get('Theme')
-                if theme_name:
-                    MetalSlugFontReborn.set_theme(theme_name)
-
+                theme_name = data.get("Theme")
+                if theme_name == "Light":
+                    palette = light_mode()
+                    QApplication.setPalette(palette)
+                elif theme_name == "Dark":
+                    palette = dark_mode()
+                    QApplication.setPalette(palette)
+                else:
+                    QApplication.setStyle("Fusion")
         except FileNotFoundError:
             pass
 
@@ -210,6 +237,7 @@ def linux_info():
 
 def main():
     app = QApplication([])
+    app.setStyle("Fusion")
     app.setWindowIcon(QIcon(ImageGenerator.icon_path))
     window = MetalSlugFontReborn()
     window.show()
