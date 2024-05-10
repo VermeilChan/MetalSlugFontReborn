@@ -4,8 +4,8 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 ## Current Status
 
-- **Stable Version**: 1.8.0
-- **Release Date**: 2024-04-26
+- **Stable Version**: 1.8.1
+- **Release Date**: 2024-05-07
 - **Maintainer**: VermeilChan
 - **Development Version**: 1.9.0
 
@@ -33,7 +33,7 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 - **Milestone 6: Reworked Webapp**
   - **Date Achieved**: 2024-02-24
-  - **Description**: Rewrote the core features of MetalSlugFontReborn webapp version, improving performance, functionality, and compatibility. The rework includes support for Progressive Web App (PWA), making the application accessible a wider range of platforms.
+  - **Description**: Rewrote the webapp version of [MetalSlugFont](https://github.com/VermeilChan/MetalSlugFont/tree/master), improving performance, functionality, compatibility and more fonts and colors. [MetalSlugFontRebornWeb](https://github.com/VermeilChan/MetalSlugFontRebornWeb)
 
 - **Milestone 7: CLI Autocompletion**
   - **Date Achieved**: 2024-03-22
