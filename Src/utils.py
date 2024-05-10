@@ -3,6 +3,7 @@ from platform import system, version, release, architecture
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QHBoxLayout, QGroupBox, QDialog
 from themes import light_mode, dark_mode
+from info import msfr_version, pyinstaller_version, pyside6_version, pillow_version, build_date
 
 def set_theme(theme_name):
     palette = light_mode() if theme_name == "Light" else dark_mode()
@@ -75,11 +76,11 @@ def about_msfr(parent):
 
     build_info_layout = QVBoxLayout()
 
-    build_info_layout.addWidget(QLabel("Version: 1.9.0 (Dev)"))
-    build_info_layout.addWidget(QLabel("Pyinstaller: 6.6.0"))
-    build_info_layout.addWidget(QLabel("PySide6: 6.7.0"))
-    build_info_layout.addWidget(QLabel("Pillow: 10.3.0"))
-    build_info_layout.addWidget(QLabel("Build date: N/A"))
+    build_info_layout.addWidget(QLabel(f"Version: {msfr_version}"))
+    build_info_layout.addWidget(QLabel(f"Pyinstaller: {pyinstaller_version}"))
+    build_info_layout.addWidget(QLabel(f"PySide6: {pyside6_version}"))
+    build_info_layout.addWidget(QLabel(f"Pillow: {pillow_version}"))
+    build_info_layout.addWidget(QLabel(f"Build date: {build_date}"))
 
     build_info_group = QGroupBox("Build Information:")
     build_info_group.setLayout(build_info_layout)

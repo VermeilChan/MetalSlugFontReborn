@@ -3,6 +3,7 @@ from pathlib import Path
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 from image_generation import generate_filename, generate_image, get_font_paths
+from info import msfr_version, build_date
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
@@ -21,7 +22,8 @@ save_locations = {
 }
 
 def startup_message():
-    print("\nMetalSlugFontReborn v1.9.0 (Dev)")
+    print(f"\nMetalSlugFontReborn {msfr_version}")
+    print(f"Build Date: {build_date}")
     print("Maintained by VermeilChan")
     print("GPL-3.0 Licensed")
     print("Repository: https://github.com/VermeilChan/MetalSlugFontReborn\n")
