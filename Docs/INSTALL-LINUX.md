@@ -5,13 +5,13 @@
    ![Download MetalSlugFontReborn](Markdown/Docs/Download.png)
 
 2. **Extract the Archive:**
-   - Extract `MetalSlugFontReborn-vX.X.X-Linux-x64-Qt-Console.tar.gz`.
+   - Extract `MetalSlugFontReborn-vX.X.X-Linux-x64-Qt-Console.tar.xz`.
 
 3. **Install Dependencies:**
    - Navigate to the `MetalSlugFontReborn` folder in the terminal.
    - Run the following command:
       ```sh
-      # Python 3.9 or later
+      # Requires Python 3.9 or later
 
       bash Install-Deps.sh
 
