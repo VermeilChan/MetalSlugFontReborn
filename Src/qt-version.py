@@ -1,10 +1,8 @@
 from pathlib import Path
-from json import load, dump
-from platform import system, version, release, architecture
-from PySide6.QtGui import QIcon, QPixmap
-from PySide6.QtWidgets import QApplication, QMessageBox, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QGroupBox, QComboBox, QWidget, QDialog, QLabel, QFileDialog
+from PySide6.QtWidgets import QWidget, QApplication, QMainWindow, QVBoxLayout, QLineEdit, QLabel, QComboBox, QPushButton, QFileDialog, QMessageBox
+from PySide6.QtGui import QIcon
 from image_generation import generate_filename, generate_image, get_font_paths
-from themes import light_mode, dark_mode
+from utils import set_theme, load_theme, about_msfr
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
@@ -48,7 +46,7 @@ class MetalSlugFontReborn(QMainWindow):
         super().__init__()
         self.setWindowTitle("MetalSlugFontReborn")
         self.setWindowIcon(QIcon(ImageGenerator.icon_path))
-        self.load_theme()
+        load_theme()
 
         self.default_save_location = str(Path.home() / "Desktop")
 
@@ -97,18 +95,12 @@ class MetalSlugFontReborn(QMainWindow):
         help_menu = menubar.addMenu("Help")
 
         about_action = help_menu.addAction("About")
-        about_action.triggered.connect(self.show_about_dialog)
+        about_action.triggered.connect(lambda: about_msfr(self))
 
         theme_menu = menubar.addMenu("Themes")
 
-        fusion_action = theme_menu.addAction("Fusion")
-        fusion_action.triggered.connect(lambda: self.set_theme("Fusion"))
-
-        light_action = theme_menu.addAction("Light Mode")
-        light_action.triggered.connect(lambda: self.set_theme("Light"))
-
-        dark_action = theme_menu.addAction("Dark Mode")
-        dark_action.triggered.connect(lambda: self.set_theme("Dark"))
+        theme_menu.addAction("Light Mode").triggered.connect(lambda: set_theme("Light"))
+        theme_menu.addAction("Dark Mode").triggered.connect(lambda: set_theme("Dark"))
 
         self.setMaximumSize(self.size())
 
@@ -135,105 +127,6 @@ class MetalSlugFontReborn(QMainWindow):
         save_location = QFileDialog.getExistingDirectory(self, "Select Save Location", self.default_save_location)
         if save_location:
             self.save_location_entry.setText(save_location)
-
-    @staticmethod
-    def set_theme(theme_name):
-        if theme_name == "Light":
-            palette = light_mode()
-            QApplication.setPalette(palette)
-            MetalSlugFontReborn.save_theme("Light")
-        elif theme_name == "Dark":
-            palette = dark_mode()
-            QApplication.setPalette(palette)
-            MetalSlugFontReborn.save_theme("Dark")
-        elif theme_name == "Fusion":
-            QApplication.setStyle("Fusion")
-            MetalSlugFontReborn.save_theme("Fusion")
-        else:
-            QApplication.setStyle(QApplication.style())
-
-    @staticmethod
-    def save_theme(theme_name):
-        with open('config.json', 'w', encoding='utf-8') as f:
-            dump({"Theme": theme_name}, f)
-
-    @staticmethod
-    def load_theme():
-        try:
-            with open('config.json', 'r', encoding='utf-8') as f:
-                data = load(f)
-                theme_name = data.get("Theme")
-                if theme_name == "Light":
-                    palette = light_mode()
-                    QApplication.setPalette(palette)
-                elif theme_name == "Dark":
-                    palette = dark_mode()
-                    QApplication.setPalette(palette)
-                else:
-                    QApplication.setStyle("Fusion")
-        except FileNotFoundError:
-            pass
-
-    def show_about_dialog(self):
-        about_dialog = QDialog(self)
-        about_dialog.setWindowTitle("About")
-
-        layout = QVBoxLayout()
-
-        top_left_layout = QHBoxLayout()
-
-        icon_label = QLabel()
-        pixmap = QPixmap("Assets/Icons/Raubtier.png")
-        icon_label.setPixmap(pixmap)
-        top_left_layout.addWidget(icon_label)
-
-        metadata_layout = QVBoxLayout()
-        metadata_layout.addWidget(QLabel(f"MetalSlugFontReborn ({architecture()[0]})"))
-        metadata_layout.addWidget(QLabel("GPL-3.0 License"))
-
-        github_link_label = QLabel('<a href="https://github.com/VermeilChan/MetalSlugFontReborn">GitHub Repository</a>')
-        github_link_label.setOpenExternalLinks(True)
-        metadata_layout.addWidget(github_link_label)
-
-        top_left_layout.addLayout(metadata_layout)
-        layout.addLayout(top_left_layout)
-
-        build_info_box = QGroupBox("Build Information:")
-        build_info_layout = QVBoxLayout()
-
-        build_info_layout.addWidget(QLabel("Version: 1.9.0 (Dev)"))
-        build_info_layout.addWidget(QLabel("Pyinstaller: 6.6.0"))
-        build_info_layout.addWidget(QLabel("PySide6: 6.7.0"))
-        build_info_layout.addWidget(QLabel("Pillow: 10.3.0"))
-        build_info_layout.addWidget(QLabel("Build date: N/A"))
-
-        os_info_box = QGroupBox("Operating System:")
-        os_info_layout = QVBoxLayout()
-
-        if system() == 'Linux':
-            pretty_name, distro_version = linux_info()
-            os_info_layout.addWidget(QLabel(f"OS: {pretty_name}"))
-            os_info_layout.addWidget(QLabel(f"Version: {distro_version}"))
-        elif system() == 'Windows':
-            os_info_layout.addWidget(QLabel(f"OS: {system()} {release()}"))
-            os_info_layout.addWidget(QLabel(f"Version: {version()}"))
-
-        os_info_box.setLayout(os_info_layout)
-        layout.addWidget(os_info_box)
-
-        build_info_box.setLayout(build_info_layout)
-        layout.addWidget(build_info_box)
-
-        about_dialog.setLayout(layout)
-        about_dialog.exec()
-
-def linux_info():
-    with open('/etc/os-release', 'r') as file:
-        os_info = {}
-        for line in file:
-            key, value = line.strip().split('=')
-            os_info[key] = value.strip('"')
-    return os_info.get('PRETTY_NAME', 'OS information not available'), os_info.get('VERSION', 'Version information not available')
 
 def main():
     app = QApplication([])
