@@ -30,6 +30,7 @@ special_characters = {
     # 'Ⅴ': 'Five',
 
 # SUPPORTED CHARACTERS
+
     '!': 'Exclamation',
     '?': 'Question',
     "'": 'Apostrophe',
