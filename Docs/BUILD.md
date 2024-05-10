@@ -40,7 +40,7 @@ pip install -r requirements.txt
 
 ```sh
 # QT VERSION
-pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
+pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Src/utils.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
 
 # CONSOLE VERSION
 pyinstaller --noconfirm --onedir --console --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/console-version.py"
@@ -118,7 +118,7 @@ pip install -r requirements.txt
 
 ```sh
 # QT VERSION
-pyinstaller --noconfirm --onedir --windowed --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
+pyinstaller --noconfirm --onedir --windowed --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
 
 # CONSOLE VERSION
 pyinstaller --noconfirm --onedir --console --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/console-version.py"
@@ -129,4 +129,5 @@ pyinstaller --noconfirm --onedir --console --name "MetalSlugFontReborn" --clean 
 
 ## macOS
 
-- Not Supported :(
+- Not Supported :(<br>
+_It's technically supported, but setting up a macOS VM is a lot of work for me :)._
