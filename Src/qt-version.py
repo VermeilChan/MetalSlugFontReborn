@@ -1,9 +1,10 @@
 from pathlib import Path
 from json import load, dump
 from platform import system, version, release, architecture
-from PySide6.QtGui import QIcon, QPixmap
-from PySide6.QtWidgets import QApplication, QMessageBox, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QGroupBox, QComboBox, QWidget, QDialog, QLabel, QFileDialog
+from PySide2.QtGui import QIcon, QPixmap
+from PySide2.QtWidgets import QApplication, QMessageBox, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QGroupBox, QComboBox, QWidget, QDialog, QLabel, QFileDialog
 from image_generation import generate_filename, generate_image, get_font_paths
+from themes import light_mode, dark_mode
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
@@ -17,9 +18,9 @@ class ImageGenerator:
     icon_path = "Assets/Icons/Raubtier.ico"
 
     @staticmethod
-    def generate_and_display_message(text, font, color, save_location):
+    def generate_and_display_message(text, font, color, save_location, parent=None):
         if not text.strip():
-            QMessageBox.critical(None, "MetalSlugFontReborn", "Input text is empty. Please enter some text.")
+            QMessageBox.critical(parent, "MetalSlugFontReborn", "Input text is empty. Please enter some text.")
             return
 
         try:
@@ -28,12 +29,12 @@ class ImageGenerator:
             image_path, error_message_generate = generate_image(text, filename, font_paths, save_location)
 
             if error_message_generate:
-                QMessageBox.critical(None, "MetalSlugFontReborn", f"Error: {error_message_generate}")
+                QMessageBox.critical(parent, "MetalSlugFontReborn", f"Error: {error_message_generate}")
             else:
-                QMessageBox.information(None, "MetalSlugFontReborn", f"Successfully generated image :D\n\nFile saved as:\n\n{image_path}\n")
+                QMessageBox.information(parent, "MetalSlugFontReborn", f"Successfully generated image :D\n\nFile saved as:\n\n{image_path}\n")
 
         except FileNotFoundError as e:
-            QMessageBox.critical(None, "MetalSlugFontReborn", str(e))
+            QMessageBox.critical(parent, "MetalSlugFontReborn", str(e))
 
 class MetalSlugFontReborn(QMainWindow):
     def __init__(self):
@@ -87,14 +88,16 @@ class MetalSlugFontReborn(QMainWindow):
 
         menubar = self.menuBar()
         help_menu = menubar.addMenu("Help")
+        theme_menu = menubar.addMenu("Themes")
 
         about_action = help_menu.addAction("About")
         about_action.triggered.connect(self.show_about_dialog)
 
-        theme_menu = menubar.addMenu("Themes")
+        dark_mode_action = theme_menu.addAction("Dark Mode")
+        dark_mode_action.triggered.connect(self.set_dark_mode)
 
-        fusion_action = theme_menu.addAction("Fusion")
-        fusion_action.triggered.connect(lambda: self.set_theme("Fusion"))
+        light_mode_action = theme_menu.addAction("Light Mode")
+        light_mode_action.triggered.connect(self.set_light_mode)
 
         self.setMaximumSize(self.size())
 
@@ -122,30 +125,32 @@ class MetalSlugFontReborn(QMainWindow):
         if save_location:
             self.save_location_entry.setText(save_location)
 
-    @staticmethod
-    def set_theme(theme_name):
-        if theme_name:
-            QApplication.setStyle(theme_name)
-            MetalSlugFontReborn.save_theme(theme_name)
-        else:
-            QApplication.setStyle(QApplication.style())
-
-    @staticmethod
-    def save_theme(theme_name):
-        with open('config.json', 'w', encoding='utf-8') as f:
-            dump({"Theme": theme_name}, f)
-
-    @staticmethod
-    def load_theme():
+    def load_theme(self):
         try:
-            with open('config.json', 'r', encoding='utf-8') as f:
+            with open("config.json", "r", encoding="utf-8") as f:
                 data = load(f)
-                theme_name = data.get('Theme')
-                if theme_name:
-                    MetalSlugFontReborn.set_theme(theme_name)
+                theme = data.get("Theme", "Fusion")
+
+                if theme == "Dark":
+                    QApplication.setPalette(dark_mode())
+                elif theme == "Light":
+                    QApplication.setPalette(light_mode())
 
         except FileNotFoundError:
             pass
+
+    def set_dark_mode(self):
+        QApplication.setPalette(dark_mode())
+        self.save_theme("Dark")
+
+    def set_light_mode(self):
+        QApplication.setPalette(light_mode())
+        self.save_theme("Light")
+
+    @staticmethod
+    def save_theme(theme_name):
+        with open("config.json", "w", encoding="utf-8") as f:
+            dump({"Theme": theme_name}, f)
 
     def show_about_dialog(self):
         about_dialog = QDialog(self)
@@ -211,9 +216,10 @@ def linux_info():
 def main():
     app = QApplication([])
     app.setWindowIcon(QIcon(ImageGenerator.icon_path))
+    app.setStyle("Fusion")
     window = MetalSlugFontReborn()
     window.show()
-    app.exec()
+    app.exec_()
 
 if __name__ == "__main__":
     main()
