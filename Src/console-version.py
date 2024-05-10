@@ -49,9 +49,23 @@ def select_color(font):
 
 def select_save_location():
     default_locations = list(save_locations.keys())
+    default_locations.append("Custom")
     save_location_prompt = f"Select save location:\n{', '.join(default_locations)}: "
-    save_location = get_valid_input(save_location_prompt, default_locations)
-    return save_locations[save_location]
+    save_location_choice = get_valid_input(save_location_prompt, default_locations)
+
+    if save_location_choice == "Custom":
+        custom_path = prompt("Enter a custom path for saving: ")
+        custom_path = Path(custom_path)
+
+        if not custom_path.exists():
+            try:
+                custom_path.mkdir(parents=True)
+            except Exception as e:
+                print(f"Could not create the specified path. Error: {e}")
+                return select_save_location()
+        return custom_path
+    else:
+        return save_locations[save_location_choice]
 
 def generate_and_display_image(text, font, color, save_location):
     if text.lower() == 'exit':
