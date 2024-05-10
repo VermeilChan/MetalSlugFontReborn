@@ -41,7 +41,7 @@ while true; do
     echo ""
     echo "Type 'exit' or press CTRL+C to close."
     
-    read -p "Enter your choice (1 or 2, or 'exit' to quit): " choice
+    read -p "Enter your choice (1 or 2): " choice
     
     case $choice in
         1)
