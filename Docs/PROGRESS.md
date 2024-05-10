@@ -33,7 +33,7 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 - **Milestone 6: Reworked Webapp**
   - **Date Achieved**: 2024-02-24
-  - **Description**: Rewrote the webapp version of [MetalSlugFont](https://github.com/VermeilChan/MetalSlugFont/tree/master), improving performance, functionality, compatibility and more fonts and colors. [MetalSlugFontRebornWeb](https://github.com/VermeilChan/MetalSlugFontRebornWeb)
+  - **Description**: Rewrote the webapp version of [MetalSlugFont](https://github.com/VermeilChan/MetalSlugFont/tree/master), improving performance, functionality, compatibility, more fonts and colors. [MetalSlugFontRebornWeb](https://github.com/VermeilChan/MetalSlugFontRebornWeb)
 
 - **Milestone 7: CLI Autocompletion**
   - **Date Achieved**: 2024-03-22
