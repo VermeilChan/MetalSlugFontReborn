@@ -39,10 +39,10 @@ pip install -r requirements.txt
 - Build MetalSlugFontReborn with PyInstaller
 
 ```sh
-# GUI VERSION
-pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
+# QT VERSION
+pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
 
-# CLI VERSION
+# CONSOLE VERSION
 pyinstaller --noconfirm --onedir --console --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/console-version.py"
 ```
 
@@ -86,7 +86,7 @@ cd MetalSlugFontReborn
 - Install required packages
 
 ```sh
-# Python 3.9+
+# Requires Python 3.9+
 
 # Debian/Ubuntu
 sudo apt install python3 python3-pip python3-venv -y
@@ -117,10 +117,10 @@ pip install -r requirements.txt
 - Build MetalSlugFontReborn with PyInstaller
 
 ```sh
-# GUI VERSION
-pyinstaller --noconfirm --onedir --windowed --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
+# QT VERSION
+pyinstaller --noconfirm --onedir --windowed --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
 
-# CLI VERSION
+# CONSOLE VERSION
 pyinstaller --noconfirm --onedir --console --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/console-version.py"
 ```
 
