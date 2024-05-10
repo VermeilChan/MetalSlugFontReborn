@@ -31,9 +31,9 @@ def linux_info():
             os_info[key] = value.strip('"')
 
     pretty_name = os_info.get('PRETTY_NAME') or system()
-    version = os_info.get('VERSION') or release()
+    os_version = os_info.get('VERSION') or release()
 
-    return pretty_name, version
+    return pretty_name, os_version
 
 def about_msfr(parent):
     about_window = QDialog(parent)
