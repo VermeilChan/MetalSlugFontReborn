@@ -1,4 +1,4 @@
-from json import load, dump
+from tomllib import load
 from platform import system, version, release, architecture
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QHBoxLayout, QGroupBox, QDialog
@@ -11,12 +11,12 @@ def set_theme(theme_name):
     save_theme(theme_name)
 
 def save_theme(theme_name):
-    with open('config.json', 'w', encoding='utf-8') as f:
-        dump({"theme": theme_name}, f)
+    with open('config.toml', 'w', encoding='utf-8') as f:
+        f.write(f'theme = "{theme_name}"')
 
 def load_theme():
     try:
-        with open('config.json', 'r', encoding='utf-8') as f:
+        with open('config.toml', 'rb') as f:
             data = load(f)
             theme_name = data.get("theme")
             if theme_name:
