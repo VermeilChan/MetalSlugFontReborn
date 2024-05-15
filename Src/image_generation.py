@@ -3,13 +3,16 @@ from pathlib import Path
 from PIL import Image
 from special_characters import special_characters
 
+
 def generate_filename(_):
     unique_id = uuid4().hex
     return f"{unique_id}.png"
 
+
 def get_font_paths(font, color):
-    base_path = Path('Assets') / 'Fonts' / f'Font-{font}' / f'MS-{color}'
-    return [base_path / folder for folder in ('Letters', 'Numbers', 'Symbols')]
+    base_path = Path("Assets") / "Fonts" / f"Font-{font}" / f"MS-{color}"
+    return [base_path / folder for folder in ("Letters", "Numbers", "Symbols")]
+
 
 def get_character_image_path(character, font_paths):
     characters_folder, numbers_folder, symbols_folder = font_paths
@@ -17,15 +20,18 @@ def get_character_image_path(character, font_paths):
     if character.isspace():
         return None
     elif character.islower():
-        character_image_path = characters_folder / 'Lower-Case' / f"{character}.png"
+        character_image_path = characters_folder / "Lower-Case" / f"{character}.png"
     elif character.isupper():
-        character_image_path = characters_folder / 'Upper-Case' / f"{character}.png"
+        character_image_path = characters_folder / "Upper-Case" / f"{character}.png"
     elif character.isdigit():
         character_image_path = numbers_folder / f"{character}.png"
     else:
-        character_image_path = symbols_folder / f"{special_characters.get(character, '')}.png"
+        character_image_path = (
+            symbols_folder / f"{special_characters.get(character, '')}.png"
+        )
 
     return character_image_path
+
 
 def get_or_create_character_image(character, font_paths):
     if character.isspace():
@@ -33,9 +39,12 @@ def get_or_create_character_image(character, font_paths):
 
     character_image_path = get_character_image_path(character, font_paths)
     if not character_image_path or not character_image_path.is_file():
-        raise FileNotFoundError(f"The character '{character}' is not supported, please check SUPPORTED.txt")
+        raise FileNotFoundError(
+            f"The character '{character}' is not supported, please check SUPPORTED.txt"
+        )
 
     return Image.open(character_image_path)
+
 
 def generate_image(text, filename, font_paths, save_location):
     font_images = {c: get_or_create_character_image(c, font_paths) for c in set(text)}

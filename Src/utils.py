@@ -1,22 +1,38 @@
 from tomllib import load
 from platform import system, version, release, architecture
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QHBoxLayout, QGroupBox, QDialog
+from PySide6.QtWidgets import (
+    QApplication,
+    QLabel,
+    QVBoxLayout,
+    QHBoxLayout,
+    QGroupBox,
+    QDialog,
+)
 from themes import light_mode, dark_mode
-from info import msfr_version, pyinstaller_version, pyside6_version, pillow_version, build_date
+from info import (
+    msfr_version,
+    pyinstaller_version,
+    pyside6_version,
+    pillow_version,
+    build_date,
+)
+
 
 def set_theme(theme_name):
     palette = light_mode() if theme_name == "Light" else dark_mode()
     QApplication.setPalette(palette)
     save_theme(theme_name)
 
+
 def save_theme(theme_name):
-    with open('config.toml', 'w', encoding='utf-8') as f:
+    with open("config.toml", "w", encoding="utf-8") as f:
         f.write(f'theme = "{theme_name}"')
+
 
 def load_theme():
     try:
-        with open('config.toml', 'rb') as f:
+        with open("config.toml", "rb") as f:
             data = load(f)
             theme_name = data.get("theme")
             if theme_name:
@@ -24,17 +40,19 @@ def load_theme():
     except FileNotFoundError:
         pass
 
+
 def linux_info():
     os_info = {}
-    with open('/etc/os-release', 'r') as file:
+    with open("/etc/os-release", "r") as file:
         for line in file:
-            key, value = line.strip().split('=')
+            key, value = line.strip().split("=")
             os_info[key] = value.strip('"')
 
-    pretty_name = os_info.get('PRETTY_NAME') or system()
-    os_version = os_info.get('VERSION') or release()
+    pretty_name = os_info.get("PRETTY_NAME") or system()
+    os_version = os_info.get("VERSION") or release()
 
     return pretty_name, os_version
+
 
 def about_msfr(parent):
     about_window = QDialog(parent)
@@ -53,7 +71,9 @@ def about_msfr(parent):
     info_layout.addWidget(QLabel(f"MetalSlugFontReborn ({architecture()[0]})"))
     info_layout.addWidget(QLabel("GPL-3.0 License"))
 
-    github_link = QLabel('<a href="https://github.com/VermeilChan/MetalSlugFontReborn">GitHub Repository</a>')
+    github_link = QLabel(
+        '<a href="https://github.com/VermeilChan/MetalSlugFontReborn">GitHub Repository</a>'
+    )
     github_link.setOpenExternalLinks(True)
     info_layout.addWidget(github_link)
 
@@ -62,11 +82,11 @@ def about_msfr(parent):
 
     os_info_layout = QVBoxLayout()
 
-    if system() == 'Linux':
+    if system() == "Linux":
         os_name, os_version = linux_info()
         os_info_layout.addWidget(QLabel(f"OS: {os_name}"))
         os_info_layout.addWidget(QLabel(f"Version: {os_version}"))
-    elif system() == 'Windows':
+    elif system() == "Windows":
         os_info_layout.addWidget(QLabel(f"OS: {system()} {release()}"))
         os_info_layout.addWidget(QLabel(f"Version: {version()}"))
 

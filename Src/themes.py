@@ -3,6 +3,7 @@ from PySide6.QtGui import QPalette, QColor
 
 # Credit To (https://stackoverflow.com/a/56851493/20787000)
 
+
 def light_mode():
     palette = QPalette()
     palette.setColor(QPalette.Window, QColor(245, 245, 245))
@@ -18,8 +19,9 @@ def light_mode():
     palette.setColor(QPalette.Link, QColor(0, 102, 204))
     palette.setColor(QPalette.Highlight, QColor(51, 153, 255))
     palette.setColor(QPalette.HighlightedText, Qt.white)
-    
+
     return palette
+
 
 def dark_mode():
     palette = QPalette()

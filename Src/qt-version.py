@@ -1,5 +1,16 @@
 from pathlib import Path
-from PySide6.QtWidgets import QWidget, QApplication, QMainWindow, QVBoxLayout, QLineEdit, QLabel, QComboBox, QPushButton, QFileDialog, QMessageBox
+from PySide6.QtWidgets import (
+    QWidget,
+    QApplication,
+    QMainWindow,
+    QVBoxLayout,
+    QLineEdit,
+    QLabel,
+    QComboBox,
+    QPushButton,
+    QFileDialog,
+    QMessageBox,
+)
 from PySide6.QtGui import QIcon
 from image_generation import generate_filename, generate_image, get_font_paths
 from utils import set_theme, load_theme, about_msfr
@@ -9,8 +20,9 @@ valid_colors_by_font = {
     2: ["Blue", "Orange", "Gold"],
     3: ["Blue", "Orange"],
     4: ["Blue", "Orange", "Yellow"],
-    5: ["Orange"]
+    5: ["Orange"],
 }
+
 
 class ImageGenerator:
     icon_path = "Assets/Icons/Raubtier.ico"
@@ -18,16 +30,24 @@ class ImageGenerator:
     @staticmethod
     def generate_and_display_message(text, font, color, save_location, parent=None):
         if not text.strip():
-            QMessageBox.critical(parent, "MetalSlugFontReborn", "Input text is empty. Please enter some text.")
+            QMessageBox.critical(
+                parent,
+                "MetalSlugFontReborn",
+                "Input text is empty. Please enter some text.",
+            )
             return
 
         try:
             filename = generate_filename(text)
             font_paths = get_font_paths(font, color)
-            image_path_str, error_message_generate = generate_image(text, filename, font_paths, save_location)
+            image_path_str, error_message_generate = generate_image(
+                text, filename, font_paths, save_location
+            )
 
             if error_message_generate:
-                QMessageBox.critical(parent, "MetalSlugFontReborn", f"Error: {error_message_generate}")
+                QMessageBox.critical(
+                    parent, "MetalSlugFontReborn", f"Error: {error_message_generate}"
+                )
             else:
                 image_path = Path(image_path_str)
                 image_name = image_path.name
@@ -40,6 +60,7 @@ class ImageGenerator:
 
         except FileNotFoundError as e:
             QMessageBox.critical(parent, "MetalSlugFontReborn", str(e))
+
 
 class MetalSlugFontReborn(QMainWindow):
     def __init__(self):
@@ -124,9 +145,12 @@ class MetalSlugFontReborn(QMainWindow):
         ImageGenerator.generate_and_display_message(text, font, color, save_location)
 
     def browse_save_location(self):
-        save_location = QFileDialog.getExistingDirectory(self, "Select Save Location", self.default_save_location)
+        save_location = QFileDialog.getExistingDirectory(
+            self, "Select Save Location", self.default_save_location
+        )
         if save_location:
             self.save_location_entry.setText(save_location)
+
 
 def main():
     app = QApplication([])
@@ -135,6 +159,7 @@ def main():
     window = MetalSlugFontReborn()
     window.show()
     app.exec()
+
 
 if __name__ == "__main__":
     main()
