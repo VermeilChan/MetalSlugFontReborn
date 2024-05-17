@@ -41,7 +41,7 @@ def load_theme():
         pass
 
 
-def linux_info():
+def get_linux_info():
     os_info = {}
     with open("/etc/os-release", "r") as file:
         for line in file:
@@ -53,15 +53,22 @@ def linux_info():
 
     return pretty_name, os_version
 
+def get_os_info():
+    if system() == "Linux":
+        return get_linux_info()
+    elif system() == "Windows":
+        return f"{system()} {release()}", version()
 
-def about_msfr(parent):
+    return system(), release()
+
+
+def about_section(parent):
     about_window = QDialog(parent)
     about_window.setWindowTitle("About")
 
     main_layout = QVBoxLayout()
 
     header_layout = QHBoxLayout()
-
     icon_label = QLabel()
     pixmap = QPixmap("Assets/Icons/Raubtier.png")
     icon_label.setPixmap(pixmap)
@@ -69,7 +76,7 @@ def about_msfr(parent):
 
     info_layout = QVBoxLayout()
     info_layout.addWidget(QLabel(f"MetalSlugFontReborn ({architecture()[0]})"))
-    info_layout.addWidget(QLabel("GPL-3.0 License"))
+    info_layout.addWidget(QLabel("GPL-3.0 Licensed"))
 
     github_link = QLabel(
         '<a href="https://github.com/VermeilChan/MetalSlugFontReborn">GitHub Repository</a>'
@@ -80,22 +87,16 @@ def about_msfr(parent):
     header_layout.addLayout(info_layout)
     main_layout.addLayout(header_layout)
 
+    os_name, os_version = get_os_info()
     os_info_layout = QVBoxLayout()
-
-    if system() == "Linux":
-        os_name, os_version = linux_info()
-        os_info_layout.addWidget(QLabel(f"OS: {os_name}"))
-        os_info_layout.addWidget(QLabel(f"Version: {os_version}"))
-    elif system() == "Windows":
-        os_info_layout.addWidget(QLabel(f"OS: {system()} {release()}"))
-        os_info_layout.addWidget(QLabel(f"Version: {version()}"))
+    os_info_layout.addWidget(QLabel(f"OS: {os_name}"))
+    os_info_layout.addWidget(QLabel(f"Version: {os_version}"))
 
     os_info_group = QGroupBox("Operating System:")
     os_info_group.setLayout(os_info_layout)
     main_layout.addWidget(os_info_group)
 
     build_info_layout = QVBoxLayout()
-
     build_info_layout.addWidget(QLabel(f"Version: {msfr_version}"))
     build_info_layout.addWidget(QLabel(f"Pyinstaller: {pyinstaller_version}"))
     build_info_layout.addWidget(QLabel(f"PySide6: {pyside6_version}"))
