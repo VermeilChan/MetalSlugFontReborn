@@ -49,7 +49,7 @@ If you have a GitHub account and have found this repository helpful, please cons
 ## Features
 
 - Easily transform text into images using the Metal Slug font.
-- Supports uppercase and lowercase letters (A-Z, a-z), digits (0-9), symbols and multiple colors.
+- Supports uppercase and lowercase letters (A-Z, a-z), digits (0-9), symbols (♥-★), and multiple colors.
 - Supports operating systems, including Windows, Linux.
 - Provides both GUI and CLI interfaces.
 
@@ -78,7 +78,7 @@ To download and use MetalSlugFontReborn, refer to the [docs](Docs/INSTALL.md) he
 
 ## Preview Fonts
 
-See examples of the [images generated](Docs/EXAMPLES.md) here. Also checkout the [supported characters](Docs/CHARACTERS.md).
+See examples of the [images generated](Docs/EXAMPLES.md) here. Also checkout the [supported characters](Docs/SUPPORTED.md).
 
 ## How to Contribute
 
