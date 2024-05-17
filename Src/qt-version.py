@@ -13,7 +13,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtGui import QIcon
 from image_generation import generate_filename, generate_image, get_font_paths
-from utils import set_theme, load_theme, about_msfr
+from utils import set_theme, load_theme, about_section
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
@@ -50,11 +50,10 @@ class ImageGenerator:
                 )
             else:
                 image_path = Path(image_path_str)
-                image_name = image_path.name
                 success_message = (
                     f"Successfully generated image :)\n"
-                    f"Image name: {image_name}\n"
-                    f"Image path: \n{image_path}"
+                    f"Image name: {image_path.name}\n"
+                    f"Image path: {image_path}"
                 )
                 QMessageBox.information(parent, "MetalSlugFontReborn", success_message)
 
@@ -71,6 +70,10 @@ class MetalSlugFontReborn(QMainWindow):
 
         self.default_save_location = str(Path.home() / "Desktop")
 
+        self.init_ui()
+        self.setMaximumSize(self.size())
+
+    def init_ui(self):
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout(central_widget)
@@ -108,22 +111,21 @@ class MetalSlugFontReborn(QMainWindow):
         layout.addWidget(self.save_location_label)
         layout.addWidget(self.save_location_entry)
 
-        self.color_combobox.setEnabled(False)
         self.font_combobox.currentIndexChanged.connect(self.on_font_change)
         self.on_font_change()
 
+        self.init_menubar()
+
+    def init_menubar(self):
         menubar = self.menuBar()
         help_menu = menubar.addMenu("Help")
 
         about_action = help_menu.addAction("About")
-        about_action.triggered.connect(lambda: about_msfr(self))
+        about_action.triggered.connect(lambda: about_section(self))
 
         theme_menu = menubar.addMenu("Themes")
-
         theme_menu.addAction("Light Mode").triggered.connect(lambda: set_theme("Light"))
         theme_menu.addAction("Dark Mode").triggered.connect(lambda: set_theme("Dark"))
-
-        self.setMaximumSize(self.size())
 
     def on_font_change(self):
         font = int(self.font_combobox.currentText())
@@ -141,8 +143,9 @@ class MetalSlugFontReborn(QMainWindow):
         save_location = self.save_location_entry.text()
 
         text = text.upper() if font == 5 else text
-
-        ImageGenerator.generate_and_display_message(text, font, color, save_location)
+        ImageGenerator.generate_and_display_message(
+            text, font, color, save_location, self
+        )
 
     def browse_save_location(self):
         save_location = QFileDialog.getExistingDirectory(
