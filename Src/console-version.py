@@ -35,18 +35,17 @@ def startup_message():
 def get_valid_input(prompt_text, valid_values):
     completer = WordCompleter(valid_values)
     while True:
-        user_input = prompt(prompt_text, completer=completer)
-        if user_input.lower() == "exit":
+        user_input = prompt(prompt_text, completer=completer).title()
+        if user_input == "Exit":
             sys.exit("Closing...")
-        elif user_input.title() in valid_values:
-            return user_input.title()
+        elif user_input in valid_values:
+            return user_input
         else:
             print("Invalid input. Please try again.")
 
 
 def select_font():
-    valid_fonts = list(map(str, range(1, 6)))
-    return int(get_valid_input("\nChoose a font (1-5): ", valid_fonts))
+    return int(get_valid_input("\nChoose a font (1-5): ", list(map(str, range(1, 6)))))
 
 
 def select_color(font):
@@ -57,15 +56,13 @@ def select_color(font):
 
 
 def select_save_location():
-    default_locations = list(save_locations.keys())
-    default_locations.append("Custom")
-    save_location_prompt = f"Select save location:\n{', '.join(default_locations)}: "
-    save_location_choice = get_valid_input(save_location_prompt, default_locations)
+    default_locations = list(save_locations.keys()) + ["Custom"]
+    save_location_choice = get_valid_input(
+        f"Select save location:\n{', '.join(default_locations)}: ", default_locations
+    )
 
     if save_location_choice == "Custom":
-        custom_path = prompt("Enter a custom path for saving: ")
-        custom_path = Path(custom_path)
-
+        custom_path = Path(prompt("Enter a custom path for saving: "))
         if not custom_path.exists():
             try:
                 custom_path.mkdir(parents=True)
@@ -78,7 +75,7 @@ def select_save_location():
 
 
 def generate_and_display_image(text, font, color, save_location):
-    if text.lower() == "exit":
+    if text.lower() == "Exit":
         sys.exit("Closing...")
 
     if not text:
@@ -104,7 +101,6 @@ def generate_and_display_image(text, font, color, save_location):
 
 def main():
     startup_message()
-
     font = select_font()
     color = select_color(font)
     save_location = select_save_location()
