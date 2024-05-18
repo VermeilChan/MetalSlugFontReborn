@@ -74,7 +74,7 @@ _Additional space required for generating images._
 
 ## Install MetalSlugFontReborn
 
-To download and use MetalSlugFontReborn, refer to the [docs](Docs/INSTALL.md) here.
+To download and use MetalSlugFontReborn, refer to the [docs](Docs/INSTALL-SELECT.md) here.
 
 ## Preview Fonts
 
