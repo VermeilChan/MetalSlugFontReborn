@@ -1,15 +1,16 @@
-name: Build MetalSlugFontReborn Windows
+name: Build MetalSlugFontReborn MacOS
 
 on:
   push:
     branches:
       - Development
     paths:
-      - '.github/workflows/build-windows.yml'
+      - '.github/workflows/build-macos.yml'
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: macos-latest-large
+    timeout-minutes: 3
     
     steps:
     - name: Checkout Repository
@@ -22,8 +23,8 @@ jobs:
 
     - name: Create a virtual environment
       run: |
-        py -m venv .venv
-        .venv\Scripts\activate
+        python3 -m venv .venv
+        source .venv/bin/activate
 
     - name: Install dependencies
       run: |
@@ -31,7 +32,7 @@ jobs:
 
     - name: Build MetalSlugFontReborn
       run: |
-        pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Src/utils.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
+        pyinstaller --noconfirm --onedir --windowed --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
 
     - name: Move Assets folder
       run: |
