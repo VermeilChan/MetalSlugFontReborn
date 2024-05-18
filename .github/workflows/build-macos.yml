@@ -10,7 +10,6 @@ on:
 jobs:
   build:
     runs-on: macos-latest-large
-    timeout-minutes: 3
     
     steps:
     - name: Checkout Repository
