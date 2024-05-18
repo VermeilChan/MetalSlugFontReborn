@@ -6,7 +6,7 @@ echo "MetalSlugFontReborn dependencies installer"
 echo "This script will download the required dependencies for MetalSlugFontReborn."
 
 if ! command -v python3 &> /dev/null; then
-    echo "Python 3.9 or later is required. Please install it before running this script."
+    echo "Python 3.11 or later is required. Please install it before running this script."
     exit 1
 fi
 
@@ -14,8 +14,8 @@ PYTHON_VERSION=$(python3 --version | grep -oP '\d+\.\d+\.\d+')
 PYTHON_MAJOR_VERSION=$(echo $PYTHON_VERSION | cut -d'.' -f1)
 PYTHON_MINOR_VERSION=$(echo $PYTHON_VERSION | cut -d'.' -f2)
 
-if [ "$PYTHON_MAJOR_VERSION" -lt 3 ] || { [ "$PYTHON_MAJOR_VERSION" -eq 3 ] && [ "$PYTHON_MINOR_VERSION" -lt 9 ]; }; then
-    echo "Python 3.9 or later is required. You have Python $PYTHON_VERSION."
+if [ "$PYTHON_MAJOR_VERSION" -lt 3 ] || { [ "$PYTHON_MAJOR_VERSION" -eq 3 ] && [ "$PYTHON_MINOR_VERSION" -lt 11 ]; }; then
+    echo "Python 3.11 or later is required. You have Python $PYTHON_VERSION."
     exit 1
 fi
 
