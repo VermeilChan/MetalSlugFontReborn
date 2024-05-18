@@ -4,7 +4,9 @@
 
 ### Requirements
 
-- [Python 3.9+](https://www.python.org/downloads/).
+- [Python](https://www.python.org/).
+   - Console Version: Python 3.8 or later
+   - Qt Version: Python 3.11 or later
 - [Git](https://gitforwindows.org/).
 
 ### Steps
@@ -53,6 +55,13 @@ pyinstaller --noconfirm --onedir --console --icon "Assets/Icons/Raubtier.ico" --
 
 _Note: Some distributions require other packages to be installed._
 
+### Requirements
+
+- [Python](https://www.python.org/).
+   - Console Version: Python 3.8 or later
+   - Qt Version: Python 3.11 or later
+- [Git](https://gitforwindows.org/).
+
 ### Steps
 
 - Install Git
@@ -86,8 +95,6 @@ cd MetalSlugFontReborn
 - Install required packages
 
 ```sh
-# Requires Python 3.9+
-
 # Debian/Ubuntu
 sudo apt install python3 python3-pip python3-venv -y
 
