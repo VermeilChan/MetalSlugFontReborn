@@ -4,7 +4,9 @@
 
 ### Requirements
 
-- [Python 3.9+](https://www.python.org/downloads/).
+- [Python](https://www.python.org/).
+   - Console Version: Python 3.8 or later
+   - Qt Version: Python 3.11 or later
 - [Git](https://gitforwindows.org/).
 
 ### Steps
@@ -39,11 +41,11 @@ pip install -r requirements.txt
 - Build MetalSlugFontReborn with PyInstaller
 
 ```sh
-# GUI VERSION
-pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/windowed-version.py"
+# QT VERSION
+pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Src/utils.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
 
-# CLI VERSION
-pyinstaller --noconfirm --onedir --console --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/constants.py;." --add-data "Src/main.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/console-version.py"
+# CONSOLE VERSION
+pyinstaller --noconfirm --onedir --console --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/console-version.py"
 ```
 
 - Move the `Assets` folder and SUPPORTED.txt out of `_internal` to `dist/MetalSlugFontReborn`.
@@ -52,6 +54,13 @@ pyinstaller --noconfirm --onedir --console --icon "Assets/Icons/Raubtier.ico" --
 ## Linux
 
 _Note: Some distributions require other packages to be installed._
+
+### Requirements
+
+- [Python](https://www.python.org/).
+   - Console Version: Python 3.8 or later
+   - Qt Version: Python 3.11 or later
+- [Git](https://gitforwindows.org/).
 
 ### Steps
 
@@ -115,11 +124,11 @@ pip install -r requirements.txt
 - Build MetalSlugFontReborn with PyInstaller
 
 ```sh
-# GUI VERSION
-pyinstaller --noconfirm --onedir --windowed --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/constants.py:." --add-data "Src/main.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/windowed-version.py"
+# QT VERSION
+pyinstaller --noconfirm --onedir --windowed --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
 
-# CLI VERSION
-pyinstaller --noconfirm --onedir --console --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/constants.py:." --add-data "Src/main.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/console-version.py"
+# CONSOLE VERSION
+pyinstaller --noconfirm --onedir --console --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/console-version.py"
 ```
 
 - Move the `Assets` folder and SUPPORTED.txt out of `_internal` to `dist/MetalSlugFontReborn`.
@@ -127,4 +136,5 @@ pyinstaller --noconfirm --onedir --console --name "MetalSlugFontReborn" --clean 
 
 ## macOS
 
-- Idk :(
+- Not Supported :(<br>
+_It's technically supported, but setting up a macOS VM is a lot of work for me :)._

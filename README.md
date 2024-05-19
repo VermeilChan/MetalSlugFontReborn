@@ -10,7 +10,7 @@
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/releases">
     <img alt="Downloads" src="https://img.shields.io/github/downloads/VermeilChan/MetalSlugFontReborn/total?color=orange" />
   </a>
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/blob/Development/LICENSE">
+  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/LICENSE">
     <img alt="License" src="https://img.shields.io/github/license/VermeilChan/MetalSlugFontReborn?color=purple" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/issues">
@@ -19,7 +19,7 @@
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn/pulls">
     <img alt="Open Pull Requests" src="https://img.shields.io/github/issues-pr/VermeilChan/MetalSlugFontReborn?color=yellow" />
   </a>
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/commits/Development">
+  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/commits">
     <img alt="Last Commit" src="https://img.shields.io/github/last-commit/VermeilChan/MetalSlugFontReborn?color=darkcyan" />
   </a>
   <a href="https://github.com/VermeilChan/MetalSlugFontReborn">
@@ -40,7 +40,7 @@ If you have a GitHub account and have found this repository helpful, please cons
 
 - [Features](#features)
 - [Requirements](#requirements)
-- [Get MetalSlugFontReborn](#get-metalslugfontreborn)
+- [Install MetalSlugFontReborn](#install-metalslugfontreborn)
 - [Preview Fonts](#preview-fonts)
 - [How to Contribute](#how-to-contribute)
 - [License](#license)
@@ -49,20 +49,19 @@ If you have a GitHub account and have found this repository helpful, please cons
 ## Features
 
 - Easily transform text into images using the Metal Slug font.
-- Supports uppercase and lowercase alphabets (A-Z, a-z), numbers (0-9), symbols, and colors.
-- Easy-to-use user interface with both GUI and CLI support.
-
-For additional details, please refer to the [docs](Docs/SUPPORTED.md) here.
+- Supports uppercase and lowercase letters (A-Z, a-z), digits (0-9), symbols (♥-★), and multiple colors.
+- Supports operating systems, including Windows, Linux.
+- Provides both GUI and CLI interfaces.
 
 ## Requirements
 
 Before installing MetalSlugFontReborn, ensure that your system meets the following requirements:
 
-| Operating System | OS Versions                                                      |
-|------------------|------------------------------------------------------------------|
-| Windows          | 11 & 10 (Qt) x64, 11, 10, 8.1 (Console) x64                      |
-| GNU/Linux        | Debian 12.5, Ubuntu 24.04, Fedora 40, Arch Linux, OpenSUSE x64   |
-| MacOS            | Currently not supported. Use [WineHQ](https://www.winehq.org/)   |
+| Operating System | Supported Versions                                             |
+|------------------|----------------------------------------------------------------|
+| Windows          | 11 & 10 (Qt) x64, 11, 10, 8.1 (Console) x64                    |
+| GNU/Linux        | Debian 12.5, Ubuntu 24.04, Fedora 40, Arch Linux, OpenSUSE x64 |
+| MacOS            | Currently not supported. Use [WineHQ](https://www.winehq.org/) |
 
 _Older Versions Might Work Too :)_
 
@@ -73,13 +72,13 @@ _Older Versions Might Work Too :)_
 
 _Additional space required for generating images._
 
-## Get MetalSlugFontReborn
+## Install MetalSlugFontReborn
 
-To download and use MetalSlugFontReborn, refer to the [docs](Docs/INSTALL.md) here.
+To download and use MetalSlugFontReborn, refer to the [docs](Docs/INSTALL-SELECT.md) here.
 
 ## Preview Fonts
 
-See examples of the [images generated](Docs/EXAMPLES.md) here.
+See examples of the [images generated](Docs/EXAMPLES.md) here. Also checkout the [supported characters](Docs/SUPPORTED.md).
 
 ## How to Contribute
 
@@ -102,8 +101,10 @@ I want to say a big thank you to the individuals who helped me.
 - [GussPrint](https://www.spriters-resource.com/submitter/Gussprint): for providing assets for font 5.
 - [BinRich](https://discord.com/users/477459550904254464): for providing diacritic marks.
 
-- Third-party libraries
+### Third-party libraries
 
-- [PySide6](https://doc.qt.io/qtforpython-6/)
-- [Pillow](https://python-pillow.org)
-- [PyInstaller](https://pyinstaller.org/en/stable)
+- [PySide6](https://doc.qt.io/qtforpython-6/): For the GUI.
+- [Pillow](https://python-pillow.org): For image processing.
+- [PyInstaller](https://pyinstaller.org/en/stable): For compiling the program.
+- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/): For the CLI Autocompletion.
+- [Ruff](https://docs.astral.sh/ruff/): Python linter and code formatter.

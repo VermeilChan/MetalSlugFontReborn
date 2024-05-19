@@ -4,10 +4,10 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 ## Current Status
 
-- **Stable Release**: 1.8.0
-- **Release Date**: 2024-04-26
-- **Project Link**: [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn)
+- **Stable Version**: 1.9.1
+- **Release Date**: 2024-05-10
 - **Maintainer**: VermeilChan
+- **Development Version**: N/A
 
 ## Achieved Milestones
 
@@ -21,7 +21,7 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 - **Milestone 3: Native Support For Linux**
   - **Date Achieved**: 2023-10-16
-  - **Description**: Added native support for Linux distributions including Debian, Ubuntu, Arch, Fedora, and OpenSUSE.
+  - **Description**: Added native support for Linux distributions including Debian, Ubuntu, Arch Linux, Fedora, and OpenSUSE.
 
 - **Milestone 4: Font Size Fixes**
   - **Date Achieved**: 2024-01-21
@@ -33,8 +33,8 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 - **Milestone 6: Reworked Webapp**
   - **Date Achieved**: 2024-02-24
-  - **Description**: Rewrote the core features of MetalSlugFontReborn webapp version, improving performance, functionality, and compatibility. The rework includes support for Progressive Web App (PWA), making the application accessible a wider range of platforms.
+  - **Description**: Rewrote the webapp version of [MetalSlugFont](https://github.com/VermeilChan/MetalSlugFont/tree/master), improving performance, functionality, compatibility, more fonts and colors. [MetalSlugFontRebornWeb](https://github.com/VermeilChan/MetalSlugFontRebornWeb)
 
 - **Milestone 7: CLI Autocompletion**
   - **Date Achieved**: 2024-03-22
-  - **Description**: Added autocompletion support for the CLI version.
+  - **Description**: Added autocompletion support for the Console version.

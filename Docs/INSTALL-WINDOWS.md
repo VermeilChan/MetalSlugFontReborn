@@ -27,4 +27,4 @@
    - Click `Generate And Save Image` to create the stylized image.
 
 6. **View the Result:**
-   - The program will save the stylized image on your desktop.
+   - The program will save the stylized image. By default, it will be saved on your desktop. You can choose a different location if desired.

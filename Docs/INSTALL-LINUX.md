@@ -5,12 +5,14 @@
    ![Download MetalSlugFontReborn](Markdown/Docs/Download.png)
 
 2. **Extract the Archive:**
-   - Extract `MetalSlugFontReborn-vX.X.X-Linux-x64-Qt-Console.tar.gz`.
+   - Extract `MetalSlugFontReborn-vX.X.X-GNULinux-x64-Qt-Console.tar.xz`.
 
 3. **Install Dependencies:**
    - Navigate to the `MetalSlugFontReborn` folder in the terminal.
    - Run the following command:
       ```sh
+      # Requires Python 3.9 or later
+
       bash Install-Deps.sh
 
       # Or
@@ -48,4 +50,4 @@
    - Click `Generate And Save Image` to create the stylized image.
 
 6. **View the Result:**
-   - The program will save the stylized image on your desktop.
+   - The program will save the stylized image. By default, it will be saved on your desktop. You can choose a different location if desired.
