@@ -53,6 +53,7 @@ def get_linux_info():
 
     return pretty_name, os_version
 
+
 def get_os_info():
     if system() == "Linux":
         return get_linux_info()
