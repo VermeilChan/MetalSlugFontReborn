@@ -76,7 +76,7 @@ To download and use MetalSlugFontReborn, refer to the [docs](Docs/INSTALL-SELECT
 
 ## Examples and Supported Characters
 
-See examples of the [images generated](Docs/EXAMPLES.md) here. Also checkout the [supported characters](Docs/SUPPORTED.md).
+See examples of the [images generated](Docs/EXAMPLES.md) and the [supported characters](Docs/SUPPORTED.md).
 
 ## How to Contribute
 
@@ -84,6 +84,20 @@ If you find issues or have ideas for improvements, please:
 
 - [Report an issue](https://github.com/VermeilChan/MetalSlugFontReborn/issues)
 - [Submit a pull request](https://github.com/VermeilChan/MetalSlugFontReborn/pulls)
+
+### Contributing
+
+Thanks to all the people who contributed!
+
+#### MetalSlugFont
+<a href="https://github.com/VermeilChan/MetalSlugFont/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=VermeilChan/MetalSlugFont&max=750" />
+</a>
+
+#### MetalSlugFontReborn
+<a href="https://github.com/VermeilChan/MetalSlugFontReborn/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=VermeilChan/MetalSlugFontReborn&max=750" />
+</a>
 
 ## License
 
@@ -99,10 +113,12 @@ I want to say a big thank you to the individuals who helped me.
 - [GussPrint](https://www.spriters-resource.com/submitter/Gussprint): for providing assets for font 5.
 - [BinRich](https://discord.com/users/477459550904254464): for providing diacritic marks.
 
-### Third-party libraries
+### Third-party
 
 - [PySide6](https://doc.qt.io/qtforpython-6/): For the GUI
 - [Pillow](https://python-pillow.org): For image processing
 - [PyInstaller](https://pyinstaller.org/en/stable): For compiling the program
 - [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/): For the CLI Autocompletion
 - [Ruff](https://docs.astral.sh/ruff/): Python linter and code formatter.
+- [SkyblockerMod](https://github.com/SkyblockerMod/Skyblocker): Issue Template
+- [Aseprite](https://github.com/aseprite/aseprite): Build template
