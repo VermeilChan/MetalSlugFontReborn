@@ -3,7 +3,7 @@
 - [Platforms](#platforms)
 - [Get the source code](#get-the-source-code)
 - [Dependencies](#dependencies)
-   - [Windows dependencies](#windows-dependencies)
+   - [Windows dependencies](#dependencies)
    - [Linux dependencies](#linux-dependencies)
 - [Compiling](#compiling)
    - [Windows details](#windows-details)
@@ -54,11 +54,11 @@ pip install -r requirements.txt
 ```
 ```sh
 # Qt Version
-pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Src/utils.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
+pyinstaller --noconfirm --onedir --windowed --optimize "2" --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Src/utils.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
 ```
 ```sh
 # Console Version
-pyinstaller --noconfirm --onedir --console --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/console-version.py"
+pyinstaller --noconfirm --onedir --console --optimize "2" --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/console-version.py"
 ```
 
 - Move the `Assets` folder and `SUPPORTED.txt` out of `_internal` folder to `dist/MetalSlugFontReborn`.
@@ -97,11 +97,11 @@ pip install -r requirements.txt
 ```
 ```sh
 # Qt Version
-pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
+pyinstaller --noconfirm --onedir --windowed --optimize "2" --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
 ```
 ```sh
 # Console Version
-pyinstaller --noconfirm --onedir --console --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/console-version.py"
+pyinstaller --noconfirm --onedir --console --optimize "2" --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/console-version.py"
 ```
 
 - Move the `Assets` folder and `SUPPORTED.txt` out of `_internal` folder to `dist/MetalSlugFontReborn`.
