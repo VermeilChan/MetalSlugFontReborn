@@ -9,7 +9,7 @@ source .venv/bin/activate
 while true; do
     echo "Select an option:"
     echo "1. Run the Qt version"
-    echo "2. Run the console version"
+    echo "2. Run the Console version"
     echo ""
     echo "Type 'exit' or press CTRL+C to close."
 
