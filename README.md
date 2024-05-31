@@ -120,5 +120,5 @@ I want to say a big thank you to the individuals who helped me.
 - [PyInstaller](https://pyinstaller.org/en/stable): For compiling the program
 - [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/): For the CLI Autocompletion
 - [Ruff](https://docs.astral.sh/ruff/): Python linter and code formatter.
-- [SkyblockerMod](https://github.com/SkyblockerMod/Skyblocker): Issue Template
-- [Aseprite](https://github.com/aseprite/aseprite): Build template
+- [SkyblockerMod](https://github.com/SkyblockerMod/Skyblocker): Issue Template.
+- [Aseprite](https://github.com/aseprite/aseprite): Build template.
