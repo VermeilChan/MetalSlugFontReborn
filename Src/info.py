@@ -1,7 +1,7 @@
-import subprocess
+from subprocess import check_output
 from datetime import datetime
 
-msfr_version = "1.9.2 ()"
+msfr_version = "1.9.2"
 pyinstaller_version = "6.7.0"
 pyside6_version = "6.7.1"
 pillow_version = "10.3.0"
@@ -15,7 +15,7 @@ if is_dev:
     formatted_date_time = current_datetime.strftime("%Y-%m-%d (%A, %B %d, %Y)")
 
     try:
-        latest_commit_sha = subprocess.check_output(
+        latest_commit_sha = check_output(
             ["git", "rev-list", "HEAD", "-1"], text=True
         ).strip()
         short_commit_sha = latest_commit_sha[:7]
