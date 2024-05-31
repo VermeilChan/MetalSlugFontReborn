@@ -1,4 +1,4 @@
-from tomllib import load
+from configparser import ConfigParser
 from platform import system, version, release, architecture
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (
@@ -16,6 +16,7 @@ from info import (
     pyside6_version,
     pillow_version,
     build_date,
+    config_file,
 )
 
 
@@ -26,17 +27,23 @@ def set_theme(theme_name):
 
 
 def save_theme(theme_name):
-    with open("config.toml", "w", encoding="utf-8") as f:
-        f.write(f'theme = "{theme_name}"')
+    config = ConfigParser()
+    config["Settings"] = {
+        "theme": theme_name,
+        "Compression": "True",
+        "CompressionLevel": "9",
+    }
+    with open(config_file, "w", encoding="utf-8") as f:
+        config.write(f)
 
 
 def load_theme():
+    config = ConfigParser()
     try:
-        with open("config.toml", "rb") as f:
-            data = load(f)
-            theme_name = data.get("theme")
-            if theme_name:
-                set_theme(theme_name)
+        config.read(config_file, encoding="utf-8")
+        theme_name = config.get("Settings", "theme", fallback=None)
+        if theme_name:
+            set_theme(theme_name)
     except FileNotFoundError:
         pass
 
