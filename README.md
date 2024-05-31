@@ -53,7 +53,7 @@ If you have a GitHub account and have found this repository helpful, please cons
 - Supports operating systems, including Windows, Linux.
 - Provides both GUI and CLI interfaces.
 
-### System Requirements
+## System Requirements
 
 #### Operating Systems
 
@@ -84,20 +84,6 @@ If you find issues or have ideas for improvements, please:
 
 - [Report an issue](https://github.com/VermeilChan/MetalSlugFontReborn/issues)
 - [Submit a pull request](https://github.com/VermeilChan/MetalSlugFontReborn/pulls)
-
-### Contributing
-
-Thanks to all the people who contributed!
-
-#### MetalSlugFont
-<a href="https://github.com/VermeilChan/MetalSlugFont/graphs/contributors">
-  <img src="https://contributors-img.web.app/image?repo=VermeilChan/MetalSlugFont&max=750" />
-</a>
-
-#### MetalSlugFontReborn
-<a href="https://github.com/VermeilChan/MetalSlugFontReborn/graphs/contributors">
-  <img src="https://contributors-img.web.app/image?repo=VermeilChan/MetalSlugFontReborn&max=750" />
-</a>
 
 ## License
 
