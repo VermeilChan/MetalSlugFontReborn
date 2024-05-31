@@ -5,8 +5,7 @@ from special_characters import special_characters
 
 
 def generate_filename(_):
-    unique_id = uuid4().hex
-    return f"{unique_id}.png"
+    return f"{uuid4().hex}.png"
 
 
 def get_font_paths(font, color):
@@ -20,17 +19,13 @@ def get_character_image_path(character, font_paths):
     if character.isspace():
         return None
     elif character.islower():
-        character_image_path = characters_folder / "Lower-Case" / f"{character}.png"
+        return characters_folder / "Lower-Case" / f"{character}.png"
     elif character.isupper():
-        character_image_path = characters_folder / "Upper-Case" / f"{character}.png"
+        return characters_folder / "Upper-Case" / f"{character}.png"
     elif character.isdigit():
-        character_image_path = numbers_folder / f"{character}.png"
+        return numbers_folder / f"{character}.png"
     else:
-        character_image_path = (
-            symbols_folder / f"{special_characters.get(character, '')}.png"
-        )
-
-    return character_image_path
+        return symbols_folder / f"{special_characters.get(character, '')}.png"
 
 
 def get_character_image(character, font_paths):
