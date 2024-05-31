@@ -4,10 +4,10 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 ## Current Status
 
-- **Stable Version**: 1.9.0
-- **Release Date**: 2024-05-10
+- **Stable Version**: 1.9.1
+- **Release Date**: 2024-05-19
 - **Maintainer**: VermeilChan
-- **Development Version**: 1.9.1
+- **Development Version**: 1.9.2
 
 ## Achieved Milestones
 
