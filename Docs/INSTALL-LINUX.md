@@ -11,8 +11,6 @@
    - Navigate to the `MetalSlugFontReborn` folder in the terminal.
    - Run the following command:
       ```sh
-      # Requires Python 3.9 or later
-
       bash Install-Deps.sh
 
       # Or

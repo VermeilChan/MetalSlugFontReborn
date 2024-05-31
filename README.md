@@ -39,9 +39,9 @@ If you have a GitHub account and have found this repository helpful, please cons
 ## Table of Contents
 
 - [Features](#features)
-- [Requirements](#requirements)
-- [Install MetalSlugFontReborn](#install-metalslugfontreborn)
-- [Preview Fonts](#preview-fonts)
+- [System Requirements](#system-requirements)
+- [Installing MetalSlugFontReborn](#installing-metalslugfontreborn)
+- [Examples and Supported Characters](#examples-and-supporteds-characters)
 - [How to Contribute](#how-to-contribute)
 - [License](#license)
 - [Credits](#credits)
@@ -53,32 +53,30 @@ If you have a GitHub account and have found this repository helpful, please cons
 - Supports operating systems, including Windows, Linux.
 - Provides both GUI and CLI interfaces.
 
-## Requirements
+## System Requirements
 
-Before installing MetalSlugFontReborn, ensure that your system meets the following requirements:
+#### Operating Systems
 
-| Operating System | Supported Versions                                             |
-|------------------|----------------------------------------------------------------|
-| Windows          | 11 & 10 (Qt) x64, 11, 10, 8.1 (Console) x64                    |
-| GNU/Linux        | Debian 12.5, Ubuntu 24.04, Fedora 40, Arch Linux, OpenSUSE x64 |
-| MacOS            | Currently not supported. Use [WineHQ](https://www.winehq.org/) |
+| Operating System | Supported Versions                                         | Architecture    |
+|------------------|----------------------------------------------------------- |-----------------|
+| Windows          | 11 & 10 (Qt Version), 11, 10, 8.1 (Console Version)        | 64-bit (x86-64) |
+| GNU/Linux        | Debian 12.5, Ubuntu 24.04, Fedora 40, Arch Linux, OpenSUSE | 64-bit (x86-64) |
+| MacOS            | Not supported. Use [WineHQ](https://www.winehq.org/)       | N/A             |
 
-_Older Versions Might Work Too :)_
+#### Resource Requirements
 
 | Version         | RAM Usage | Disk Space |
 |-----------------|-----------|------------|
 | Qt Version      | 50MB      | 130MB      |
 | Console Version | 40MB      | 30MB       |
 
-_Additional space required for generating images._
-
-## Install MetalSlugFontReborn
+## Installing MetalSlugFontReborn
 
 To download and use MetalSlugFontReborn, refer to the [docs](Docs/INSTALL-SELECT.md) here.
 
-## Preview Fonts
+## Examples and Supported Characters
 
-See examples of the [images generated](Docs/EXAMPLES.md) here. Also checkout the [supported characters](Docs/SUPPORTED.md).
+See examples of the [images generated](Docs/EXAMPLES.md) and the [supported characters](Docs/SUPPORTED.md).
 
 ## How to Contribute
 
@@ -101,10 +99,12 @@ I want to say a big thank you to the individuals who helped me.
 - [GussPrint](https://www.spriters-resource.com/submitter/Gussprint): for providing assets for font 5.
 - [BinRich](https://discord.com/users/477459550904254464): for providing diacritic marks.
 
-### Third-party libraries
+### Third-party
 
-- [PySide6](https://doc.qt.io/qtforpython-6/): For the GUI.
-- [Pillow](https://python-pillow.org): For image processing.
-- [PyInstaller](https://pyinstaller.org/en/stable): For compiling the program.
-- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/): For the CLI Autocompletion.
+- [PySide6](https://doc.qt.io/qtforpython-6/): For the GUI
+- [Pillow](https://python-pillow.org): For image processing
+- [PyInstaller](https://pyinstaller.org/en/stable): For compiling the program
+- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/): For the CLI Autocompletion
 - [Ruff](https://docs.astral.sh/ruff/): Python linter and code formatter.
+- [SkyblockerMod](https://github.com/SkyblockerMod/Skyblocker): Issue Template.
+- [Aseprite](https://github.com/aseprite/aseprite): Build template.

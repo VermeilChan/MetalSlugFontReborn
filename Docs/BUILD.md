@@ -1,140 +1,108 @@
-# Building MetalSlugFontReborn
+# Table of contents
 
-## Windows
+- [Platforms](#platforms)
+- [Get the source code](#get-the-source-code)
+- [Dependencies](#dependencies)
+   - [Windows dependencies](#dependencies)
+   - [Linux dependencies](#linux-dependencies)
+- [Compiling](#compiling)
+   - [Windows details](#windows-details)
+   - [Linux details](#linux-details)
 
-### Requirements
+# Platforms
 
-- [Python](https://www.python.org/).
-   - Console Version: Python 3.8 or later
-   - Qt Version: Python 3.11 or later
-- [Git](https://gitforwindows.org/).
+You should be able to compile Aseprite successfully on the following
+platforms:
 
-### Steps
+- Windows 11 and 10 (Qt), Windows 11, 10, 8.1 (Console) x86-64.
+- GNU/Linux Debian 12.5, Ubuntu 24.04, Fedora 40, Arch Linux, OpenSUSE x86-64.
 
-- Install [Git](https://gitforwindows.org/)
+# Get the source code
 
-- Clone the repository
+You can get the source code by downloading the archive `MetalSlugFontReborn-v1.x-Source.zip` from the [latest release](https://github.com/VermeilChan/MetalSlugFontReborn/releases/latest).
 
+Or you can clone the repository using the following command:
 ```sh
 git clone https://github.com/VermeilChan/MetalSlugFontReborn.git
 ```
+To update an existing clone you can use the following commands:
+```sh
+cd MetalSlugFontReborn
+git pull
+```
+# Dependencies
 
-- Navigate to the MetalSlugFontReborn folder
+To compile MetalSlugFontReborn you will need the following:
+
+- [Python](https://www.python.org/) (3.9 or greater)
+- [PyInstaller](https://pyinstaller.org/en/stable/)
+- [PySide6](https://pypi.org/project/PySide6/)
+- [Pillow](https://pillow.readthedocs.io/en/stable/)
+- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/)
+
+# Compiling
+
+## Windows details
+
+Open a the command prompt (`cmd.exe`) and run:
 
 ```sh
 cd MetalSlugFontReborn
-```
-
-- Create a virtual environment and activate it
-
-```sh
 py -m venv .venv
 .venv\Scripts\activate
-```
-
-- Install dependencies
-
-```sh
 pip install -r requirements.txt
 ```
-
-- Build MetalSlugFontReborn with PyInstaller
-
 ```sh
-# QT VERSION
-pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Src/utils.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
-
-# CONSOLE VERSION
-pyinstaller --noconfirm --onedir --console --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/console-version.py"
+# Qt Version
+pyinstaller --noconfirm --onedir --windowed --optimize "2" --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Src/utils.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
+```
+```sh
+# Console Version
+pyinstaller --noconfirm --onedir --console --optimize "2" --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/console-version.py"
 ```
 
-- Move the `Assets` folder and SUPPORTED.txt out of `_internal` to `dist/MetalSlugFontReborn`.
-- Run the program: `dist/MetalSlugFontReborn/MetalSlugFontReborn.exe`.
+- Move the `Assets` folder and `SUPPORTED.txt` out of `_internal` folder to `dist/MetalSlugFontReborn`.
+- The executable will be located at `dist/MetalSlugFontReborn/MetalSlugFontReborn.exe`
 
-## Linux
+---
 
-_Note: Some distributions require other packages to be installed._
+## Linux dependencies
 
-### Requirements
-
-- [Python](https://www.python.org/).
-   - Console Version: Python 3.8 or later
-   - Qt Version: Python 3.11 or later
-- [Git](https://gitforwindows.org/).
-
-### Steps
-
-- Install Git
-
+You will need the following dependencies on Ubuntu/Debian:
 ```sh
-# Debian/Ubuntu
-sudo apt install git
-
-# Fedora
-sudo dnf install git
-
-# Arch Linux
-sudo pacman -S git
-
-# OpenSUSE
-sudo zypper git
+sudo apt install -y python3 python3-pip python3-venv libxcb-cursor0
+```
+On Fedora:
+```sh
+sudo dnf install -y python3 python3-pip python3-virtualenv xcb-util-cursor
+```
+On Arch:
+```sh
+sudo pacman -Syu --noconfirm python-pip python-virtualenv xcb-util-cursor
+```
+On SUSE:
+```sh
+sudo zypper install -y python3 python3-pip python3-virtualenv libxcb-cursor0
 ```
 
-- Clone the repository
+## Linux details
 
-```sh
-git clone https://github.com/VermeilChan/MetalSlugFontReborn.git
-```
-
-- Navigate to the MetalSlugFontReborn folder
+Open the terminal and run:
 
 ```sh
 cd MetalSlugFontReborn
-```
-
-- Install required packages
-
-```sh
-# Debian/Ubuntu
-sudo apt install python3 python3-pip python3-venv -y
-
-# Fedora
-sudo dnf install python3 python3-pip python3-virtualenv -y
-
-# Arch Linux
-sudo pacman -S python3 python-pip python-virtualenv --noconfirm
-
-# OpenSUSE
-sudo zypper install python3 python3-pip python3-virtualenv
-```
-
-- Create a virtual environment and activate it
-
-```sh
 python3 -m venv .venv
 source .venv/bin/activate
-```
-
-- Install python dependencies
-
-```sh
 pip install -r requirements.txt
 ```
-
-- Build MetalSlugFontReborn with PyInstaller
-
 ```sh
-# QT VERSION
-pyinstaller --noconfirm --onedir --windowed --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
-
-# CONSOLE VERSION
-pyinstaller --noconfirm --onedir --console --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/console-version.py"
+# Qt Version
+pyinstaller --noconfirm --onedir --windowed --optimize "2" --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
+```
+```sh
+# Console Version
+pyinstaller --noconfirm --onedir --console --optimize "2" --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/console-version.py"
 ```
 
-- Move the `Assets` folder and SUPPORTED.txt out of `_internal` to `dist/MetalSlugFontReborn`.
-- Run the Linux executable: `dist/MetalSlugFontReborn/MetalSlugFontReborn`.
-
-## macOS
-
-- Not Supported :(<br>
-_It's technically supported, but setting up a macOS VM is a lot of work for me :)._
+- Move the `Assets` folder and `SUPPORTED.txt` out of `_internal` folder to `dist/MetalSlugFontReborn`.
+- The executable will be located at `dist/MetalSlugFontReborn/MetalSlugFontReborn`
