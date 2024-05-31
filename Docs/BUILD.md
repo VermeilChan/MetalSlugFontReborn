@@ -11,7 +11,7 @@
 
 # Platforms
 
-You should be able to compile Aseprite successfully on the following
+You should be able to compile MetalSlugFontReborn successfully on the following
 platforms:
 
 - Windows 11 and 10 (Qt), Windows 11, 10, 8.1 (Console) x86-64.
