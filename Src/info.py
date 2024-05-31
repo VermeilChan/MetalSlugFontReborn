@@ -1,7 +1,7 @@
 from subprocess import check_output
 from datetime import datetime
 
-msfr_version = "1.9.2"
+msfr_version = "1.9.3"
 pyinstaller_version = "6.7.0"
 pyside6_version = "6.7.1"
 pillow_version = "10.3.0"
