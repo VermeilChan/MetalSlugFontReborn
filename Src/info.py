@@ -2,8 +2,8 @@ from subprocess import check_output
 from datetime import datetime
 
 msfr_version = "1.9.3"
-pyinstaller_version = "6.7.0"
-pyside6_version = "6.7.1"
+pyinstaller_version = "6.7.2"
+pyside6_version = "6.8.0"
 pillow_version = "10.3.0"
 build_date = "N/A"
 config_file = "config.ini"
