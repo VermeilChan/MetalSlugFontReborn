@@ -1,3 +1,7 @@
+from os import path
+from PIL import Image
+from time import time
+from asyncio import run
 from pathlib import Path
 from PySide6.QtWidgets import (
     QWidget,
@@ -37,28 +41,42 @@ class ImageGenerator:
             )
             return
 
-        try:
+        async def run_generate_image():
+            start_time = time()
             filename = generate_filename(text)
             font_paths = get_font_paths(font, color)
-            image_path_str, error_message_generate = generate_image(
-                text, filename, font_paths, save_location
-            )
-
-            if error_message_generate:
-                QMessageBox.critical(
-                    parent, "MetalSlugFontReborn", f"Error: {error_message_generate}"
+            try:
+                image_path_str, error_message_generate = await generate_image(
+                    text, filename, font_paths, save_location
                 )
-            else:
-                image_path = Path(image_path_str)
-                success_message = (
-                    f"Successfully generated image :)\n"
-                    f"Image name: {image_path.name}\n"
-                    f"Image path: {image_path}"
-                )
-                QMessageBox.information(parent, "MetalSlugFontReborn", success_message)
 
-        except FileNotFoundError as e:
-            QMessageBox.critical(parent, "MetalSlugFontReborn", str(e))
+                end_time = time()
+                if error_message_generate:
+                    QMessageBox.critical(
+                        parent,
+                        "MetalSlugFontReborn",
+                        f"Error: {error_message_generate}",
+                    )
+                else:
+                    image_path = Path(image_path_str)
+                    with Image.open(image_path) as img:
+                        width, height = img.size
+                        size = path.getsize(image_path_str)
+                        success_message = (
+                            f"Successfully generated image :)\n"
+                            f"Image path: {image_path}\n"
+                            f"Width: {width}, Height: {height}\n"
+                            f"Size: {size} bytes\n"
+                            f"Generation time: {end_time - start_time:.3f}s"
+                        )
+                    QMessageBox.information(
+                        parent, "MetalSlugFontReborn", success_message
+                    )
+
+            except FileNotFoundError as e:
+                QMessageBox.critical(parent, "MetalSlugFontReborn", str(e))
+
+        run(run_generate_image())
 
 
 class MetalSlugFontReborn(QMainWindow):
