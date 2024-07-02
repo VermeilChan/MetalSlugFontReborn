@@ -66,11 +66,4 @@ async def generate_image(text, filename, font_paths, save_location):
     image_path = Path(save_location) / filename
     await loop.run_in_executor(None, final_image.save, image_path)
 
-    compress_image(str(image_path))
-
     return str(image_path), None
-
-
-def compress_image(image_path_str):
-    image = Image.open(image_path_str)
-    image.save(image_path_str, optimize=True)
