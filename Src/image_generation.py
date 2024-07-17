@@ -1,7 +1,6 @@
-from PIL import Image
 from uuid import uuid4
 from pathlib import Path
-from asyncio import get_event_loop
+from PIL import Image
 from special_characters import special_characters
 
 
@@ -29,7 +28,7 @@ def get_character_image_path(character, font_paths):
         return symbols_folder / f"{special_characters.get(character, '')}.png"
 
 
-async def get_character_image(character, font_paths):
+def get_character_image(character, font_paths):
     if character.isspace():
         return Image.new("RGBA", (30, 0), (0, 0, 0, 0))
 
@@ -39,17 +38,11 @@ async def get_character_image(character, font_paths):
             f"The character '{character}' is not supported, please check SUPPORTED.txt"
         )
 
-    loop = get_event_loop()
-    return await loop.run_in_executor(None, Image.open, character_image_path)
+    return Image.open(character_image_path)
 
 
-async def generate_image(text, filename, font_paths, save_location):
-    loop = get_event_loop()
-
-    font_images = {
-        character: await get_character_image(character, font_paths)
-        for character in set(text)
-    }
+def generate_image(text, filename, font_paths, save_location):
+    font_images = {character: get_character_image(character, font_paths) for character in set(text)}
 
     total_width = sum(font_images[character].width for character in text)
     max_height = max(font_images[character].height for character in text)
@@ -64,6 +57,6 @@ async def generate_image(text, filename, font_paths, save_location):
         x_position += character_image.width
 
     image_path = Path(save_location) / filename
-    await loop.run_in_executor(None, final_image.save, image_path)
+    final_image.save(image_path)
 
     return str(image_path), None
