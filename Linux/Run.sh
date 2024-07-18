@@ -8,8 +8,8 @@ source .venv/bin/activate
 
 while true; do
     echo "Select an option:"
-    echo "1. Run the Qt version"
-    echo "2. Run the Console version"
+    echo "1) Run the Qt version"
+    echo "2) Run the Console version"
     echo ""
     echo "Type 'exit' or press CTRL+C to close."
 
@@ -21,7 +21,7 @@ while true; do
             python Src/qt-version.py
             ;;
         2)
-            echo "Running the console version..."
+            echo "Running the Console version..."
             python Src/console-version.py
             ;;
         exit|EXIT)
