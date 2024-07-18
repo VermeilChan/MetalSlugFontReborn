@@ -42,7 +42,7 @@ body:
     id: metal-slug-font-reborn-version
     attributes:
       label: What version of MetalSlugFontReborn are you using?
-      placeholder: ex. MetalSlugFontReborn 1.9.2
+      placeholder: ex. MetalSlugFontReborn 1.9.3
     validations:
       required: true
   - type: input
