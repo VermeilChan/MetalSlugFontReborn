@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QFileDialog,
     QMessageBox,
+    QCheckBox,
 )
 from PySide6.QtGui import QIcon
 from image_generation import generate_filename, generate_image, get_font_paths
@@ -31,7 +32,9 @@ class ImageGenerator:
     icon_path = "Assets/Icons/Raubtier.ico"
 
     @staticmethod
-    def generate_and_display_message(text, font, color, save_location, parent=None):
+    def generate_and_display_message(
+        text, font, color, save_location, compress, parent=None
+    ):
         if not text.strip():
             QMessageBox.critical(
                 parent,
@@ -48,29 +51,38 @@ class ImageGenerator:
                 text, filename, font_paths, save_location
             )
 
-            end_time = time()
             if error_message_generate:
                 QMessageBox.critical(
                     parent,
                     "MetalSlugFontReborn",
                     f"Error: {error_message_generate}",
                 )
-            else:
-                image_path = Path(image_path_str)
-                with Image.open(image_path) as img:
-                    width, height = img.size
-                    size = path.getsize(image_path_str)
-                    success_message = (
-                        f"Successfully generated image :)\n"
-                        f"Image path: {image_path}\n"
-                        f"Width: {width}, Height: {height}\n"
-                        f"Size: {size} bytes\n"
-                        f"Generation time: {end_time - start_time:.3f}s"
-                    )
-                QMessageBox.information(parent, "MetalSlugFontReborn", success_message)
+                return
+
+            if compress:
+                compress_image(image_path_str)
+
+            end_time = time()
+            image_path = Path(image_path_str)
+            with Image.open(image_path) as img:
+                width, height = img.size
+                size = path.getsize(image_path_str)
+                success_message = (
+                    f"Successfully generated image :)\n"
+                    f"Image path: {image_path}\n"
+                    f"Width: {width}, Height: {height}\n"
+                    f"Size: {size} bytes\n"
+                    f"Generation time: {end_time - start_time:.3f}s"
+                )
+            QMessageBox.information(parent, "MetalSlugFontReborn", success_message)
 
         except FileNotFoundError as e:
             QMessageBox.critical(parent, "MetalSlugFontReborn", str(e))
+
+
+def compress_image(image_path_str):
+    image = Image.open(image_path_str)
+    image.save(image_path_str, optimize=True)
 
 
 class MetalSlugFontReborn(QMainWindow):
@@ -103,6 +115,12 @@ class MetalSlugFontReborn(QMainWindow):
         layout.addWidget(QLabel("Select Color:"))
         self.color_combobox = QComboBox()
         layout.addWidget(self.color_combobox)
+
+        self.compress_checkbox = QCheckBox("Compression")
+        self.compress_checkbox.setToolTip(
+            "Lowers the size of the image but takes longer to generate"
+        )
+        layout.addWidget(self.compress_checkbox)
 
         browse_button = QPushButton("Browse", self)
         browse_button.clicked.connect(self.browse_save_location)
@@ -153,10 +171,11 @@ class MetalSlugFontReborn(QMainWindow):
         font = int(self.font_combobox.currentText())
         color = self.color_combobox.currentText()
         save_location = self.save_location_entry.text()
+        compress = self.compress_checkbox.isChecked()
 
         text = text.upper() if font == 5 else text
         ImageGenerator.generate_and_display_message(
-            text, font, color, save_location, self
+            text, font, color, save_location, compress, self
         )
 
     def browse_save_location(self):

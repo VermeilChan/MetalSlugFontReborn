@@ -42,7 +42,9 @@ def get_character_image(character, font_paths):
 
 
 def generate_image(text, filename, font_paths, save_location):
-    font_images = {character: get_character_image(character, font_paths) for character in set(text)}
+    font_images = {
+        character: get_character_image(character, font_paths) for character in set(text)
+    }
 
     total_width = sum(font_images[character].width for character in text)
     max_height = max(font_images[character].height for character in text)
