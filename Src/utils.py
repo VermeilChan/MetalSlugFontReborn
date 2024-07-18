@@ -30,8 +30,6 @@ def save_theme(theme_name):
     config = ConfigParser()
     config["Settings"] = {
         "theme": theme_name,
-        "Compression": "True",
-        "CompressionLevel": "9",
     }
     with open(config_file, "w", encoding="utf-8") as f:
         config.write(f)
