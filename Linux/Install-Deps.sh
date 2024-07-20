@@ -10,11 +10,10 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
-PYTHON_VERSION=$(python3 --version | grep -oP '\d+\.\d+\.\d+')
-PYTHON_MAJOR_VERSION=$(echo $PYTHON_VERSION | cut -d'.' -f1)
-PYTHON_MINOR_VERSION=$(echo $PYTHON_VERSION | cut -d'.' -f2)
+PYTHON_VERSION=$(python3 --version | awk '{print $2}')
+REQUIRED_VERSION="3.9.0"
 
-if [ "$PYTHON_MAJOR_VERSION" -lt 3 ] || { [ "$PYTHON_MAJOR_VERSION" -eq 3 ] && [ "$PYTHON_MINOR_VERSION" -lt 9 ]; }; then
+if [[ $(echo -e "$PYTHON_VERSION\n$REQUIRED_VERSION" | sort -V | head -n1) != "$REQUIRED_VERSION" ]]; then
     echo "Python 3.9 or later is required. You have Python $PYTHON_VERSION."
     exit 1
 fi
