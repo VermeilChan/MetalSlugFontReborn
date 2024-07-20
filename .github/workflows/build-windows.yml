@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
@@ -18,7 +18,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-            python-version: '3.12.4'
+        python-version: '3.12.4'
 
     - name: Create a virtual environment
       run: |
@@ -39,8 +39,12 @@ jobs:
         mv dist/MetalSlugFontReborn/_internal/SUPPORTED.txt dist/MetalSlugFontReborn/
       shell: bash
 
+    - name: Get short commit hash
+      id: vars
+      run: echo "::set-output name=short_commit::$(git rev-parse --short HEAD)"
+
     - name: Upload MetalSlugFontReborn
       uses: actions/upload-artifact@v4
       with:
-        name: MetalSlugFontReborn-Dev
+        name: MetalSlugFontReborn-${{ steps.vars.outputs.short_commit }}
         path: dist/MetalSlugFontReborn
