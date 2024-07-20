@@ -67,8 +67,8 @@ If you have a GitHub account and have found this repository helpful, please cons
 
 | Version         | RAM Usage | Disk Space |
 |-----------------|-----------|------------|
-| Qt Version      | 50MB      | 130MB      |
-| Console Version | 40MB      | 30MB       |
+| Qt Version      | 40MB      | 120MB      |
+| Console Version | 40MB      | 26MB       |
 
 ## Installing MetalSlugFontReborn
 
