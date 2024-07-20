@@ -1,4 +1,6 @@
 import sys
+from time import time
+from PIL import Image
 from pathlib import Path
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
@@ -74,8 +76,13 @@ def select_save_location():
         return save_locations[save_location_choice]
 
 
-def generate_and_display_image(text, font, color, save_location):
-    if text.lower() == "Exit":
+def compress_image(image_path_str):
+    image = Image.open(image_path_str)
+    image.save(image_path_str, optimize=True)
+
+
+def generate_and_display_image(text, font, color, save_location, compress=False):
+    if text.lower() == "exit":
         sys.exit("Closing...")
 
     if not text:
@@ -84,16 +91,30 @@ def generate_and_display_image(text, font, color, save_location):
     text = text.upper() if font == 5 else text
 
     try:
+        start_time = time()
         filename = generate_filename(text)
         font_paths = get_font_paths(font, color)
-        image_path, error_message_generate = generate_image(
+        image_path_str, error_message_generate = generate_image(
             text, filename, font_paths, save_location
         )
 
         if error_message_generate:
             print(f"Error generating image: {error_message_generate}")
-        else:
-            print(f"You can find the generated image here: {image_path}")
+            return
+
+        if compress:
+            compress_image(image_path_str)
+
+        end_time = time()
+        image_path = Path(image_path_str)
+        with Image.open(image_path) as img:
+            width, height = img.size
+            size = image_path.stat().st_size
+            success_message = (
+                f"Image path: {image_path}\n"
+                f"Width: {width}, Height: {height} | Size: {size} bytes | Generation time: {end_time - start_time:.3f}s\n"
+            )
+            print(success_message)
 
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -108,7 +129,11 @@ def main():
     try:
         while True:
             text = prompt("Enter the text you want to generate: ")
-            generate_and_display_image(text, font, color, save_location)
+            compress_input = prompt(
+                "Do you want to compress the image? (Y/n): "
+            ).lower()
+            compress = compress_input in {"yes", "y"}
+            generate_and_display_image(text, font, color, save_location, compress)
     except KeyboardInterrupt:
         sys.exit("Closing...")
 
