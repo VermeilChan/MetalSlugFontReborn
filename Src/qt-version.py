@@ -17,7 +17,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtGui import QIcon
 from image_generation import generate_filename, generate_image, get_font_paths
-from utils import set_theme, load_theme, about_section
+from qt_utils import set_theme, load_theme, about_section
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
