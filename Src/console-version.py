@@ -81,7 +81,7 @@ def compress_image(image_path_str):
     image.save(image_path_str, optimize=True)
 
 
-def generate_and_display_image(text, font, color, save_location, compress=False):
+def generate_and_info(text, font, color, save_location, compress=False):
     if text.lower() == "exit":
         sys.exit("Closing...")
 
@@ -126,14 +126,13 @@ def main():
     color = select_color(font)
     save_location = select_save_location()
 
+    compress_input = prompt("Do you want to compress the image? (Y/n): ").lower()
+    compress = compress_input in {"yes", "y"}
+
     try:
         while True:
             text = prompt("Enter the text you want to generate: ")
-            compress_input = prompt(
-                "Do you want to compress the image? (Y/n): "
-            ).lower()
-            compress = compress_input in {"yes", "y"}
-            generate_and_display_image(text, font, color, save_location, compress)
+            generate_and_info(text, font, color, save_location, compress)
     except KeyboardInterrupt:
         sys.exit("Closing...")
 
