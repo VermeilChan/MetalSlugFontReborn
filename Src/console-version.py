@@ -82,8 +82,9 @@ def select_save_location():
 
 
 def ask_compression():
-    compress_input = prompt("Do you want to compress the image? (Y/n): ").lower()
-    if compress_input in {"yes", "y"}:
+    compress_completer = WordCompleter(["yes", "no", "y", "n"])
+    compress_input = prompt("Do you want to compress the image? (Y/n): ", completer=compress_completer).lower()
+    if compress_input in {"yes", "y", ""}:
         return True
     else:
         return False
