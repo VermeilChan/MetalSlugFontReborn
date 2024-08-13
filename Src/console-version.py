@@ -4,7 +4,7 @@ from PIL import Image
 from pathlib import Path
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
-from image_generation import generate_filename, generate_image, get_font_paths
+from image_generation import generate_filename, generate_image, get_font_paths, compress_image
 from info import msfr_version, build_date
 
 valid_colors_by_font = {
@@ -76,9 +76,12 @@ def select_save_location():
         return save_locations[save_location_choice]
 
 
-def compress_image(image_path_str):
-    image = Image.open(image_path_str)
-    image.save(image_path_str, optimize=True)
+def ask_compression():
+    compress_input = prompt("Do you want to compress the image? (Y/n): ").lower()
+    if compress_input in {"yes", "y"}:
+        return True
+    else:
+        return False
 
 
 def generate_and_info(text, font, color, save_location, compress=False):
@@ -126,8 +129,7 @@ def main():
     color = select_color(font)
     save_location = select_save_location()
 
-    compress_input = prompt("Do you want to compress the image? (Y/n): ").lower()
-    compress = compress_input in {"yes", "y"}
+    compress = ask_compression()
 
     try:
         while True:
