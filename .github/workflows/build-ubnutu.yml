@@ -5,7 +5,7 @@ on:
     branches:
       - Development
     paths:
-      - '.github/workflows/build-linux.yml'
+      - '.github/workflows/build-ubnutu.yml'
 
 jobs:
   build:
@@ -41,7 +41,7 @@ jobs:
 
     - name: Get short commit hash
       id: vars
-      run: echo "::set-output name=short_commit::$(git rev-parse --short HEAD)"
+      run: echo "short_commit=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
     - name: Upload MetalSlugFontReborn
       uses: actions/upload-artifact@v4
