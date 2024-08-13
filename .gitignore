@@ -169,4 +169,4 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-config.json
+config.ini

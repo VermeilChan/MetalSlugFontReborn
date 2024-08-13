@@ -1,50 +1,103 @@
+from os import path
+from PIL import Image
+from time import time
 from pathlib import Path
-from json import load, dump
-from platform import system, version, release, architecture
-from PySide2.QtGui import QIcon, QPixmap
-from PySide2.QtWidgets import QApplication, QMessageBox, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QGroupBox, QComboBox, QWidget, QDialog, QLabel, QFileDialog
+from PySide2.QtWidgets import (
+    QWidget,
+    QApplication,
+    QMainWindow,
+    QVBoxLayout,
+    QLineEdit,
+    QLabel,
+    QComboBox,
+    QPushButton,
+    QFileDialog,
+    QMessageBox,
+    QCheckBox,
+)
+from PySide2.QtGui import QIcon
 from image_generation import generate_filename, generate_image, get_font_paths
-from themes import light_mode, dark_mode
+from qt_utils import set_theme, load_theme, about_section
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
     2: ["Blue", "Orange", "Gold"],
     3: ["Blue", "Orange"],
     4: ["Blue", "Orange", "Yellow"],
-    5: ["Orange"]
+    5: ["Orange"],
 }
+
 
 class ImageGenerator:
     icon_path = "Assets/Icons/Raubtier.ico"
 
     @staticmethod
-    def generate_and_display_message(text, font, color, save_location, parent=None):
+    def generate_and_display_message(
+        text, font, color, save_location, compress, parent=None
+    ):
         if not text.strip():
-            QMessageBox.critical(parent, "MetalSlugFontReborn", "Input text is empty. Please enter some text.")
+            QMessageBox.critical(
+                parent,
+                "MetalSlugFontReborn",
+                "Input text is empty. Please enter some text.",
+            )
             return
 
         try:
+            start_time = time()
             filename = generate_filename(text)
             font_paths = get_font_paths(font, color)
-            image_path, error_message_generate = generate_image(text, filename, font_paths, save_location)
+            image_path_str, error_message_generate = generate_image(
+                text, filename, font_paths, save_location
+            )
 
             if error_message_generate:
-                QMessageBox.critical(parent, "MetalSlugFontReborn", f"Error: {error_message_generate}")
-            else:
-                QMessageBox.information(parent, "MetalSlugFontReborn", f"Successfully generated image :D\n\nFile saved as:\n\n{image_path}\n")
+                QMessageBox.critical(
+                    parent,
+                    "MetalSlugFontReborn",
+                    f"Error: {error_message_generate}",
+                )
+                return
+
+            if compress:
+                compress_image(image_path_str)
+
+            end_time = time()
+            image_path = Path(image_path_str)
+            with Image.open(image_path) as img:
+                width, height = img.size
+                size = path.getsize(image_path_str)
+                success_message = (
+                    f"Successfully generated image :)\n"
+                    f"Image path: {image_path}\n"
+                    f"Width: {width}, Height: {height}\n"
+                    f"Size: {size} bytes\n"
+                    f"Generation time: {end_time - start_time:.3f}s"
+                )
+            QMessageBox.information(parent, "MetalSlugFontReborn", success_message)
 
         except FileNotFoundError as e:
             QMessageBox.critical(parent, "MetalSlugFontReborn", str(e))
+
+
+def compress_image(image_path_str):
+    image = Image.open(image_path_str)
+    image.save(image_path_str, optimize=True)
+
 
 class MetalSlugFontReborn(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("MetalSlugFontReborn")
         self.setWindowIcon(QIcon(ImageGenerator.icon_path))
-        self.load_theme()
+        load_theme()
 
         self.default_save_location = str(Path.home() / "Desktop")
 
+        self.init_ui()
+        self.setMaximumSize(self.size())
+
+    def init_ui(self):
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout(central_widget)
@@ -56,12 +109,18 @@ class MetalSlugFontReborn(QMainWindow):
 
         layout.addWidget(QLabel("Select Font:"))
         self.font_combobox = QComboBox()
-        self.font_combobox.addItems(map(str, sorted(valid_colors_by_font.keys())))
+        self.font_combobox.addItems(list(map(str, sorted(valid_colors_by_font.keys()))))
         layout.addWidget(self.font_combobox)
 
         layout.addWidget(QLabel("Select Color:"))
         self.color_combobox = QComboBox()
         layout.addWidget(self.color_combobox)
+
+        self.compress_checkbox = QCheckBox("Compression")
+        self.compress_checkbox.setToolTip(
+            "Lowers the size of the image but takes longer to generate"
+        )
+        layout.addWidget(self.compress_checkbox)
 
         browse_button = QPushButton("Browse", self)
         browse_button.clicked.connect(self.browse_save_location)
@@ -82,24 +141,21 @@ class MetalSlugFontReborn(QMainWindow):
         layout.addWidget(self.save_location_label)
         layout.addWidget(self.save_location_entry)
 
-        self.color_combobox.setEnabled(False)
         self.font_combobox.currentIndexChanged.connect(self.on_font_change)
         self.on_font_change()
 
+        self.init_menubar()
+
+    def init_menubar(self):
         menubar = self.menuBar()
         help_menu = menubar.addMenu("Help")
-        theme_menu = menubar.addMenu("Themes")
 
         about_action = help_menu.addAction("About")
-        about_action.triggered.connect(self.show_about_dialog)
+        about_action.triggered.connect(lambda: about_section(self))
 
-        dark_mode_action = theme_menu.addAction("Dark Mode")
-        dark_mode_action.triggered.connect(self.set_dark_mode)
-
-        light_mode_action = theme_menu.addAction("Light Mode")
-        light_mode_action.triggered.connect(self.set_light_mode)
-
-        self.setMaximumSize(self.size())
+        theme_menu = menubar.addMenu("Themes")
+        theme_menu.addAction("Light Mode").triggered.connect(lambda: set_theme("Light"))
+        theme_menu.addAction("Dark Mode").triggered.connect(lambda: set_theme("Dark"))
 
     def on_font_change(self):
         font = int(self.font_combobox.currentText())
@@ -114,112 +170,30 @@ class MetalSlugFontReborn(QMainWindow):
         text = self.text_entry.text()
         font = int(self.font_combobox.currentText())
         color = self.color_combobox.currentText()
-        save_location = self.save_location_entry.text()  
+        save_location = self.save_location_entry.text()
+        compress = self.compress_checkbox.isChecked()
 
         text = text.upper() if font == 5 else text
-
-        ImageGenerator.generate_and_display_message(text, font, color, save_location)
+        ImageGenerator.generate_and_display_message(
+            text, font, color, save_location, compress, self
+        )
 
     def browse_save_location(self):
-        save_location = QFileDialog.getExistingDirectory(self, "Select Save Location", self.default_save_location)
+        save_location = QFileDialog.getExistingDirectory(
+            self, "Select Save Location", self.default_save_location
+        )
         if save_location:
             self.save_location_entry.setText(save_location)
 
-    def load_theme(self):
-        try:
-            with open("config.json", "r", encoding="utf-8") as f:
-                data = load(f)
-                theme = data.get("Theme", "Fusion")
-
-                if theme == "Dark":
-                    QApplication.setPalette(dark_mode())
-                elif theme == "Light":
-                    QApplication.setPalette(light_mode())
-
-        except FileNotFoundError:
-            pass
-
-    def set_dark_mode(self):
-        QApplication.setPalette(dark_mode())
-        self.save_theme("Dark")
-
-    def set_light_mode(self):
-        QApplication.setPalette(light_mode())
-        self.save_theme("Light")
-
-    @staticmethod
-    def save_theme(theme_name):
-        with open("config.json", "w", encoding="utf-8") as f:
-            dump({"Theme": theme_name}, f)
-
-    def show_about_dialog(self):
-        about_dialog = QDialog(self)
-        about_dialog.setWindowTitle("About")
-
-        layout = QVBoxLayout()
-
-        top_left_layout = QHBoxLayout()
-
-        icon_label = QLabel()
-        pixmap = QPixmap("Assets/Icons/Raubtier.png")
-        icon_label.setPixmap(pixmap)
-        top_left_layout.addWidget(icon_label)
-
-        metadata_layout = QVBoxLayout()
-        metadata_layout.addWidget(QLabel(f"MetalSlugFontReborn ({architecture()[0]})"))
-        metadata_layout.addWidget(QLabel("GPL-3.0 License"))
-
-        github_link_label = QLabel('<a href="https://github.com/VermeilChan/MetalSlugFontReborn">GitHub Repository</a>')
-        github_link_label.setOpenExternalLinks(True)
-        metadata_layout.addWidget(github_link_label)
-
-        top_left_layout.addLayout(metadata_layout)
-        layout.addLayout(top_left_layout)
-
-        build_info_box = QGroupBox("Build Information:")
-        build_info_layout = QVBoxLayout()
-
-        build_info_layout.addWidget(QLabel("Version: 1.9.0 (Dev)"))
-        build_info_layout.addWidget(QLabel("Pyinstaller: 6.6.0"))
-        build_info_layout.addWidget(QLabel("PySide6: 6.7.0"))
-        build_info_layout.addWidget(QLabel("Pillow: 10.3.0"))
-        build_info_layout.addWidget(QLabel("Build date: N/A"))
-
-        os_info_box = QGroupBox("Operating System:")
-        os_info_layout = QVBoxLayout()
-
-        if system() == 'Linux':
-            pretty_name, distro_version = linux_info()
-            os_info_layout.addWidget(QLabel(f"OS: {pretty_name}"))
-            os_info_layout.addWidget(QLabel(f"Version: {distro_version}"))
-        elif system() == 'Windows':
-            os_info_layout.addWidget(QLabel(f"OS: {system()} {release()}"))
-            os_info_layout.addWidget(QLabel(f"Version: {version()}"))
-
-        os_info_box.setLayout(os_info_layout)
-        layout.addWidget(os_info_box)
-
-        build_info_box.setLayout(build_info_layout)
-        layout.addWidget(build_info_box)
-
-        about_dialog.setLayout(layout)
-        about_dialog.exec()
-
-def linux_info():
-    with open('/etc/os-release', 'r') as file:
-        os_info = {}
-        for line in file:
-            key, value = line.strip().split('=')
-            os_info[key] = value.strip('"')
-    return os_info.get('PRETTY_NAME', 'OS information not available'), os_info.get('VERSION', 'Version information not available')
 
 def main():
     app = QApplication([])
-    app.setWindowIcon(QIcon(ImageGenerator.icon_path))
     app.setStyle("Fusion")
+    app.setWindowIcon(QIcon(ImageGenerator.icon_path))
     window = MetalSlugFontReborn()
     window.show()
     app.exec_()
+
 
 if __name__ == "__main__":
     main()
