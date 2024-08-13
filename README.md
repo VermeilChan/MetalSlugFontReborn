@@ -53,24 +53,21 @@ If you have a GitHub account and have found this repository helpful, please cons
 - Easily transform text into images using the Metal Slug font.
 - Supports uppercase and lowercase letters (A-Z, a-z), digits (0-9), symbols (♥-★), and multiple colors.
 - Supports operating systems, including Windows, Linux.
-- Provides both GUI and CLI interfaces.
 
 ## System Requirements
 
 #### Operating Systems
 
 | Operating System | Supported Versions                                         | Architecture    |
-|------------------|----------------------------------------------------------- |-----------------|
-| Windows          | 11 & 10 (Qt Version), 11, 10, 8.1 (Console Version)        | 64-bit (x86-64) |
+|------------------|------------------------------------------------------------|-----------------|
+| Windows          | 11, 10, 8.1, 8 (Qt Version)                                | 64-bit (x86-64) |
 | GNU/Linux        | Debian 12.6, Ubuntu 24.04, Fedora 40, Arch Linux, OpenSUSE | 64-bit (x86-64) |
-| MacOS            | Not supported. Use [WineHQ](https://www.winehq.org/)       | N/A             |
 
 #### Resource Requirements
 
 | Version         | RAM Usage | Disk Space |
 |-----------------|-----------|------------|
 | Qt Version      | 40MB      | 120MB      |
-| Console Version | 40MB      | 26MB       |
 
 ## Installing MetalSlugFontReborn
 
@@ -103,10 +100,7 @@ I want to say a big thank you to the individuals who helped me.
 
 ### Third-party
 
-- [PySide6](https://doc.qt.io/qtforpython-6/): For the GUI
+- [PySide2](https://pypi.org/project/PySide2/): For the GUI
 - [Pillow](https://python-pillow.org): For image processing
 - [PyInstaller](https://pyinstaller.org/en/stable): For compiling the program
-- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/): For the CLI Autocompletion
 - [Ruff](https://docs.astral.sh/ruff/): Python linter and code formatter.
-- [SkyblockerMod](https://github.com/SkyblockerMod/Skyblocker): Issue Template.
-- [Aseprite](https://github.com/aseprite/aseprite): Build template.
