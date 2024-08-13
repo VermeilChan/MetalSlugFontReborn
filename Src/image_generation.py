@@ -41,6 +41,11 @@ def get_character_image(character, font_paths):
     return Image.open(character_image_path)
 
 
+def compress_image(image_path_str):
+    image = Image.open(image_path_str)
+    image.save(image_path_str, optimize=True)
+
+
 def generate_image(text, filename, font_paths, save_location):
     font_images = {
         character: get_character_image(character, font_paths) for character in set(text)
