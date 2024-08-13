@@ -41,7 +41,9 @@ jobs:
 
     - name: Get short commit hash
       id: vars
-      run: echo "short_commit=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      run: |
+        short_commit=$(git rev-parse --short HEAD)
+        echo "short_commit=$short_commit" >> $GITHUB_OUTPUT
 
     - name: Upload MetalSlugFontReborn
       uses: actions/upload-artifact@v4
