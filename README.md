@@ -58,10 +58,10 @@ If you have a GitHub account and have found this repository helpful, please cons
 #### Operating Systems
 
 | Operating System | Supported Versions                                         | Architecture    |
-|------------------|----------------------------------------------------------- |-----------------|
+|------------------|------------------------------------------------------------|-----------------|
 | Windows          | 11 & 10 (Qt Version), 11, 10, 8.1 (Console Version)        | 64-bit (x86-64) |
 | GNU/Linux        | Debian 12.6, Ubuntu 24.04, Fedora 40, Arch Linux, OpenSUSE | 64-bit (x86-64) |
-| MacOS            | Not supported. Use [WineHQ](https://www.winehq.org/)       | N/A             |
+| MacOS            | 14, 13, 12, 11, 10.15  (Source only)                       | 64-bit (x86-64) |
 
 #### Resource Requirements
 

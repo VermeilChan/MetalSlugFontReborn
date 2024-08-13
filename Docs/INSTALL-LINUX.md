@@ -4,42 +4,21 @@
 
    ![Download MetalSlugFontReborn](Markdown/Docs/Download.png)
 
-2. **Extract the Archive:**
-   - Extract `MetalSlugFontReborn-vX.X.X-GNULinux-x64-Qt-Console.tar.xz`.
-
-3. **Install Dependencies:**
-   - Navigate to the `MetalSlugFontReborn` folder in the terminal.
-   - Run the following command:
-      ```sh
-      bash Install-Deps.sh
-
-      # Or
-
-      chmod +x Install-Deps.sh
-      ./Install-Deps.sh
-      ```
-
-4. **Run MetalSlugFontReborn:**
-   - Launch MetalSlugFontReborn after the installation script completes:
-      ```sh
-      bash Run.sh
-
-      # Or
-
-      chmod +x Run.sh
-      ./Run.sh
-      ```
+**Extract and Run MetalSlugFontReborn:**
+   - Locate and extract `MetalSlugFontReborn-vX.X.X-Linux-x64-Qt.tar.xz` or `MetalSlugFontReborn-vX.X.X-Linux-x64-Console.tar.xz`.
+   - Go to the `MetalSlugFontReborn` folder.
+   - Run `MetalSlugFontReborn`.
 
 3. **Select a Font:**
    - Upon opening MetalSlugFontReborn, choose your desired font and color, you can [preview](EXAMPLES.md) here.
    
   Qt Version:
 
- ![MetalSlugFontReborn](Markdown/Docs/Linux/MetalSlugFontReborn-Qt.png)
+ ![MetalSlugFontReborn](Markdown/Docs/Windows/MetalSlugFontReborn-Qt.png)
 
   Console Version:
 
-  ![MetalSlugFontReborn](Markdown/Docs/Linux/MetalSlugFontReborn-Console.png)
+  ![MetalSlugFontReborn](Markdown/Docs/Windows/MetalSlugFontReborn-Console.png)
 
 4. **Input Your Text:**
    - Enter the text you want to convert to the metal slug font.
