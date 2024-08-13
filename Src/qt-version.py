@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (
     QCheckBox,
 )
 from PySide6.QtGui import QIcon
-from image_generation import generate_filename, generate_image, get_font_paths
+from image_generation import generate_filename, generate_image, get_font_paths, compress_image
 from qt_utils import set_theme, load_theme, about_section
 
 valid_colors_by_font = {
@@ -78,11 +78,6 @@ class ImageGenerator:
 
         except FileNotFoundError as e:
             QMessageBox.critical(parent, "MetalSlugFontReborn", str(e))
-
-
-def compress_image(image_path_str):
-    image = Image.open(image_path_str)
-    image.save(image_path_str, optimize=True)
 
 
 class MetalSlugFontReborn(QMainWindow):
