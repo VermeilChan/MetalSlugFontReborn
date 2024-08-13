@@ -4,7 +4,12 @@ from PIL import Image
 from pathlib import Path
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
-from image_generation import generate_filename, generate_image, get_font_paths, compress_image
+from image_generation import (
+    generate_filename,
+    generate_image,
+    get_font_paths,
+    compress_image,
+)
 from info import msfr_version, build_date
 
 valid_colors_by_font = {

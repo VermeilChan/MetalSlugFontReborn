@@ -16,7 +16,12 @@ from PySide6.QtWidgets import (
     QCheckBox,
 )
 from PySide6.QtGui import QIcon
-from image_generation import generate_filename, generate_image, get_font_paths, compress_image
+from image_generation import (
+    generate_filename,
+    generate_image,
+    get_font_paths,
+    compress_image,
+)
 from qt_utils import set_theme, load_theme, about_section
 
 valid_colors_by_font = {
