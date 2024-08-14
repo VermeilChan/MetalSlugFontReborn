@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - Development
-    paths:
-      - 'build-macos.txt'
 
 jobs:
   build:

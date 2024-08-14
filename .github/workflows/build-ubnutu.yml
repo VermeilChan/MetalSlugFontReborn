@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - Development
-    paths:
-      - 'build-ubuntu.txt'
 
 jobs:
   build:
