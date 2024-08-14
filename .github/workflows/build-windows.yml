@@ -1,50 +1,46 @@
-name: Build MetalSlugFontReborn Windows
+name: Build Windows
 
 on:
   push:
     branches:
       - Development
     paths:
-      - '.github/workflows/build-windows.yml'
+      - 'build-windows.txt'
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.9.13'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9.13'
+          architecture: 'x64'
 
-    - name: Create a virtual environment
-      run: |
-        py -m venv .venv
-        .venv\Scripts\activate
+      - name: Create virtual environment
+        run: py -m venv .venv
 
-    - name: Install dependencies
-      run: |
-        pip install PySide6 pillow pyinstaller
+      - name: Activate virtual environment
+        run: .venv\Scripts\activate
 
-    - name: Build MetalSlugFontReborn
-      run: |
-        pyinstaller --noconfirm --onedir --windowed --optimize "2" --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Src/qt_utils.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
+      - name: Install dependencies
+        run: pip install PySide6 pyinstaller pillow
 
-    - name: Move Assets folder
-      run: |
-        mv dist/MetalSlugFontReborn/_internal/Assets dist/MetalSlugFontReborn/
-        mv dist/MetalSlugFontReborn/_internal/SUPPORTED.txt dist/MetalSlugFontReborn/
-      shell: bash
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller --noconfirm --onedir --windowed --optimize "2" --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Src/qt_utils.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
 
-    - name: Get short commit hash
-      id: vars
-      run: echo "::set-output name=short_commit::$(git rev-parse --short HEAD)"
+      - name: Move Assets and SUPPORTED.txt
+        run: |
+          mv dist/MetalSlugFontReborn/_internal/Assets dist/MetalSlugFontReborn/
+          mv dist/MetalSlugFontReborn/_internal/SUPPORTED.txt dist/MetalSlugFontReborn/
 
-    - name: Upload MetalSlugFontReborn
-      uses: actions/upload-artifact@v4
-      with:
-        name: MetalSlugFontReborn-${{ steps.vars.outputs.short_commit }}-Windows-x64-Qt
-        path: dist/MetalSlugFontReborn
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MetalSlugFontReborn
+          path: dist/MetalSlugFontReborn
