@@ -4,10 +4,9 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 ## Current Status
 
-- **Stable Version**: 1.9.2
-- **Release Date**: 2024-05-31
+- **Stable Version**: 1.9.3
+- **Release Date**: 2024-08-13
 - **Maintainer**: VermeilChan
-- **Development Version**: 1.9.3
 
 ## Achieved Milestones
 
@@ -38,3 +37,7 @@ This document provides an overview of the latest updates, milestones, and upcomi
 - **Milestone 7: CLI Autocompletion**
   - **Date Achieved**: 2024-03-22
   - **Description**: Added autocompletion support for the Console version.
+
+- **Milestone 8: Mac Support and Linux Binaries**
+  - **Date Achieved**: [Date to be added]
+  - **Description**: Added support for macOS and transitioned Linux support from a script-based system to providing pre-built binaries.
