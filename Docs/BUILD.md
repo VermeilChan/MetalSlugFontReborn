@@ -40,8 +40,8 @@ git pull
 To compile MetalSlugFontReborn you will need the following:
 
 - [Python](https://www.python.org/) 3.9 or later
-- [PyInstaller](https://pypi.org/project/PySide6/) 6.6.0 or later
-- [PySide6-Essentials](https://pyinstaller.org/en/stable/) 6.5 or later
+- [PyInstaller](https://pyinstaller.org/en/stable/) 6.6.0 or later
+- [PySide6-Essentials](https://pypi.org/project/PySide6/) 6.5 or later
 - [Pillow](https://pillow.readthedocs.io/en/stable/) 9.5.0 or later
 - [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/) 3.0.37 or later
 
