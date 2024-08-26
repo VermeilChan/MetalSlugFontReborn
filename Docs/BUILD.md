@@ -5,9 +5,11 @@
 - [Dependencies](#dependencies)
    - [Windows dependencies](#dependencies)
    - [Linux dependencies](#linux-dependencies)
+   - [MacOS dependencies](#dependencies)
 - [Compiling](#compiling)
    - [Windows details](#windows-details)
-   - [Linux details](#linux-details)
+   - [Linux details](#linux-and-macOS-details)
+   - [MacOS details](#linux-and-macOS-details)
 
 # Platforms
 
@@ -18,6 +20,7 @@ platforms:
 |------------------|----------------------------------------------------------- |-----------------|
 | Windows          | 11 & 10 (Qt Version), 11, 10, 8.1 (Console Version)        | 64-bit (x86-64) |
 | GNU/Linux        | Debian 12.6, Ubuntu 24.04, Fedora 40, Arch Linux, OpenSUSE | 64-bit (x86-64) |
+| MacOS            | 14, 13, 12, 11, 10.15                                      | 64-bit (x86-64) |
 
 # Get the source code
 
@@ -36,11 +39,11 @@ git pull
 
 To compile MetalSlugFontReborn you will need the following:
 
-- [Python](https://www.python.org/)
-- [PyInstaller](https://pyinstaller.org/en/stable/)
-- [PySide6](https://pypi.org/project/PySide6/)
-- [Pillow](https://pillow.readthedocs.io/en/stable/)
-- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/)
+- [Python](https://www.python.org/) 3.9 or later
+- [PyInstaller](https://pypi.org/project/PySide6/) 6.6.0 or later
+- [PySide6-Essentials](https://pyinstaller.org/en/stable/) 6.5 or later
+- [Pillow](https://pillow.readthedocs.io/en/stable/) 9.5.0 or later
+- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/) 3.0.37 or later
 
 # Compiling
 
@@ -87,7 +90,7 @@ On SUSE:
 sudo zypper install -y python3 python3-pip python3-virtualenv libxcb-cursor0
 ```
 
-## Linux details
+## Linux and MacOS details
 
 Open the terminal and run:
 
