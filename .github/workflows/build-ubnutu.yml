@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - Development
+    paths:
+      - '.github/workflows/**'
+      - 'Assets/**'
+      - 'Src/**'
+      - 'versionfile.txt'
 
 jobs:
   build:
