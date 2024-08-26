@@ -23,6 +23,7 @@ jobs:
         with:
           python-version: '3.12.5'
           architecture: 'x64'
+          cache: 'pip'
 
       - name: Create virtual environment
         run: python3 -m venv .venv
@@ -31,7 +32,7 @@ jobs:
         run: source .venv/bin/activate
 
       - name: Install dependencies
-        run: pip install PySide6-Essentials pyinstaller pillow
+        run: pip install --upgrade PySide6-Essentials pyinstaller pillow
 
       - name: Build with PyInstaller
         run: |
