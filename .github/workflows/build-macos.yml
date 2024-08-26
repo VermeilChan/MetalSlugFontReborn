@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9.19'
+          python-version: '3.12.5'
           architecture: 'x64'
 
       - name: Create virtual environment
@@ -26,7 +26,7 @@ jobs:
         run: source .venv/bin/activate
 
       - name: Install dependencies
-        run: pip install PySide6 pyinstaller pillow
+        run: pip install PySide6-Essentials pyinstaller pillow
 
       - name: Build with PyInstaller
         run: |
@@ -42,3 +42,4 @@ jobs:
         with:
           name: MetalSlugFontReborn
           path: dist/MetalSlugFontReborn
+          compression-level: 9
