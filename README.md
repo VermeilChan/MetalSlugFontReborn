@@ -50,8 +50,7 @@ If you have a GitHub account and have found this repository helpful, please cons
 
 - Easily transform text into images using the Metal Slug font.
 - Supports uppercase and lowercase letters (A-Z, a-z), digits (0-9), symbols (♥-★), and multiple colors.
-- Supports operating systems, including Windows, Linux.
-- Provides both GUI and CLI interfaces.
+- Supports operating systems, including Windows, Linux, MacOS.
 
 ## System Requirements
 
@@ -59,16 +58,14 @@ If you have a GitHub account and have found this repository helpful, please cons
 
 | Operating System | Supported Versions                                         | Architecture    |
 |------------------|------------------------------------------------------------|-----------------|
-| Windows          | 11 & 10 (Qt Version), 11, 10, 8.1 (Console Version)        | 64-bit (x86-64) |
+| Windows          | 11, 10                                                     | 64-bit (x86-64) |
 | GNU/Linux        | Debian 12.6, Ubuntu 24.04, Fedora 40, Arch Linux, OpenSUSE | 64-bit (x86-64) |
-| MacOS            | 14, 13, 12, 11, 10.15  (Source only)                       | 64-bit (x86-64) |
+| MacOS            | 14, 13, 12, 11, 10.15                                      | 64-bit (x86-64) |
 
 #### Resource Requirements
 
-| Version         | RAM Usage | Disk Space |
-|-----------------|-----------|------------|
-| Qt Version      | 40MB      | 125MB      |
-| Console Version | 40MB      | 28MB       |
+**RAM Usage:** 40MB
+**Disk Space:** 60MB
 
 ## Installing MetalSlugFontReborn
 
