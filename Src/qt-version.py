@@ -39,6 +39,18 @@ class ImageGenerator:
     icon_path = "Assets/Icons/Raubtier.ico"
 
     @staticmethod
+    def human_readable_size(size_bytes):
+        if size_bytes == 0:
+            return "0 bytes"
+        size_units = ["bytes", "KB", "MB"]
+        i = 0
+        size = size_bytes
+        while size >= 1024 and i < len(size_units) - 1:
+            size /= 1024
+            i += 1
+        return f"{size:.2f} {size_units[i]}"
+
+    @staticmethod
     def generate_and_display_message(
         text, font, color, save_location, compress, parent=None, max_words_per_line=None
     ):
@@ -73,12 +85,13 @@ class ImageGenerator:
             image_path = Path(image_path_str)
             with Image.open(image_path) as img:
                 width, height = img.size
-                size = path.getsize(image_path_str)
+                size_bytes = path.getsize(image_path_str)
+                size_human_readable = ImageGenerator.human_readable_size(size_bytes)
                 success_message = (
                     f"Successfully generated image :)\n"
                     f"Image path: {image_path}\n"
                     f"Width: {width}, Height: {height}\n"
-                    f"Size: {size} bytes\n"
+                    f"Size: {size_human_readable}\n"
                     f"Generation time: {end_time - start_time:.3f}s"
                 )
             QMessageBox.information(parent, "MetalSlugFontReborn", success_message)
