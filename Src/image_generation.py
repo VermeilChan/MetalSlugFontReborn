@@ -48,12 +48,7 @@ def compress_image(image_path_str):
 
 def apply_line_breaks(text, max_words_per_line):
     words = text.split()
-    lines = []
-    while words:
-        line = " ".join(words[:max_words_per_line])
-        lines.append(line)
-        words = words[max_words_per_line:]
-    return lines
+    return [" ".join(words[i:i + max_words_per_line]) for i in range(0, len(words), max_words_per_line)]
 
 
 def generate_image(text, filename, font_paths, save_location, max_words_per_line=None):
