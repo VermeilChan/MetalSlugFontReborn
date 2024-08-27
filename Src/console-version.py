@@ -89,7 +89,32 @@ def ask_compression():
     return bool(compress_input in {"yes", "y"})
 
 
-def generate_and_info(text, font, color, save_location, compress=False):
+def ask_line_breaks():
+    line_break_completer = WordCompleter(["yes", "no", "y", "n"])
+    line_break_input = prompt(
+        "Do you want to enable line breaks? (Y/n): ", completer=line_break_completer
+    ).lower()
+    if line_break_input in {"yes", "y"}:
+        max_words_per_line = int(prompt("Enter the maximum number of words per line: "))
+        return max_words_per_line
+    return None
+
+
+def human_readable_size(size_bytes):
+    if size_bytes == 0:
+        return "0 bytes"
+    size_units = ["bytes", "KB", "MB"]
+    i = 0
+    size = size_bytes
+    while size >= 1024 and i < len(size_units) - 1:
+        size /= 1024
+        i += 1
+    return f"{size:.2f} {size_units[i]}"
+
+
+def generate_and_info(
+    text, font, color, save_location, compress=False, max_words_per_line=None
+):
     if text.lower() == "exit":
         sys.exit("Closing...")
 
@@ -103,7 +128,7 @@ def generate_and_info(text, font, color, save_location, compress=False):
         filename = generate_filename(text)
         font_paths = get_font_paths(font, color)
         image_path_str, error_message_generate = generate_image(
-            text, filename, font_paths, save_location
+            text, filename, font_paths, save_location, max_words_per_line
         )
 
         if error_message_generate:
@@ -117,10 +142,11 @@ def generate_and_info(text, font, color, save_location, compress=False):
         image_path = Path(image_path_str)
         with Image.open(image_path) as img:
             width, height = img.size
-            size = image_path.stat().st_size
+            size_bytes = image_path.stat().st_size
+            size_human_readable = human_readable_size(size_bytes)
             success_message = (
                 f"Image path: {image_path}\n"
-                f"Width: {width}, Height: {height} | Size: {size} bytes | Generation time: {end_time - start_time:.3f}s\n"
+                f"Width: {width}, Height: {height} | Size: {size_human_readable} | Generation time: {end_time - start_time:.3f}s\n"
             )
             print(success_message)
 
@@ -135,11 +161,14 @@ def main():
     save_location = select_save_location()
 
     compress = ask_compression()
+    max_words_per_line = ask_line_breaks()
 
     try:
         while True:
             text = prompt("Enter the text you want to generate: ")
-            generate_and_info(text, font, color, save_location, compress)
+            generate_and_info(
+                text, font, color, save_location, compress, max_words_per_line
+            )
     except KeyboardInterrupt:
         sys.exit("Closing...")
 
