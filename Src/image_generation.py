@@ -46,22 +46,53 @@ def compress_image(image_path_str):
     image.save(image_path_str, optimize=True)
 
 
-def generate_image(text, filename, font_paths, save_location):
-    font_images = {
-        character: get_character_image(character, font_paths) for character in set(text)
-    }
+def apply_line_breaks(text, max_words_per_line):
+    words = text.split()
+    lines = []
+    while words:
+        line = " ".join(words[:max_words_per_line])
+        lines.append(line)
+        words = words[max_words_per_line:]
+    return lines
 
-    total_width = sum(font_images[character].width for character in text)
-    max_height = max(font_images[character].height for character in text)
 
-    final_image = Image.new("RGBA", (total_width, max_height), (0, 0, 0, 0))
+def generate_image(text, filename, font_paths, save_location, max_words_per_line=None):
+    if max_words_per_line:
+        lines = apply_line_breaks(text, max_words_per_line)
+    else:
+        lines = [text]
 
-    x_position = 0
-    for character in text:
-        character_image = font_images[character]
-        y_position = max_height - character_image.height
-        final_image.paste(character_image, (x_position, y_position))
-        x_position += character_image.width
+    line_images = []
+    max_width = 0
+    total_height = 0
+
+    for line in lines:
+        font_images = {
+            character: get_character_image(character, font_paths)
+            for character in set(line)
+        }
+        line_width = sum(font_images[character].width for character in line)
+        line_height = max(font_images[character].height for character in line)
+
+        line_image = Image.new("RGBA", (line_width, line_height), (0, 0, 0, 0))
+
+        x_position = 0
+        for character in line:
+            character_image = font_images[character]
+            y_position = line_height - character_image.height
+            line_image.paste(character_image, (x_position, y_position))
+            x_position += character_image.width
+
+        line_images.append(line_image)
+        max_width = max(max_width, line_width)
+        total_height += line_height
+
+    final_image = Image.new("RGBA", (max_width, total_height), (0, 0, 0, 0))
+
+    y_position = 0
+    for line_image in line_images:
+        final_image.paste(line_image, (0, y_position))
+        y_position += line_image.height
 
     image_path = Path(save_location) / filename
     final_image.save(image_path)
