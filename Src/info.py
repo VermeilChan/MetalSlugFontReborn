@@ -1,12 +1,11 @@
 from datetime import datetime
 from subprocess import run, DEVNULL, PIPE, CalledProcessError
 
-msfr_version = "1.9.3"
+msfr_version = "1.10.0"
 pyinstaller_version = "6.10.0"
 pyside6_version = "6.7.2"
 pillow_version = "10.4.0"
 build_date = "N/A"
-config_file = "config.ini"
 
 current_datetime = datetime.now()
 formatted_date_time = current_datetime.strftime("%Y-%m-%d (%A, %B %d, %Y)")
