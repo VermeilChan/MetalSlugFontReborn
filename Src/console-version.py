@@ -3,6 +3,7 @@ from time import time
 from PIL import Image
 from pathlib import Path
 from prompt_toolkit import prompt
+from platform import system, architecture
 from prompt_toolkit.completion import WordCompleter
 from image_generation import (
     generate_filename,
@@ -30,10 +31,8 @@ save_locations = {
 
 
 def startup_message():
-    print(f"\nMetalSlugFontReborn {msfr_version}")
-    print(f"Build Date: {build_date}")
-    print("Maintained by VermeilChan")
-    print("GPL-3.0 Licensed")
+    print(f"\nMetalSlugFontReborn {msfr_version} {system()} ({architecture()[0]}), Build Date: {build_date}")
+    print("Maintained by VermeilChan, GPL-3.0 Licensed")
     print("Repository: https://github.com/VermeilChan/MetalSlugFontReborn\n")
     print("You can check the supported characters in SUPPORTED.txt.")
     print("Type 'exit' or press CTRL+C to close the program.")
