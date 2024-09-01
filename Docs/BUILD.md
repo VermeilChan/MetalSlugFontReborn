@@ -17,8 +17,8 @@ You should be able to compile MetalSlugFontReborn successfully on the following
 platforms:
 
 | Operating System | Supported Versions                                         | Architecture    |
-|------------------|----------------------------------------------------------- |-----------------|
-| Windows          | 11 & 10 (Qt Version), 11, 10, 8.1 (Console Version)        | 64-bit (x86-64) |
+|------------------|------------------------------------------------------------|-----------------|
+| Windows          | 11, 10                                                     | 64-bit (x86-64) |
 | GNU/Linux        | Debian 12.6, Ubuntu 24.04, Fedora 40, Arch Linux, OpenSUSE | 64-bit (x86-64) |
 | MacOS            | 14, 13, 12, 11, 10.15                                      | 64-bit (x86-64) |
 
@@ -43,7 +43,7 @@ To compile MetalSlugFontReborn you will need the following:
 - [PyInstaller](https://pyinstaller.org/en/stable/) 6.6.0 or later
 - [PySide6-Essentials](https://pypi.org/project/PySide6/) 6.5 or later
 - [Pillow](https://pillow.readthedocs.io/en/stable/) 9.5.0 or later
-- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/) 3.0.37 or later
+- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/) 3.0.47 or later
 
 # Compiling
 
@@ -59,7 +59,7 @@ pip install -r requirements.txt
 ```
 ```sh
 # Qt Version
-pyinstaller --noconfirm --onedir --windowed --optimize "2" --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --upx-dir "Src/Extra/UPX-Windows/upx.exe" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Src/qt_utils.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
+pyinstaller --noconfirm --onedir --windowed --optimize "2" --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Src/qt_utils.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
 ```
 
 - Move the `Assets` folder and `SUPPORTED.txt` out of `_internal` folder to `dist/MetalSlugFontReborn`.
@@ -98,7 +98,7 @@ pip install -r requirements.txt
 ```
 ```sh
 # Qt Version
-pyinstaller --noconfirm --onedir --windowed --optimize "2" --strip --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --upx-dir "Src/Extra/UPX-Linux/upx" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/qt_utils.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
+pyinstaller --noconfirm --onedir --windowed --optimize "2" --strip --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/qt_utils.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
 ```
 
 - Move the `Assets` folder and `SUPPORTED.txt` out of `_internal` folder to `dist/MetalSlugFontReborn`.
