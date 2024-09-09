@@ -31,8 +31,10 @@ save_locations = {
 
 
 def startup_message():
-    print(f"\nMetalSlugFontReborn {msfr_version} {system()} ({architecture()[0]}), Build Date: {build_date}")
-    print("Maintained by VermeilChan, GPL-3.0 Licensed")
+    print(
+        f"\nMetalSlugFontReborn {msfr_version}, {system()} ({architecture()[0]}), Build Date {build_date}."
+    )
+    print("Maintained by VermeilChan, GPL-3.0 Licensed.")
     print("Repository: https://github.com/VermeilChan/MetalSlugFontReborn\n")
     print("You can check the supported characters in SUPPORTED.txt.")
     print("Type 'exit' or press CTRL+C to close the program.")
@@ -81,21 +83,21 @@ def select_save_location():
 
 
 def ask_compression():
-    compress_completer = WordCompleter(["yes", "no", "y", "n"])
-    compress_input = prompt(
-        "Do you want to compress the image? (Y/n): ", completer=compress_completer
-    ).lower()
-    return bool(compress_input in {"yes", "y"})
+    return get_valid_input("Do you want to compress the image? (Yes/No): ", ["Yes", "No"]) == "Yes"
 
 
 def ask_line_breaks():
-    line_break_completer = WordCompleter(["yes", "no", "y", "n"])
-    line_break_input = prompt(
-        "Do you want to enable line breaks? (Y/n): ", completer=line_break_completer
-    ).lower()
-    if line_break_input in {"yes", "y"}:
-        max_words_per_line = int(prompt("Enter the maximum number of words per line: "))
-        return max_words_per_line
+    line_break_choice = get_valid_input("Do you want to enable line breaks? (Yes/No): ", ["Yes", "No"])
+    if line_break_choice == "Yes":
+        while True:
+            try:
+                max_words_per_line = int(prompt("Enter the maximum number of words per line: "))
+                if max_words_per_line > 0:
+                    return max_words_per_line
+                else:
+                    print("Please enter a positive number.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
     return None
 
 
