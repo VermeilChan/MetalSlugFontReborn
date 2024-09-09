@@ -2,4 +2,4 @@ PySide6-Essentials>=6.7.2
 prompt_toolkit>=3.0.47
 pillow>=10.4.0
 pyinstaller>=6.10.0
-ruff>=0.6.2
+ruff>=0.6.4
