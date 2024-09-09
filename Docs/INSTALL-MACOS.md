@@ -1,13 +1,13 @@
-# **Windows:**
+# **Linux:**
 
 1. Get the latest release of [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn/releases/latest).
 
    ![Download MetalSlugFontReborn](Markdown/Docs/Download.png)
 
 **Extract and Run MetalSlugFontReborn:**
-   - Locate and extract `MetalSlugFontReborn-v1.x.x-Windows-x64-Qt.7z`.
+   - Locate and extract `MetalSlugFontReborn-v1.x.x-Linux-x64-Qt.7z`.
    - Go to the `MetalSlugFontReborn` folder.
-   - Run `MetalSlugFontReborn.exe`.
+   - Run `MetalSlugFontReborn`.
 
 3. **Select a Font:**
    - Upon opening MetalSlugFontReborn, choose your desired font and color, you can them [preview](EXAMPLES.md) here.

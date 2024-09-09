@@ -35,14 +35,14 @@ body:
     id: what-os
     attributes:
       label: What Operating System are you using?
-      placeholder: ex. Windows, Linux
+      placeholder: ex. Windows, Linux, MacOS
     validations:
       required: true
   - type: input
     id: metal-slug-font-reborn-version
     attributes:
       label: What version of MetalSlugFontReborn are you using?
-      placeholder: ex. MetalSlugFontReborn 1.9.2
+      placeholder: ex. MetalSlugFontReborn 1.10.0
     validations:
       required: true
   - type: input

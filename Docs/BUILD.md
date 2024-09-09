@@ -5,17 +5,22 @@
 - [Dependencies](#dependencies)
    - [Windows dependencies](#dependencies)
    - [Linux dependencies](#linux-dependencies)
+   - [MacOS dependencies](#dependencies)
 - [Compiling](#compiling)
    - [Windows details](#windows-details)
-   - [Linux details](#linux-details)
+   - [Linux details](#linux-and-macOS-details)
+   - [MacOS details](#linux-and-macOS-details)
 
 # Platforms
 
 You should be able to compile MetalSlugFontReborn successfully on the following
 platforms:
 
-- Windows 11 and 10 (Qt), Windows 11, 10, 8.1 (Console) x86-64.
-- GNU/Linux Debian 12.5, Ubuntu 24.04, Fedora 40, Arch Linux, OpenSUSE x86-64.
+| Operating System | Supported Versions                                         | Architecture |
+|------------------|------------------------------------------------------------|--------------|
+| Windows          | 11, 10                                                     | 64-bit       |
+| GNU/Linux        | Debian 12, Ubuntu 22.04, Fedora 39, Arch Linux, OpenSUSE   | 64-bit       |
+| MacOS            | 14, 13, 12, 11, 10.15                                      | 64-bit       |
 
 # Get the source code
 
@@ -34,11 +39,11 @@ git pull
 
 To compile MetalSlugFontReborn you will need the following:
 
-- [Python](https://www.python.org/) (3.9 or greater)
-- [PyInstaller](https://pyinstaller.org/en/stable/)
-- [PySide6](https://pypi.org/project/PySide6/)
-- [Pillow](https://pillow.readthedocs.io/en/stable/)
-- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/)
+- [Python](https://www.python.org/) 3.9 or later
+- [PyInstaller](https://pyinstaller.org/en/stable/) 6.6.0 or later
+- [PySide6-Essentials](https://pypi.org/project/PySide6/) 6.5 or later
+- [Pillow](https://pillow.readthedocs.io/en/stable/) 9.5.0 or later
+- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/) 3.0.47 or later
 
 # Compiling
 
@@ -54,11 +59,7 @@ pip install -r requirements.txt
 ```
 ```sh
 # Qt Version
-pyinstaller --noconfirm --onedir --windowed --optimize "2" --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Src/utils.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
-```
-```sh
-# Console Version
-pyinstaller --noconfirm --onedir --console --optimize "2" --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/console-version.py"
+pyinstaller --noconfirm --onedir --windowed --optimize "2" --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Src/qt_utils.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
 ```
 
 - Move the `Assets` folder and `SUPPORTED.txt` out of `_internal` folder to `dist/MetalSlugFontReborn`.
@@ -85,7 +86,7 @@ On SUSE:
 sudo zypper install -y python3 python3-pip python3-virtualenv libxcb-cursor0
 ```
 
-## Linux details
+## Linux and MacOS details
 
 Open the terminal and run:
 
@@ -97,11 +98,7 @@ pip install -r requirements.txt
 ```
 ```sh
 # Qt Version
-pyinstaller --noconfirm --onedir --windowed --optimize "2" --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
-```
-```sh
-# Console Version
-pyinstaller --noconfirm --onedir --console --optimize "2" --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/console-version.py"
+pyinstaller --noconfirm --onedir --windowed --optimize "2" --strip --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/qt_utils.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
 ```
 
 - Move the `Assets` folder and `SUPPORTED.txt` out of `_internal` folder to `dist/MetalSlugFontReborn`.

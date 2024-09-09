@@ -16,7 +16,6 @@ from info import (
     pyside6_version,
     pillow_version,
     build_date,
-    config_file,
 )
 
 
@@ -30,17 +29,15 @@ def save_theme(theme_name):
     config = ConfigParser()
     config["Settings"] = {
         "theme": theme_name,
-        "Compression": "True",
-        "CompressionLevel": "9",
     }
-    with open(config_file, "w", encoding="utf-8") as f:
+    with open("config.ini", "w", encoding="utf-8") as f:
         config.write(f)
 
 
 def load_theme():
     config = ConfigParser()
     try:
-        config.read(config_file, encoding="utf-8")
+        config.read("config.ini", encoding="utf-8")
         theme_name = config.get("Settings", "theme", fallback=None)
         if theme_name:
             set_theme(theme_name)
@@ -62,12 +59,16 @@ def get_linux_info():
 
 
 def get_os_info():
-    if system() == "Linux":
-        return get_linux_info()
-    elif system() == "Windows":
-        return f"{system()} {release()}", version()
+    os_name = system()
+    os_release = release()
+    os_version = version()
 
-    return system(), release()
+    if os_name == "Linux":
+        return get_linux_info()
+    elif os_name in ["Windows", "Darwin"]:
+        return f"{os_name} {os_release}", os_version
+
+    return os_name, os_release
 
 
 def about_section(parent):

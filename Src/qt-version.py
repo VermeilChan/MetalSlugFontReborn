@@ -1,3 +1,6 @@
+from os import path
+from PIL import Image
+from time import time
 from pathlib import Path
 from PySide6.QtWidgets import (
     QWidget,
@@ -10,10 +13,18 @@ from PySide6.QtWidgets import (
     QPushButton,
     QFileDialog,
     QMessageBox,
+    QCheckBox,
+    QSpinBox,
+    QHBoxLayout,
 )
 from PySide6.QtGui import QIcon
-from image_generation import generate_filename, generate_image, get_font_paths
-from utils import set_theme, load_theme, about_section
+from image_generation import (
+    generate_filename,
+    generate_image,
+    get_font_paths,
+    compress_image,
+)
+from qt_utils import set_theme, load_theme, about_section
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
@@ -28,7 +39,21 @@ class ImageGenerator:
     icon_path = "Assets/Icons/Raubtier.ico"
 
     @staticmethod
-    def generate_and_display_message(text, font, color, save_location, parent=None):
+    def human_readable_size(size_bytes):
+        if size_bytes == 0:
+            return "0 bytes"
+        size_units = ["bytes", "KB", "MB"]
+        i = 0
+        size = size_bytes
+        while size >= 1024 and i < len(size_units) - 1:
+            size /= 1024
+            i += 1
+        return f"{size:.2f} {size_units[i]}"
+
+    @staticmethod
+    def generate_and_display_message(
+        text, font, color, save_location, compress, parent=None, max_words_per_line=None
+    ):
         if not text.strip():
             QMessageBox.critical(
                 parent,
@@ -38,24 +63,38 @@ class ImageGenerator:
             return
 
         try:
+            start_time = time()
             filename = generate_filename(text)
             font_paths = get_font_paths(font, color)
             image_path_str, error_message_generate = generate_image(
-                text, filename, font_paths, save_location
+                text, filename, font_paths, save_location, max_words_per_line
             )
 
             if error_message_generate:
                 QMessageBox.critical(
-                    parent, "MetalSlugFontReborn", f"Error: {error_message_generate}"
+                    parent,
+                    "MetalSlugFontReborn",
+                    f"Error: {error_message_generate}",
                 )
-            else:
-                image_path = Path(image_path_str)
+                return
+
+            if compress:
+                compress_image(image_path_str)
+
+            end_time = time()
+            image_path = Path(image_path_str)
+            with Image.open(image_path) as image:
+                width, height = image.size
+                size_bytes = path.getsize(image_path_str)
+                size_human_readable = ImageGenerator.human_readable_size(size_bytes)
                 success_message = (
                     f"Successfully generated image :)\n"
-                    f"Image name: {image_path.name}\n"
-                    f"Image path: {image_path}"
+                    f"Image path: {image_path}\n"
+                    f"Width: {width}, Height: {height}\n"
+                    f"Size: {size_human_readable}\n"
+                    f"Generation time: {end_time - start_time:.3f}s"
                 )
-                QMessageBox.information(parent, "MetalSlugFontReborn", success_message)
+            QMessageBox.information(parent, "MetalSlugFontReborn", success_message)
 
         except FileNotFoundError as e:
             QMessageBox.critical(parent, "MetalSlugFontReborn", str(e))
@@ -91,6 +130,37 @@ class MetalSlugFontReborn(QMainWindow):
         layout.addWidget(QLabel("Select Color:"))
         self.color_combobox = QComboBox()
         layout.addWidget(self.color_combobox)
+
+        options_layout = QHBoxLayout()
+
+        self.compress_checkbox = QCheckBox("Compression")
+        self.compress_checkbox.setToolTip(
+            "Reduces image size, but may increase processing time."
+        )
+        options_layout.addWidget(self.compress_checkbox)
+
+        self.line_break_checkbox = QCheckBox("Line Break")
+        self.line_break_checkbox.setToolTip(
+            "Insert line breaks after a number of words, but may increase processing time."
+        )
+        options_layout.addWidget(self.line_break_checkbox)
+
+        self.words_per_line_label = QLabel("Max Words Per Line:")
+        self.words_per_line_spinbox = QSpinBox()
+        self.words_per_line_spinbox.setRange(1, 100)
+        self.words_per_line_spinbox.setFixedWidth(50)
+
+        self.words_per_line_label.setVisible(False)
+        self.words_per_line_spinbox.setVisible(False)
+
+        options_layout.addWidget(self.words_per_line_label)
+        options_layout.addWidget(self.words_per_line_spinbox)
+
+        layout.addLayout(options_layout)
+
+        self.line_break_checkbox.stateChanged.connect(
+            self.toggle_words_per_line_spinbox
+        )
 
         browse_button = QPushButton("Browse", self)
         browse_button.clicked.connect(self.browse_save_location)
@@ -129,40 +199,42 @@ class MetalSlugFontReborn(QMainWindow):
 
     def on_font_change(self):
         font = int(self.font_combobox.currentText())
-        valid_colors = valid_colors_by_font.get(font, [])
         self.color_combobox.clear()
-        self.color_combobox.addItems(valid_colors)
-        self.color_combobox.setEnabled(bool(valid_colors))
-        if valid_colors:
-            self.color_combobox.setCurrentIndex(0)
+        self.color_combobox.addItems(valid_colors_by_font[font])
+
+    def toggle_words_per_line_spinbox(self):
+        is_checked = self.line_break_checkbox.isChecked()
+        self.words_per_line_label.setVisible(is_checked)
+        self.words_per_line_spinbox.setVisible(is_checked)
+
+    def browse_save_location(self):
+        save_location = QFileDialog.getExistingDirectory(
+            self, "Select Image Save Location", self.default_save_location
+        )
+        if save_location:
+            self.save_location_entry.setText(save_location)
 
     def generate_and_display_image(self):
         text = self.text_entry.text()
         font = int(self.font_combobox.currentText())
         color = self.color_combobox.currentText()
         save_location = self.save_location_entry.text()
+        compress = self.compress_checkbox.isChecked()
+
+        if self.line_break_checkbox.isChecked():
+            max_words_per_line = self.words_per_line_spinbox.value()
+        else:
+            max_words_per_line = None
 
         text = text.upper() if font == 5 else text
         ImageGenerator.generate_and_display_message(
-            text, font, color, save_location, self
+            text, font, color, save_location, compress, self, max_words_per_line
         )
-
-    def browse_save_location(self):
-        save_location = QFileDialog.getExistingDirectory(
-            self, "Select Save Location", self.default_save_location
-        )
-        if save_location:
-            self.save_location_entry.setText(save_location)
-
-
-def main():
-    app = QApplication([])
-    app.setStyle("Fusion")
-    app.setWindowIcon(QIcon(ImageGenerator.icon_path))
-    window = MetalSlugFontReborn()
-    window.show()
-    app.exec()
 
 
 if __name__ == "__main__":
-    main()
+    app = QApplication([])
+    app.setStyle("Fusion")
+    window = MetalSlugFontReborn()
+    window.show()
+    app.exec()

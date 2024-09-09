@@ -1,26 +1,25 @@
-from subprocess import check_output
 from datetime import datetime
+from subprocess import run, DEVNULL, PIPE, CalledProcessError
 
-msfr_version = "1.9.2"
-pyinstaller_version = "6.7.0"
-pyside6_version = "6.7.1"
-pillow_version = "10.3.0"
-build_date = "2024-05-31 (Friday, May 31, 2024)"
-config_file = "config.ini"
+msfr_version = "1.10.0"
+pyinstaller_version = "6.10.0"
+pyside6_version = "6.7.2"
+pillow_version = "10.4.0"
+build_date = "N/A"
 
-is_dev = False
+current_datetime = datetime.now()
+formatted_date_time = current_datetime.strftime("%Y-%m-%d (%A, %B %d, %Y)")
+build_date = formatted_date_time
 
-if is_dev:
-    current_datetime = datetime.now()
-    formatted_date_time = current_datetime.strftime("%Y-%m-%d (%A, %B %d, %Y)")
-
-    try:
-        latest_commit_sha = check_output(
-            ["git", "rev-list", "HEAD", "-1"], text=True
-        ).strip()
-        short_commit_sha = latest_commit_sha[:7]
-        msfr_version += f" ({short_commit_sha})"
-        build_date = formatted_date_time
-    except Exception:
-        msfr_version += "(N/A)"
-        build_date = formatted_date_time
+try:
+    result = run(
+        ["git", "rev-parse", "--short", "HEAD"],
+        stdout=PIPE,
+        stderr=DEVNULL,
+        text=True,
+        check=True,
+    )
+    latest_commit_sha = result.stdout.strip()
+    msfr_version += f" ({latest_commit_sha})"
+except (CalledProcessError, FileNotFoundError):
+    msfr_version += " (N/A)"

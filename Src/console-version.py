@@ -1,8 +1,16 @@
 import sys
+from time import time
+from PIL import Image
 from pathlib import Path
 from prompt_toolkit import prompt
+from platform import system, architecture
 from prompt_toolkit.completion import WordCompleter
-from image_generation import generate_filename, generate_image, get_font_paths
+from image_generation import (
+    generate_filename,
+    generate_image,
+    get_font_paths,
+    compress_image,
+)
 from info import msfr_version, build_date
 
 valid_colors_by_font = {
@@ -23,10 +31,10 @@ save_locations = {
 
 
 def startup_message():
-    print(f"\nMetalSlugFontReborn {msfr_version}")
-    print(f"Build Date: {build_date}")
-    print("Maintained by VermeilChan")
-    print("GPL-3.0 Licensed")
+    print(
+        f"\nMetalSlugFontReborn {msfr_version}, {system()} ({architecture()[0]}), Build Date {build_date}."
+    )
+    print("Maintained by VermeilChan, GPL-3.0 Licensed.")
     print("Repository: https://github.com/VermeilChan/MetalSlugFontReborn\n")
     print("You can check the supported characters in SUPPORTED.txt.")
     print("Type 'exit' or press CTRL+C to close the program.")
@@ -74,8 +82,41 @@ def select_save_location():
         return save_locations[save_location_choice]
 
 
-def generate_and_display_image(text, font, color, save_location):
-    if text.lower() == "Exit":
+def ask_compression():
+    return get_valid_input("Do you want to compress the image? (Yes/No): ", ["Yes", "No"]) == "Yes"
+
+
+def ask_line_breaks():
+    line_break_choice = get_valid_input("Do you want to enable line breaks? (Yes/No): ", ["Yes", "No"])
+    if line_break_choice == "Yes":
+        while True:
+            try:
+                max_words_per_line = int(prompt("Enter the maximum number of words per line: "))
+                if max_words_per_line > 0:
+                    return max_words_per_line
+                else:
+                    print("Please enter a positive number.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+    return None
+
+
+def human_readable_size(size_bytes):
+    if size_bytes == 0:
+        return "0 bytes"
+    size_units = ["bytes", "KB", "MB"]
+    i = 0
+    size = size_bytes
+    while size >= 1024 and i < len(size_units) - 1:
+        size /= 1024
+        i += 1
+    return f"{size:.2f} {size_units[i]}"
+
+
+def generate_and_info(
+    text, font, color, save_location, compress=False, max_words_per_line=None
+):
+    if text.lower() == "exit":
         sys.exit("Closing...")
 
     if not text:
@@ -84,16 +125,31 @@ def generate_and_display_image(text, font, color, save_location):
     text = text.upper() if font == 5 else text
 
     try:
+        start_time = time()
         filename = generate_filename(text)
         font_paths = get_font_paths(font, color)
-        image_path, error_message_generate = generate_image(
-            text, filename, font_paths, save_location
+        image_path_str, error_message_generate = generate_image(
+            text, filename, font_paths, save_location, max_words_per_line
         )
 
         if error_message_generate:
             print(f"Error generating image: {error_message_generate}")
-        else:
-            print(f"You can find the generated image here: {image_path}")
+            return
+
+        if compress:
+            compress_image(image_path_str)
+
+        end_time = time()
+        image_path = Path(image_path_str)
+        with Image.open(image_path) as img:
+            width, height = img.size
+            size_bytes = image_path.stat().st_size
+            size_human_readable = human_readable_size(size_bytes)
+            success_message = (
+                f"Image path: {image_path}\n"
+                f"Width: {width}, Height: {height} | Size: {size_human_readable} | Generation time: {end_time - start_time:.3f}s\n"
+            )
+            print(success_message)
 
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -105,10 +161,15 @@ def main():
     color = select_color(font)
     save_location = select_save_location()
 
+    compress = ask_compression()
+    max_words_per_line = ask_line_breaks()
+
     try:
         while True:
             text = prompt("Enter the text you want to generate: ")
-            generate_and_display_image(text, font, color, save_location)
+            generate_and_info(
+                text, font, color, save_location, compress, max_words_per_line
+            )
     except KeyboardInterrupt:
         sys.exit("Closing...")
 
