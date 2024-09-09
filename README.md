@@ -56,16 +56,16 @@ If you have a GitHub account and have found this repository helpful, please cons
 
 #### Operating Systems
 
-| Operating System | Supported Versions                                         | Architecture    |
-|------------------|------------------------------------------------------------|-----------------|
-| Windows          | 11, 10                                                     | 64-bit (x86-64) |
-| GNU/Linux        | Debian 12.6, Ubuntu 24.04, Fedora 40, Arch Linux, OpenSUSE | 64-bit (x86-64) |
-| MacOS            | 14, 13, 12, 11, 10.15                                      | 64-bit (x86-64) |
+| Operating System | Supported Versions                                         | Architecture |
+|------------------|------------------------------------------------------------|--------------|
+| Windows          | 11, 10                                                     | 64-bit       |
+| GNU/Linux        | Debian 12, Ubuntu 22.04, Fedora 39, Arch Linux, OpenSUSE   | 64-bit       |
+| MacOS            | 14, 13, 12, 11, 10.15                                      | 64-bit       |
 
 #### Resource Requirements
 
 **RAM Usage:** 40MB
-**Disk Space:** 60MB
+**Disk Space:** 190MB
 
 ## Installing MetalSlugFontReborn
 
