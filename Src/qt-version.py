@@ -83,8 +83,8 @@ class ImageGenerator:
 
             end_time = time()
             image_path = Path(image_path_str)
-            with Image.open(image_path) as img:
-                width, height = img.size
+            with Image.open(image_path) as image:
+                width, height = image.size
                 size_bytes = path.getsize(image_path_str)
                 size_human_readable = ImageGenerator.human_readable_size(size_bytes)
                 success_message = (
