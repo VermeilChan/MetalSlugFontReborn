@@ -21,7 +21,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9.19'
+          python-version: '3.9.20'
           architecture: 'x64'
           cache: 'pip'
 
@@ -33,11 +33,6 @@ jobs:
 
       - name: Install python dependencies
         run: pip install --upgrade PySide6-Essentials pyinstaller pillow
-
-      - name: Update dependencies
-        run: |
-          sudo apt update -y
-          sudo apt upgrade -y
 
       - name: Build with PyInstaller
         run: |
