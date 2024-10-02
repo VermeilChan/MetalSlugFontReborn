@@ -41,9 +41,9 @@ def get_character_image(character, font_paths):
     return Image.open(character_image_path)
 
 
-def compress_image(image_path_str):
-    image = Image.open(image_path_str)
-    image.save(image_path_str, optimize=True)
+def compress_image(image_path):
+    with Image.open(image_path) as image:
+        image.save(image_path, optimize=True)
 
 
 def apply_line_breaks(text, max_words_per_line):
@@ -55,14 +55,12 @@ def apply_line_breaks(text, max_words_per_line):
 
 
 def generate_image(text, filename, font_paths, save_location, max_words_per_line=None):
-    if max_words_per_line:
-        lines = apply_line_breaks(text, max_words_per_line)
-    else:
-        lines = [text]
+    lines = (
+        apply_line_breaks(text, max_words_per_line) if max_words_per_line else [text]
+    )
 
     line_images = []
-    max_width = 0
-    total_height = 0
+    max_width = total_height = 0
 
     for line in lines:
         font_images = {
@@ -73,8 +71,8 @@ def generate_image(text, filename, font_paths, save_location, max_words_per_line
         line_height = max(font_images[character].height for character in line)
 
         line_image = Image.new("RGBA", (line_width, line_height), (0, 0, 0, 0))
-
         x_position = 0
+
         for character in line:
             character_image = font_images[character]
             y_position = line_height - character_image.height
@@ -86,8 +84,8 @@ def generate_image(text, filename, font_paths, save_location, max_words_per_line
         total_height += line_height
 
     final_image = Image.new("RGBA", (max_width, total_height), (0, 0, 0, 0))
-
     y_position = 0
+
     for line_image in line_images:
         final_image.paste(line_image, (0, y_position))
         y_position += line_image.height
