@@ -72,6 +72,7 @@ def get_os_info():
         return get_linux_info()
     return f"{os_name} {os_release}", os_version
 
+
 def group_box(title, layout):
     group_box = QGroupBox(title)
     group_box.setLayout(layout)
