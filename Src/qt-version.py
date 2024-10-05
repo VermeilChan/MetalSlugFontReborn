@@ -1,30 +1,10 @@
-from os import path
 from PIL import Image
 from time import time
 from pathlib import Path
-from PySide6.QtWidgets import (
-    QWidget,
-    QApplication,
-    QMainWindow,
-    QVBoxLayout,
-    QLineEdit,
-    QLabel,
-    QComboBox,
-    QPushButton,
-    QFileDialog,
-    QMessageBox,
-    QCheckBox,
-    QSpinBox,
-    QHBoxLayout,
-)
+from PySide6.QtWidgets import QWidget, QApplication, QMainWindow, QVBoxLayout, QLineEdit, QLabel, QComboBox, QPushButton, QFileDialog, QMessageBox, QCheckBox, QSpinBox, QHBoxLayout 
 from PySide6.QtGui import QIcon
-from image_generation import (
-    generate_filename,
-    generate_image,
-    get_font_paths,
-    compress_image,
-)
-from qt_utils import set_theme, load_theme, about_section
+from qt_utils import set_theme, load_theme, about_section, readable_size
+from image_generation import generate_filename, generate_image, get_font_paths, compress_image
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
@@ -39,54 +19,33 @@ class ImageGenerator:
     icon_path = "Assets/Icons/Raubtier.ico"
 
     @staticmethod
-    def human_readable_size(size_bytes):
-        if size_bytes == 0:
-            return "0 bytes"
-        size_units = ["bytes", "KB", "MB"]
-        i = 0
-        size = size_bytes
-        while size >= 1024 and i < len(size_units) - 1:
-            size /= 1024
-            i += 1
-        return f"{size:.2f} {size_units[i]}"
-
-    @staticmethod
     def generate_and_display_message(
         text, font, color, save_location, compress, parent=None, max_words_per_line=None
     ):
         if not text.strip():
-            QMessageBox.critical(
-                parent,
-                "MetalSlugFontReborn",
-                "Input text is empty. Please enter some text.",
-            )
-            return
+            return QMessageBox.critical(parent,"MetalSlugFontReborn", "Input text is empty. Please enter some text.")
+
 
         try:
             start_time = time()
             filename = generate_filename(text)
             font_paths = get_font_paths(font, color)
-            image_path_str, error_message_generate = generate_image(
+            image_path, error_message = generate_image(
                 text, filename, font_paths, save_location, max_words_per_line
             )
 
-            if error_message_generate:
-                QMessageBox.critical(
-                    parent,
-                    "MetalSlugFontReborn",
-                    f"Error: {error_message_generate}",
-                )
-                return
+            if error_message:
+                return QMessageBox.critical(parent, "MetalSlugFontReborn", f"Error: {error_message}")
 
             if compress:
-                compress_image(image_path_str)
+                compress_image(image_path)
 
             end_time = time()
-            image_path = Path(image_path_str)
+            image_path = Path(image_path)
             with Image.open(image_path) as image:
                 width, height = image.size
-                size_bytes = path.getsize(image_path_str)
-                size_human_readable = ImageGenerator.human_readable_size(size_bytes)
+                size_bytes = image_path.stat().st_size
+                size_human_readable = readable_size(size_bytes)
                 success_message = (
                     f"Successfully generated image :)\n"
                     f"Image path: {image_path}\n"
@@ -108,7 +67,6 @@ class MetalSlugFontReborn(QMainWindow):
         load_theme()
 
         self.default_save_location = str(Path.home() / "Desktop")
-
         self.init_ui()
         self.setMaximumSize(self.size())
 
@@ -124,7 +82,7 @@ class MetalSlugFontReborn(QMainWindow):
 
         layout.addWidget(QLabel("Select Font:"))
         self.font_combobox = QComboBox()
-        self.font_combobox.addItems(list(map(str, sorted(valid_colors_by_font.keys()))))
+        self.font_combobox.addItems(map(str, sorted(valid_colors_by_font.keys())))
         layout.addWidget(self.font_combobox)
 
         layout.addWidget(QLabel("Select Color:"))
@@ -132,7 +90,6 @@ class MetalSlugFontReborn(QMainWindow):
         layout.addWidget(self.color_combobox)
 
         options_layout = QHBoxLayout()
-
         self.compress_checkbox = QCheckBox("Compression")
         self.compress_checkbox.setToolTip(
             "Reduces image size, but may increase processing time."
@@ -149,13 +106,11 @@ class MetalSlugFontReborn(QMainWindow):
         self.words_per_line_spinbox = QSpinBox()
         self.words_per_line_spinbox.setRange(1, 100)
         self.words_per_line_spinbox.setFixedWidth(50)
-
         self.words_per_line_label.setVisible(False)
         self.words_per_line_spinbox.setVisible(False)
 
         options_layout.addWidget(self.words_per_line_label)
         options_layout.addWidget(self.words_per_line_spinbox)
-
         layout.addLayout(options_layout)
 
         self.line_break_checkbox.stateChanged.connect(
@@ -174,22 +129,19 @@ class MetalSlugFontReborn(QMainWindow):
         self.save_location_entry = QLineEdit()
         self.save_location_entry.setReadOnly(True)
         self.save_location_entry.setText(self.default_save_location)
-
         self.save_location_label.setVisible(False)
         self.save_location_entry.setVisible(False)
 
         layout.addWidget(self.save_location_label)
         layout.addWidget(self.save_location_entry)
 
-        self.font_combobox.currentIndexChanged.connect(self.on_font_change)
-        self.on_font_change()
-
+        self.font_combobox.currentIndexChanged.connect(self.update_color_combobox)
+        self.update_color_combobox()
         self.init_menubar()
 
     def init_menubar(self):
         menubar = self.menuBar()
         help_menu = menubar.addMenu("Help")
-
         about_action = help_menu.addAction("About")
         about_action.triggered.connect(lambda: about_section(self))
 
@@ -197,7 +149,7 @@ class MetalSlugFontReborn(QMainWindow):
         theme_menu.addAction("Light Mode").triggered.connect(lambda: set_theme("Light"))
         theme_menu.addAction("Dark Mode").triggered.connect(lambda: set_theme("Dark"))
 
-    def on_font_change(self):
+    def update_color_combobox(self):
         font = int(self.font_combobox.currentText())
         self.color_combobox.clear()
         self.color_combobox.addItems(valid_colors_by_font[font])
@@ -221,10 +173,11 @@ class MetalSlugFontReborn(QMainWindow):
         save_location = self.save_location_entry.text()
         compress = self.compress_checkbox.isChecked()
 
-        if self.line_break_checkbox.isChecked():
-            max_words_per_line = self.words_per_line_spinbox.value()
-        else:
-            max_words_per_line = None
+        max_words_per_line = (
+            self.words_per_line_spinbox.value()
+            if self.line_break_checkbox.isChecked()
+            else None
+        )
 
         text = text.upper() if font == 5 else text
         ImageGenerator.generate_and_display_message(

@@ -27,9 +27,7 @@ def set_theme(theme_name):
 
 def save_theme(theme_name):
     config = ConfigParser()
-    config["Settings"] = {
-        "theme": theme_name,
-    }
+    config["Settings"] = {"theme": theme_name}
     with open("config.ini", "w", encoding="utf-8") as f:
         config.write(f)
 
@@ -45,6 +43,16 @@ def load_theme():
         pass
 
 
+def readable_size(size_bytes):
+    size_units = ["bytes", "KB", "MB"]
+    index = 0
+    size = size_bytes
+    while size >= 1024 and index < len(size_units) - 1:
+        size /= 1024
+        index += 1
+    return f"{size:.2f} {size_units[index]}"
+
+
 def get_linux_info():
     os_info = {}
     with open("/etc/os-release", "r") as file:
@@ -52,10 +60,7 @@ def get_linux_info():
             key, value = line.strip().split("=")
             os_info[key] = value.strip('"')
 
-    pretty_name = os_info.get("PRETTY_NAME") or system()
-    os_version = os_info.get("VERSION") or release()
-
-    return pretty_name, os_version
+    return os_info.get("PRETTY_NAME") or system(), os_info.get("VERSION") or release()
 
 
 def get_os_info():
@@ -65,10 +70,12 @@ def get_os_info():
 
     if os_name == "Linux":
         return get_linux_info()
-    elif os_name in ["Windows", "Darwin"]:
-        return f"{os_name} {os_release}", os_version
+    return f"{os_name} {os_release}", os_version
 
-    return os_name, os_release
+def group_box(title, layout):
+    group_box = QGroupBox(title)
+    group_box.setLayout(layout)
+    return group_box
 
 
 def about_section(parent):
@@ -81,7 +88,6 @@ def about_section(parent):
     icon_label = QLabel()
     pixmap = QPixmap("Assets/Icons/Raubtier.png")
     icon_label.setPixmap(pixmap)
-    header_layout.addWidget(icon_label)
 
     info_layout = QVBoxLayout()
     info_layout.addWidget(QLabel(f"MetalSlugFontReborn ({architecture()[0]})"))
@@ -93,6 +99,7 @@ def about_section(parent):
     github_link.setOpenExternalLinks(True)
     info_layout.addWidget(github_link)
 
+    header_layout.addWidget(icon_label)
     header_layout.addLayout(info_layout)
     main_layout.addLayout(header_layout)
 
@@ -101,9 +108,7 @@ def about_section(parent):
     os_info_layout.addWidget(QLabel(f"OS: {os_name}"))
     os_info_layout.addWidget(QLabel(f"Version: {os_version}"))
 
-    os_info_group = QGroupBox("Operating System:")
-    os_info_group.setLayout(os_info_layout)
-    main_layout.addWidget(os_info_group)
+    main_layout.addWidget(group_box("Operating System:", os_info_layout))
 
     build_info_layout = QVBoxLayout()
     build_info_layout.addWidget(QLabel(f"Version: {msfr_version}"))
@@ -112,9 +117,7 @@ def about_section(parent):
     build_info_layout.addWidget(QLabel(f"Pillow: {pillow_version}"))
     build_info_layout.addWidget(QLabel(f"Build date: {build_date}"))
 
-    build_info_group = QGroupBox("Build Information:")
-    build_info_group.setLayout(build_info_layout)
-    main_layout.addWidget(build_info_group)
+    main_layout.addWidget(group_box("Build Information:", build_info_layout))
 
     about_window.setLayout(main_layout)
     about_window.exec()

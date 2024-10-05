@@ -4,4 +4,4 @@
 
 - **Linux:** [Installation Guide](INSTALL-LINUX.md)
 
-- **MacOS:** [Installation Guide](INSTALL-MACOS.md)
+- **macOS:** [Installation Guide](INSTALL-MACOS.md)

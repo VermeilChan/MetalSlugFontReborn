@@ -37,6 +37,6 @@ Here you can find which characters MetalSlugFontReborn supports.
 - **Symbols:** ! ?
 - **Colors:** Orange
 
-# Unsupported Characters
+# Unsupported Characters (Unused)
 
 - **Symbols:** ȧ ä ā á à â ã í ü ū ú ė ë é ê ö ō ó ô Ⅰ Ⅱ Ⅲ Ⅳ Ⅴ
