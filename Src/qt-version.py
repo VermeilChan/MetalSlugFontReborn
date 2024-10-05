@@ -1,30 +1,10 @@
-from os import path
 from PIL import Image
 from time import time
 from pathlib import Path
-from PySide6.QtWidgets import (
-    QWidget,
-    QApplication,
-    QMainWindow,
-    QVBoxLayout,
-    QLineEdit,
-    QLabel,
-    QComboBox,
-    QPushButton,
-    QFileDialog,
-    QMessageBox,
-    QCheckBox,
-    QSpinBox,
-    QHBoxLayout,
-)
+from PySide6.QtWidgets import QWidget, QApplication, QMainWindow, QVBoxLayout, QLineEdit, QLabel, QComboBox, QPushButton, QFileDialog, QMessageBox, QCheckBox, QSpinBox, QHBoxLayout 
 from PySide6.QtGui import QIcon
-from image_generation import (
-    generate_filename,
-    generate_image,
-    get_font_paths,
-    compress_image,
-)
 from qt_utils import set_theme, load_theme, about_section, readable_size
+from image_generation import generate_filename, generate_image, get_font_paths, compress_image
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
@@ -43,35 +23,28 @@ class ImageGenerator:
         text, font, color, save_location, compress, parent=None, max_words_per_line=None
     ):
         if not text.strip():
-            QMessageBox.critical(
-                parent,
-                "MetalSlugFontReborn",
-                "Input text is empty. Please enter some text.",
-            )
-            return
+            return QMessageBox.critical(parent,"MetalSlugFontReborn", "Input text is empty. Please enter some text.")
+
 
         try:
             start_time = time()
             filename = generate_filename(text)
             font_paths = get_font_paths(font, color)
-            image_path_str, error_message = generate_image(
+            image_path, error_message = generate_image(
                 text, filename, font_paths, save_location, max_words_per_line
             )
 
             if error_message:
-                QMessageBox.critical(
-                    parent, "MetalSlugFontReborn", f"Error: {error_message}"
-                )
-                return
+                return QMessageBox.critical(parent, "MetalSlugFontReborn", f"Error: {error_message}")
 
             if compress:
-                compress_image(image_path_str)
+                compress_image(image_path)
 
             end_time = time()
-            image_path = Path(image_path_str)
+            image_path = Path(image_path)
             with Image.open(image_path) as image:
                 width, height = image.size
-                size_bytes = path.getsize(image_path_str)
+                size_bytes = image_path.stat().st_size
                 size_human_readable = readable_size(size_bytes)
                 success_message = (
                     f"Successfully generated image :)\n"
