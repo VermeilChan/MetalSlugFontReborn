@@ -5,13 +5,9 @@ from pathlib import Path
 from prompt_toolkit import prompt
 from platform import system, architecture
 from prompt_toolkit.completion import WordCompleter
-from image_generation import (
-    generate_filename,
-    generate_image,
-    get_font_paths,
-    compress_image,
-)
+from image_generation import generate_filename, generate_image, get_font_paths, compress_image
 from info import msfr_version, build_date
+from qt_utils import readable_size
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
@@ -46,10 +42,9 @@ def get_valid_input(prompt_text, valid_values):
         user_input = prompt(prompt_text, completer=completer).title()
         if user_input == "Exit":
             sys.exit("Closing...")
-        elif user_input in valid_values:
+        if user_input in valid_values:
             return user_input
-        else:
-            print("Invalid input. Please try again.")
+        print("Invalid input. Please try again.")
 
 
 def select_font():
@@ -57,19 +52,17 @@ def select_font():
 
 
 def select_color(font):
-    valid_colors = valid_colors_by_font.get(font, [])
+    valid_colors = valid_colors_by_font[font]
     return get_valid_input(
         f"Available colors: {', '.join(valid_colors)}\nChoose a color: ", valid_colors
     )
 
 
 def select_save_location():
-    default_locations = list(save_locations.keys()) + ["Custom"]
-    save_location_choice = get_valid_input(
-        f"Select save location:\n{', '.join(default_locations)}: ", default_locations
-    )
+    options = list(save_locations.keys()) + ["Custom"]
+    choice = get_valid_input(f"Select save location:\n{', '.join(options)}: ", options)
 
-    if save_location_choice == "Custom":
+    if choice == "Custom":
         custom_path = Path(prompt("Enter a custom path for saving: "))
         if not custom_path.exists():
             try:
@@ -78,8 +71,7 @@ def select_save_location():
                 print(f"Could not create the specified path. Error: {e}")
                 return select_save_location()
         return custom_path
-    else:
-        return save_locations[save_location_choice]
+    return save_locations[choice]
 
 
 def ask_compression():
@@ -94,31 +86,15 @@ def ask_line_breaks():
                 max_words_per_line = int(prompt("Enter the maximum number of words per line: "))
                 if max_words_per_line > 0:
                     return max_words_per_line
-                else:
-                    print("Please enter a positive number.")
+                print("Please enter a positive number.")
             except ValueError:
                 print("Invalid input. Please enter a number.")
     return None
 
 
-def human_readable_size(size_bytes):
-    if size_bytes == 0:
-        return "0 bytes"
-    size_units = ["bytes", "KB", "MB"]
-    i = 0
-    size = size_bytes
-    while size >= 1024 and i < len(size_units) - 1:
-        size /= 1024
-        i += 1
-    return f"{size:.2f} {size_units[i]}"
-
-
 def generate_and_info(
     text, font, color, save_location, compress=False, max_words_per_line=None
 ):
-    if text.lower() == "exit":
-        sys.exit("Closing...")
-
     if not text:
         return print("Input text is empty. Please enter some text.")
 
@@ -128,27 +104,24 @@ def generate_and_info(
         start_time = time()
         filename = generate_filename(text)
         font_paths = get_font_paths(font, color)
-        image_path_str, error_message_generate = generate_image(
-            text, filename, font_paths, save_location, max_words_per_line
-        )
+        image_path, error_message = generate_image(text, filename, font_paths, save_location, max_words_per_line)
 
-        if error_message_generate:
-            print(f"Error generating image: {error_message_generate}")
+        if error_message:
+            print(f"Error generating image: {error_message}")
             return
 
         if compress:
-            compress_image(image_path_str)
+            compress_image(image_path)
 
         end_time = time()
-        image_path = Path(image_path_str)
-        with Image.open(image_path) as img:
-            width, height = img.size
+        image_path = Path(image_path)
+        with Image.open(image_path) as image:
+            width, height = image.size
             size_bytes = image_path.stat().st_size
-            size_human_readable = human_readable_size(size_bytes)
+            size_human_readable = readable_size(size_bytes)
             success_message = (
                 f"Image path: {image_path}\n"
-                f"Width: {width}, Height: {height} | Size: {size_human_readable} | Generation time: {end_time - start_time:.3f}s\n"
-            )
+                f"Width: {width}, Height: {height} | Size: {size_human_readable} | Generation time: {end_time - start_time:.3f}s\n")
             print(success_message)
 
     except Exception as e:
@@ -167,9 +140,7 @@ def main():
     try:
         while True:
             text = prompt("Enter the text you want to generate: ")
-            generate_and_info(
-                text, font, color, save_location, compress, max_words_per_line
-            )
+            generate_and_info(text, font, color, save_location, compress, max_words_per_line)
     except KeyboardInterrupt:
         sys.exit("Closing...")
 
