@@ -1,9 +1,9 @@
 from uuid import uuid4
 from datetime import datetime
 
-msfr_version = "1.10.0"
+msfr_version = "1.10.1"
 pyinstaller_version = "6.10.0"
-pyside6_version = "6.7.2"
+pyside6_version = "6.7.3"
 pillow_version = "10.4.0"
 
 latest_commit_sha = uuid4().hex[:7]  # ik im autistic

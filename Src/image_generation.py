@@ -55,18 +55,13 @@ def apply_line_breaks(text, max_words_per_line):
 
 
 def generate_image(text, filename, font_paths, save_location, max_words_per_line=None):
-    lines = (
-        apply_line_breaks(text, max_words_per_line) if max_words_per_line else [text]
-    )
+    lines = (apply_line_breaks(text, max_words_per_line) if max_words_per_line else [text])
 
     line_images = []
     max_width = total_height = 0
 
     for line in lines:
-        font_images = {
-            character: get_character_image(character, font_paths)
-            for character in set(line)
-        }
+        font_images = {character: get_character_image(character, font_paths) for character in set(line)}
         line_width = sum(font_images[character].width for character in line)
         line_height = max(font_images[character].height for character in line)
 
