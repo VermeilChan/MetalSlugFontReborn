@@ -1,26 +1,25 @@
 from configparser import ConfigParser
 from platform import system, version, release, architecture
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import (
-    QApplication,
-    QLabel,
-    QVBoxLayout,
-    QHBoxLayout,
-    QGroupBox,
-    QDialog,
-)
-from themes import light_mode, dark_mode
-from info import (
-    msfr_version,
-    pyinstaller_version,
-    pyside6_version,
-    pillow_version,
-    build_date,
-)
+from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QHBoxLayout, QGroupBox, QDialog
+from themes import light_mode, dark_mode, dracula_mode, arc_dark_mode, monokai_mode
+from info import msfr_version,pyinstaller_version,pyside6_version,pillow_version,build_date
 
 
 def set_theme(theme_name):
-    palette = light_mode() if theme_name == "Light" else dark_mode()
+    if theme_name == "Light":
+        palette = light_mode()
+    elif theme_name == "Dark":
+        palette = dark_mode()
+    elif theme_name == "Dracula":
+        palette = dracula_mode()
+    elif theme_name == "Monokai":
+        palette = monokai_mode()
+    elif theme_name == "Arc Dark":
+        palette = arc_dark_mode()
+    else:
+        palette = dark_mode()
+
     QApplication.setPalette(palette)
     save_theme(theme_name)
 
