@@ -30,7 +30,8 @@
   </a>
 </p>
 
-_This Branch Only Support Qt Version_<br>It Uses Qt 5.15.2
+_This Branch Is For PySide2 (Qt 5.15.2.1), Python 3.10.11_<br>
+_Why Does It Exist?, To Support Older PC'S :)_
 
 A tool for creating images with the Metal Slug font.
 
@@ -52,22 +53,20 @@ If you have a GitHub account and have found this repository helpful, please cons
 
 - Easily transform text into images using the Metal Slug font.
 - Supports uppercase and lowercase letters (A-Z, a-z), digits (0-9), symbols (♥-★), and multiple colors.
-- Supports operating systems, including Windows, Linux.
+- Supports operating systems, including Windows, Linux, macOS.
 
 ## System Requirements
 
 #### Operating Systems
 
-| Operating System | Supported Versions                                         | Architecture    |
-|------------------|------------------------------------------------------------|-----------------|
-| Windows          | 11, 10, 8.1, 8 (Qt Version)                                | 64-bit (x86-64) |
-| GNU/Linux        | Debian 12.6, Ubuntu 24.04, Fedora 40, Arch Linux, OpenSUSE | 64-bit (x86-64) |
+| Operating System | Supported Versions                                 | Architecture   |
+|------------------|----------------------------------------------------|----------------|
+| Windows          | 11, 10, 8.1, 7                                     | 64-bit, 32-bit |
+| GNU/Linux        | Ubuntu 18.04, Fedora 38, Arch Linux, OpenSUSE 15.4 | 64-bit, 32-bit |
+| macOS            | 15, 14, 13, 12, 11, 10.13                          | 64-bit, 32-bit |
 
-#### Resource Requirements
-
-| Version         | RAM Usage | Disk Space |
-|-----------------|-----------|------------|
-| Qt Version      | 40MB      | 120MB      |
+_Uhh, I don't think pyinstaller supports some of the versions here because they reached EOL.<br>_
+_So you might want to use an older version of pyinstaller._
 
 ## Installing MetalSlugFontReborn
 
@@ -103,4 +102,3 @@ I want to say a big thank you to the individuals who helped me.
 - [PySide2](https://pypi.org/project/PySide2/): For the GUI
 - [Pillow](https://python-pillow.org): For image processing
 - [PyInstaller](https://pyinstaller.org/en/stable): For compiling the program
-- [Ruff](https://docs.astral.sh/ruff/): Python linter and code formatter.
