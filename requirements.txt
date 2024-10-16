@@ -1,4 +1,3 @@
 PySide2
 pillow
 pyinstaller
-ruff
