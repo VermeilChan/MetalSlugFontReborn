@@ -1,5 +1,3 @@
-PySide6>=6.6.2
-pyinstaller>=6.4.0
-semantic_version>=2.10.0
-requests>=2.31.0
-opencv-python>=4.9.0.80
+PySide6-Essentials>=6.8.0.1
+opencv-python>=4.10.0.84
+pyinstaller>=6.11.0

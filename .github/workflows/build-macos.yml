@@ -1,0 +1,51 @@
+name: Build macOS
+
+on:
+  push:
+    branches:
+      - Development
+    paths:
+      - '.github/workflows/**'
+      - 'Assets/**'
+      - 'Src/**'
+      - 'versionfile.txt'
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9.20'
+          architecture: 'x64'
+          cache: 'pip'
+
+      - name: Create virtual environment
+        run: python3 -m venv .venv
+
+      - name: Activate virtual environment
+        run: source .venv/bin/activate
+
+      - name: Install dependencies
+        run: pip install --upgrade PySide6-Essentials pyinstaller opencv-python
+
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller --noconfirm --onedir --windowed --optimize "2" --strip --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/qt_utils.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
+
+      - name: Move Assets and SUPPORTED.txt
+        run: |
+          mv dist/MetalSlugFontReborn/_internal/Assets dist/MetalSlugFontReborn/
+          mv dist/MetalSlugFontReborn/_internal/SUPPORTED.txt dist/MetalSlugFontReborn/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MetalSlugFontReborn-v1.x.x-macOS-x64-Qt
+          path: dist/MetalSlugFontReborn
+          compression-level: 9
