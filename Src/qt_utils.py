@@ -1,5 +1,5 @@
 from configparser import ConfigParser
-from platform import system, version, release, architecture
+from platform import system ,architecture, win32_ver, win32_edition, freedesktop_os_release, mac_ver, machine
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QHBoxLayout, QGroupBox, QDialog
 from themes import light_mode, dark_mode, dracula_mode, arc_dark_mode, monokai_mode
@@ -51,26 +51,53 @@ def readable_size(size_bytes):
         index += 1
     return f"{size:.2f} {size_units[index]}"
 
-
-def get_linux_info():
-    os_info = {}
-    with open("/etc/os-release", "r") as file:
-        for line in file:
-            key, value = line.strip().split("=")
-            os_info[key] = value.strip('"')
-
-    return os_info.get("PRETTY_NAME") or system(), os_info.get("VERSION") or release()
+def normalize_architecture(architecture):
+    arch_map = {
+        "x86_64": "64-bit",
+        "64bit": "64-bit",
+        "arm64": "Arm64"
+    }
+    return arch_map.get(architecture, architecture)
 
 
 def get_os_info():
-    os_name = system()
-    os_release = release()
-    os_version = version()
+    sys = system()
 
-    if os_name == "Linux":
-        return get_linux_info()
-    return f"{os_name} {os_release}", os_version
+    if sys == "Windows":
+        win_version, win_release, _, _ = win32_ver()
+        win_edition = win32_edition()
+        arch = normalize_architecture(architecture()[0])
+        return f"Windows {win_version} {win_edition} {arch}"
 
+    elif sys == "Linux":
+        try:
+            distro_info = freedesktop_os_release()
+            pretty_name = distro_info.get("PRETTY_NAME", "")
+            version = distro_info.get("VERSION", "")
+            version_id = distro_info.get("VERSION_ID", "")
+            arch = normalize_architecture(architecture()[0])
+
+            if pretty_name:
+                return f"{pretty_name} {arch}"
+            elif version:
+                return f"{version} {arch}"
+            else:
+                name = distro_info.get("NAME", "Linux")
+                if version_id:
+                    return f"{name} {version_id} {arch}"
+                else:
+                    return f"{name} {arch}"
+
+        except OSError:
+            return f"Linux {normalize_architecture(architecture()[0])}"
+
+    elif sys == "Darwin":
+        mac_version = mac_ver()[0]
+        arch = normalize_architecture(machine())
+        return f"macOS {mac_version} {arch}"
+
+    else:
+        return "Unable to get OS information (っ °Д °;)っ"
 
 def group_box(title, layout):
     group_box = QGroupBox(title)
@@ -90,7 +117,7 @@ def about_section(parent):
     icon_label.setPixmap(pixmap)
 
     info_layout = QVBoxLayout()
-    info_layout.addWidget(QLabel(f"MetalSlugFontReborn ({architecture()[0]})"))
+    info_layout.addWidget(QLabel(f"MetalSlugFontReborn ({normalize_architecture(architecture()[0])})"))
     info_layout.addWidget(QLabel("GPL-3.0 Licensed"))
 
     github_link = QLabel(
@@ -103,10 +130,9 @@ def about_section(parent):
     header_layout.addLayout(info_layout)
     main_layout.addLayout(header_layout)
 
-    os_name, os_version = get_os_info()
+    os_info = get_os_info()
     os_info_layout = QVBoxLayout()
-    os_info_layout.addWidget(QLabel(f"OS: {os_name}"))
-    os_info_layout.addWidget(QLabel(f"Version: {os_version}"))
+    os_info_layout.addWidget(QLabel(f"OS: {os_info}"))
 
     main_layout.addWidget(group_box("Operating System:", os_info_layout))
 
