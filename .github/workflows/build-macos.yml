@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-latest
 
     steps:
       - name: Checkout code
@@ -21,9 +21,15 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9.20'
-          architecture: 'x64'
+          python-version: '3.9.13'
+          architecture: 'arm64'
           cache: 'pip'
+
+      - name: Get Shortened Commit SHA
+        id: shorten_commit_sha
+        uses: iendeavor/shorten-commit-sha@v2.0.3
+        with:
+          length: 7
 
       - name: Create virtual environment
         run: python3 -m venv .venv
@@ -46,6 +52,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MetalSlugFontReborn-v1.x.x-macOS-x64-Qt
+          name: MetalSlugFontReborn-${{ steps.shorten_commit_sha.outputs.shortened_commit_sha }}-macOS-Arm64-Qt
           path: dist/MetalSlugFontReborn
           compression-level: 9
