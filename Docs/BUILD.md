@@ -9,7 +9,7 @@
 - [Compiling](#compiling)
    - [Windows details](#windows-details)
    - [Linux details](#linux-and-macOS-details)
-   - [MacOS details](#linux-and-macOS-details)
+   - [macOS details](#linux-and-macOS-details)
 
 # Platforms
 
@@ -19,12 +19,12 @@ platforms:
 | Operating System | Supported Versions                                         | Architecture |
 |------------------|------------------------------------------------------------|--------------|
 | Windows          | 11, 10                                                     | 64-bit       |
-| GNU/Linux        | Debian 12, Ubuntu 22.04, Fedora 40, Arch Linux, OpenSUSE   | 64-bit       |
-| macOS            | 15, 14, 13, 12, 11, 10.15                                  | 64-bit       |
+| GNU/Linux        | Debian 12, Ubuntu 22.04, Fedora 41, Arch Linux, OpenSUSE   | 64-bit       |
+| macOS            | 15, 14, 13, 12, 11, 10.15                                  | Arm64        |
 
 # Get the source code
 
-You can get the source code by downloading the archive `MetalSlugFontReborn-v1.x-Source.zip` from the [latest release](https://github.com/VermeilChan/MetalSlugFontReborn/releases/latest).
+You can get the source code by downloading the archive `Source code (zip)` from the [latest release](https://github.com/VermeilChan/MetalSlugFontReborn/releases/latest).
 
 Or you can clone the repository using the following command:
 ```sh
@@ -40,9 +40,9 @@ git pull
 To compile MetalSlugFontReborn you will need the following:
 
 - [Python](https://www.python.org/) 3.9 or later
-- [PyInstaller](https://pyinstaller.org/en/stable/) 6.10.0 or later
-- [PySide6-Essentials](https://pypi.org/project/PySide6/) 6.7.3 or later
-- [Pillow](https://pillow.readthedocs.io/en/stable/) 10.4.0 or later
+- [PyInstaller](https://pyinstaller.org/en/stable/) 6.11.1 or later
+- [PySide6-Essentials](https://pypi.org/project/PySide6/) 6.8.1 or later
+- [Pillow](https://pillow.readthedocs.io/en/stable/) 11.0.0 or later
 - [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/) 3.0.48 or later
 
 # Compiling
@@ -85,7 +85,7 @@ On SUSE:
 sudo zypper install -y python3 python3-pip python3-virtualenv libxcb-cursor0
 ```
 
-## Linux and MacOS details
+## Linux and macOS details
 
 Open the terminal and run:
 
