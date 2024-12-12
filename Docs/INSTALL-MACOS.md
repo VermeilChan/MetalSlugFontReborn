@@ -5,7 +5,7 @@
    ![Download MetalSlugFontReborn](Markdown/Docs/Download.png)
 
 **Extract and Run MetalSlugFontReborn:**
-   - Locate and extract `MetalSlugFontReborn-v1.x.x-Linux-x64-Qt.7z`.
+   - Locate and extract `MetalSlugFontReborn-v1.x.x-macOS-x64-Qt.tar.xz`.
    - Go to the `MetalSlugFontReborn` folder.
    - Run `MetalSlugFontReborn`.
 
