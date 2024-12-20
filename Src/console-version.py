@@ -27,9 +27,7 @@ save_locations = {
 
 
 def startup_message():
-    print(
-        f"\nMetalSlugFontReborn {msfr_version}, {system()} ({architecture()[0]}), Build Date {build_date}."
-    )
+    print(f"\nMetalSlugFontReborn {msfr_version}, {system()} ({architecture()[0]}), Build Date {build_date}.")
     print("Maintained by VermeilChan, GPL-3.0 Licensed.")
     print("Repository: https://github.com/VermeilChan/MetalSlugFontReborn\n")
     print("You can check the supported characters in SUPPORTED.txt.")
@@ -53,9 +51,7 @@ def select_font():
 
 def select_color(font):
     valid_colors = valid_colors_by_font[font]
-    return get_valid_input(
-        f"Available colors: {', '.join(valid_colors)}\nChoose a color: ", valid_colors
-    )
+    return get_valid_input(f"Available colors: {', '.join(valid_colors)}\nChoose a color: ", valid_colors)
 
 
 def select_save_location():
@@ -92,9 +88,7 @@ def ask_line_breaks():
     return None
 
 
-def generate_and_info(
-    text, font, color, save_location, compress=False, max_words_per_line=None
-):
+def generate_and_info(text, font, color, save_location, compress=False, max_words_per_line=None):
     if not text:
         return print("Input text is empty. Please enter some text.")
 

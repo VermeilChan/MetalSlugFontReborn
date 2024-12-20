@@ -1,7 +1,7 @@
 from PIL import Image
 from time import time
 from pathlib import Path
-from PySide6.QtWidgets import QWidget, QApplication, QMainWindow, QVBoxLayout, QLineEdit, QLabel, QComboBox, QPushButton, QFileDialog, QMessageBox, QCheckBox, QSpinBox, QHBoxLayout 
+from PySide6.QtWidgets import QWidget, QApplication, QMainWindow, QVBoxLayout, QLineEdit, QLabel, QComboBox, QPushButton, QFileDialog, QMessageBox, QCheckBox, QSpinBox, QHBoxLayout
 from PySide6.QtGui import QIcon
 from qt_utils import set_theme, load_theme, about_section, readable_size
 from image_generation import generate_filename, generate_image, get_font_paths, compress_image
@@ -113,9 +113,7 @@ class MetalSlugFontReborn(QMainWindow):
         options_layout.addWidget(self.words_per_line_spinbox)
         layout.addLayout(options_layout)
 
-        self.line_break_checkbox.stateChanged.connect(
-            self.toggle_words_per_line_spinbox
-        )
+        self.line_break_checkbox.stateChanged.connect(self.toggle_words_per_line_spinbox)
 
         browse_button = QPushButton("Browse", self)
         browse_button.clicked.connect(self.browse_save_location)
@@ -148,6 +146,9 @@ class MetalSlugFontReborn(QMainWindow):
         theme_menu = menubar.addMenu("Themes")
         theme_menu.addAction("Light Mode").triggered.connect(lambda: set_theme("Light"))
         theme_menu.addAction("Dark Mode").triggered.connect(lambda: set_theme("Dark"))
+        theme_menu.addAction("Dracula Mode").triggered.connect(lambda: set_theme("Dracula"))
+        theme_menu.addAction("Monokai Mode").triggered.connect(lambda: set_theme("Monokai"))
+        theme_menu.addAction("Arc Dark Mode").triggered.connect(lambda: set_theme("Arc Dark"))
 
     def update_color_combobox(self):
         font = int(self.font_combobox.currentText())
@@ -173,16 +174,10 @@ class MetalSlugFontReborn(QMainWindow):
         save_location = self.save_location_entry.text()
         compress = self.compress_checkbox.isChecked()
 
-        max_words_per_line = (
-            self.words_per_line_spinbox.value()
-            if self.line_break_checkbox.isChecked()
-            else None
-        )
+        max_words_per_line = (self.words_per_line_spinbox.value() if self.line_break_checkbox.isChecked() else None)
 
         text = text.upper() if font == 5 else text
-        ImageGenerator.generate_and_display_message(
-            text, font, color, save_location, compress, self, max_words_per_line
-        )
+        ImageGenerator.generate_and_display_message(text, font, color, save_location, compress, self, max_words_per_line)
 
 
 if __name__ == "__main__":

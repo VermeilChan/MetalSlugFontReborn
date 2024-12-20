@@ -3,30 +3,29 @@ from pathlib import Path
 from PIL import Image
 from special_characters import special_characters
 
-
 def generate_filename(_):
     return f"{uuid4().hex}.png"
 
-
 def get_font_paths(font, color):
     base_path = Path("Assets") / "Fonts" / f"Font-{font}" / f"MS-{color}"
-    return [base_path / folder for folder in ("Letters", "Numbers", "Symbols")]
-
+    return {
+        "letters": base_path / "Letters",
+        "numbers": base_path / "Numbers",
+        "symbols": base_path / "Symbols",
+    }
 
 def get_character_image_path(character, font_paths):
-    characters_folder, numbers_folder, symbols_folder = font_paths
-
     if character.isspace():
         return None
-    elif character.islower():
-        return characters_folder / "Lower-Case" / f"{character}.png"
-    elif character.isupper():
-        return characters_folder / "Upper-Case" / f"{character}.png"
-    elif character.isdigit():
-        return numbers_folder / f"{character}.png"
-    else:
-        return symbols_folder / f"{special_characters.get(character, '')}.png"
 
+    if character.islower():
+        return font_paths["letters"] / "Lower-Case" / f"{character}.png"
+    if character.isupper():
+        return font_paths["letters"] / "Upper-Case" / f"{character}.png"
+    if character.isdigit():
+        return font_paths["numbers"] / f"{character}.png"
+
+    return font_paths["symbols"] / f"{special_characters.get(character, '')}.png"
 
 def get_character_image(character, font_paths):
     if character.isspace():
@@ -35,16 +34,14 @@ def get_character_image(character, font_paths):
     character_image_path = get_character_image_path(character, font_paths)
     if not character_image_path or not character_image_path.is_file():
         raise FileNotFoundError(
-            f"The character '{character}' is not supported, please check SUPPORTED.txt"
+            f"The character '{character}' is not supported. Please check SUPPORTED.txt"
         )
 
     return Image.open(character_image_path)
 
-
 def compress_image(image_path):
     with Image.open(image_path) as image:
         image.save(image_path, optimize=True)
-
 
 def apply_line_breaks(text, max_words_per_line):
     words = text.split()
@@ -53,20 +50,14 @@ def apply_line_breaks(text, max_words_per_line):
         for i in range(0, len(words), max_words_per_line)
     ]
 
-
 def generate_image(text, filename, font_paths, save_location, max_words_per_line=None):
-    lines = (
-        apply_line_breaks(text, max_words_per_line) if max_words_per_line else [text]
-    )
+    lines = apply_line_breaks(text, max_words_per_line) if max_words_per_line else [text]
 
     line_images = []
     max_width = total_height = 0
 
     for line in lines:
-        font_images = {
-            character: get_character_image(character, font_paths)
-            for character in set(line)
-        }
+        font_images = {character: get_character_image(character, font_paths) for character in set(line)}
         line_width = sum(font_images[character].width for character in line)
         line_height = max(font_images[character].height for character in line)
 

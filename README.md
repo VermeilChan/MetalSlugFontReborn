@@ -59,8 +59,8 @@ If you have a GitHub account and have found this repository helpful, please cons
 | Operating System | Supported Versions                                         | Architecture |
 |------------------|------------------------------------------------------------|--------------|
 | Windows          | 11, 10                                                     | 64-bit       |
-| GNU/Linux        | Debian 12, Ubuntu 22.04, Fedora 40, Arch Linux, OpenSUSE   | 64-bit       |
-| macOS            | 14, 13, 12, 11, 10.15                                      | 64-bit       |
+| GNU/Linux        | Debian 12, Ubuntu 22.04, Fedora 41, Arch Linux, OpenSUSE   | 64-bit       |
+| macOS            | 15, 14, 13, 12, 11, 10.15                                  | Arm64        |
 
 #### Resource Requirements
 
