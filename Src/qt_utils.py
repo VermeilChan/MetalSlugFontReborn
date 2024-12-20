@@ -117,7 +117,7 @@ def about_section(parent):
     icon_label.setPixmap(pixmap)
 
     info_layout = QVBoxLayout()
-    info_layout.addWidget(QLabel(f"MetalSlugFontReborn ({normalize_architecture(architecture()[0])})"))
+    info_layout.addWidget(QLabel(f"MetalSlugFontReborn"))
     info_layout.addWidget(QLabel("GPL-3.0 Licensed"))
 
     github_link = QLabel(
