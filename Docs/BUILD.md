@@ -18,9 +18,9 @@ platforms:
 
 | Operating System | Supported Versions                                         | Architecture |
 |------------------|------------------------------------------------------------|--------------|
-| Windows          | 11, 10                                                     | 64-bit       |
-| GNU/Linux        | Debian 12, Ubuntu 22.04, Fedora 41, Arch Linux, OpenSUSE   | 64-bit       |
-| macOS            | 15, 14, 13, 12, 11, 10.15                                  | Arm64        |
+| Windows          | 11, 10                                                     | 64-Bit       |
+| GNU/Linux        | Debian 12, Ubuntu 22.04, Fedora 41, Arch Linux, OpenSUSE   | 64-Bit       |
+| macOS            | 15, 14, 13, 12                                             | ARM64        |
 
 # Get the source code
 
@@ -42,7 +42,7 @@ To compile MetalSlugFontReborn you will need the following:
 - [Python](https://www.python.org/) 3.10 or later
 - [PyInstaller](https://pyinstaller.org/en/stable/) 6.11.1 or later
 - [PySide6-Essentials](https://pypi.org/project/PySide6/) 6.8.1 or later
-- [Pillow](https://pillow.readthedocs.io/en/stable/) 11.0.0 or later
+- [Pillow](https://pillow.readthedocs.io/en/stable/) 11.1.0 or later
 - [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/) 3.0.48 or later
 
 # Compiling
