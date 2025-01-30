@@ -1,12 +1,16 @@
-from PIL import Image
 from time import time
 from pathlib import Path
-from PySide6.QtWidgets import QWidget, QApplication, QMainWindow, QVBoxLayout, QLineEdit, QLabel, QComboBox, QPushButton, QFileDialog, QMessageBox, QCheckBox, QSpinBox, QHBoxLayout
+from PIL import Image
 from PySide6.QtGui import QIcon
-from qt_utils import set_theme, load_theme, about_section, readable_size
-from image_generation import generate_filename, generate_image, get_font_paths, compress_image
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
+                            QHBoxLayout, QLabel, QLineEdit, QMainWindow,
+                            QMessageBox, QPushButton, QSpinBox, QVBoxLayout,
+                            QWidget)
+from qt_utils import about_section, load_theme, readable_size, set_theme
+from image_generation import (compress_image, generate_filename,
+                            generate_image, get_font_paths)
 
-valid_colors_by_font = {
+FONT_COLORS = {
     1: ["Blue", "Orange", "Gold"],
     2: ["Blue", "Orange", "Gold"],
     3: ["Blue", "Orange"],
@@ -14,175 +18,157 @@ valid_colors_by_font = {
     5: ["Orange"],
 }
 
-
-class ImageGenerator:
-    icon_path = "Assets/Icons/Raubtier.ico"
-
+class ImageProcessor:
     @staticmethod
-    def generate_and_display_message(
-        text, font, color, save_location, compress, parent=None, max_words_per_line=None
-    ):
+    def process_image(text, font, color, save_path, compress, parent, max_words=None):
         if not text.strip():
-            return QMessageBox.critical(parent,"MetalSlugFontReborn", "Input text is empty. Please enter some text.")
-
+            QMessageBox.critical(parent, "Error", "Input text cannot be empty")
+            return
 
         try:
-            start_time = time()
+            start = time()
             filename = generate_filename(text)
             font_paths = get_font_paths(font, color)
-            image_path, error_message = generate_image(
-                text, filename, font_paths, save_location, max_words_per_line
-            )
-
-            if error_message:
-                return QMessageBox.critical(parent, "MetalSlugFontReborn", f"Error: {error_message}")
+            
+            image_path, error = generate_image(text, filename, font_paths, save_path, max_words)
+            if error:
+                raise RuntimeError(error)
 
             if compress:
                 compress_image(image_path)
 
-            end_time = time()
-            image_path = Path(image_path)
-            with Image.open(image_path) as image:
-                width, height = image.size
-                size_bytes = image_path.stat().st_size
-                size_human_readable = readable_size(size_bytes)
-                success_message = (
-                    f"Successfully generated image :)\n"
-                    f"Image path: {image_path}\n"
-                    f"Width: {width}, Height: {height}\n"
-                    f"Size: {size_human_readable}\n"
-                    f"Generation time: {end_time - start_time:.3f}s"
-                )
-            QMessageBox.information(parent, "MetalSlugFontReborn", success_message)
+            ImageProcessor.show_success_message(image_path, start, parent)
+        
+        except Exception as e:
+            QMessageBox.critical(parent, "Error", str(e))
 
-        except FileNotFoundError as e:
-            QMessageBox.critical(parent, "MetalSlugFontReborn", str(e))
+    @staticmethod
+    def show_success_message(image_path, start_time, parent):
+        path = Path(image_path)
+        with Image.open(path) as img:
+            size = readable_size(path.stat().st_size)
+            message = f"""
+            Successfully generated image :)
+            Path: \n{path}
+            Dimensions: {img.width}x{img.height}
+            Size: {size}
+            Time: {time() - start_time:.3f}s
+            """
+            QMessageBox.information(parent, "Success", message.strip())
 
-
-class MetalSlugFontReborn(QMainWindow):
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("MetalSlugFontReborn")
-        self.setWindowIcon(QIcon(ImageGenerator.icon_path))
+        self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
+        self.setup_ui()
         load_theme()
 
-        self.default_save_location = str(Path.home() / "Desktop")
-        self.init_ui()
+    def setup_ui(self):
+        central = QWidget()
+        self.setCentralWidget(central)
+        layout = QVBoxLayout(central)
+
+        self.add_text_input(layout)
+        self.add_font_selector(layout)
+        self.add_color_selector(layout)
+        self.add_options(layout)
+        self.add_action_buttons(layout)
+        self.create_menubar()
+
         self.setMaximumSize(self.size())
 
-    def init_ui(self):
-        central_widget = QWidget(self)
-        self.setCentralWidget(central_widget)
-        layout = QVBoxLayout(central_widget)
-
+    def add_text_input(self, layout):
         layout.addWidget(QLabel("Text to Generate:"))
-        self.text_entry = QLineEdit()
-        self.text_entry.setMinimumWidth(600)
-        layout.addWidget(self.text_entry)
+        self.text_input = QLineEdit()
+        self.text_input.setMinimumWidth(600)
+        layout.addWidget(self.text_input)
 
+    def add_font_selector(self, layout):
         layout.addWidget(QLabel("Select Font:"))
-        self.font_combobox = QComboBox()
-        self.font_combobox.addItems(map(str, sorted(valid_colors_by_font.keys())))
-        layout.addWidget(self.font_combobox)
+        self.font_select = QComboBox()
+        self.font_select.addItems(map(str, sorted(FONT_COLORS)))
+        self.font_select.currentIndexChanged.connect(self.update_colors)
+        layout.addWidget(self.font_select)
 
+    def add_color_selector(self, layout):
         layout.addWidget(QLabel("Select Color:"))
-        self.color_combobox = QComboBox()
-        layout.addWidget(self.color_combobox)
+        self.color_select = QComboBox()
+        layout.addWidget(self.color_select)
+        self.update_colors()
 
-        options_layout = QHBoxLayout()
-        self.compress_checkbox = QCheckBox("Compression")
-        self.compress_checkbox.setToolTip(
-            "Reduces image size, but may increase processing time."
-        )
-        options_layout.addWidget(self.compress_checkbox)
+    def add_options(self, layout):
+        options = QHBoxLayout()
+        self.compress_option = QCheckBox("Compression")
+        self.line_break_option = QCheckBox("Line Break")
+        
+        self.max_words_label = QLabel("Max Words Per Line:")
+        self.max_words_input = QSpinBox()
+        self.max_words_input.setRange(1, 100)
+        self.max_words_input.setFixedWidth(50)
+        
+        self.line_break_option.toggled.connect(self.toggle_word_limit)
+        self.toggle_word_limit(False)
+        
+        options.addWidget(self.compress_option)
+        options.addWidget(self.line_break_option)
+        options.addWidget(self.max_words_label)
+        options.addWidget(self.max_words_input)
+        layout.addLayout(options)
 
-        self.line_break_checkbox = QCheckBox("Line Break")
-        self.line_break_checkbox.setToolTip(
-            "Insert line breaks after a number of words, but may increase processing time."
-        )
-        options_layout.addWidget(self.line_break_checkbox)
+    def add_action_buttons(self, layout):
+        browse_btn = QPushButton("Browse")
+        browse_btn.clicked.connect(self.select_save_path)
+        
+        generate_btn = QPushButton("Generate and Save Image")
+        generate_btn.clicked.connect(self.generate_image)
+        
+        layout.addWidget(browse_btn)
+        layout.addWidget(generate_btn)
 
-        self.words_per_line_label = QLabel("Max Words Per Line:")
-        self.words_per_line_spinbox = QSpinBox()
-        self.words_per_line_spinbox.setRange(1, 100)
-        self.words_per_line_spinbox.setFixedWidth(50)
-        self.words_per_line_label.setVisible(False)
-        self.words_per_line_spinbox.setVisible(False)
-
-        options_layout.addWidget(self.words_per_line_label)
-        options_layout.addWidget(self.words_per_line_spinbox)
-        layout.addLayout(options_layout)
-
-        self.line_break_checkbox.stateChanged.connect(self.toggle_words_per_line_spinbox)
-
-        browse_button = QPushButton("Browse", self)
-        browse_button.clicked.connect(self.browse_save_location)
-        layout.addWidget(browse_button)
-
-        generate_button = QPushButton("Generate and Save Image", self)
-        generate_button.clicked.connect(self.generate_and_display_image)
-        layout.addWidget(generate_button)
-
-        self.save_location_label = QLabel("Image Save Location:")
-        self.save_location_entry = QLineEdit()
-        self.save_location_entry.setReadOnly(True)
-        self.save_location_entry.setText(self.default_save_location)
-        self.save_location_label.setVisible(False)
-        self.save_location_entry.setVisible(False)
-
-        layout.addWidget(self.save_location_label)
-        layout.addWidget(self.save_location_entry)
-
-        self.font_combobox.currentIndexChanged.connect(self.update_color_combobox)
-        self.update_color_combobox()
-        self.init_menubar()
-
-    def init_menubar(self):
+    def create_menubar(self):
         menubar = self.menuBar()
+        
         help_menu = menubar.addMenu("Help")
-        about_action = help_menu.addAction("About")
-        about_action.triggered.connect(lambda: about_section(self))
+        help_menu.addAction("About").triggered.connect(lambda: about_section(self))
 
         theme_menu = menubar.addMenu("Themes")
-        theme_menu.addAction("Light Mode").triggered.connect(lambda: set_theme("Light"))
-        theme_menu.addAction("Dark Mode").triggered.connect(lambda: set_theme("Dark"))
-        theme_menu.addAction("Dracula Mode").triggered.connect(lambda: set_theme("Dracula"))
-        theme_menu.addAction("Monokai Mode").triggered.connect(lambda: set_theme("Monokai"))
-        theme_menu.addAction("Arc Dark Mode").triggered.connect(lambda: set_theme("Arc Dark"))
+        for theme in ["Light", "Dark", "Dracula", "Monokai", "Arc Dark"]:
+            theme_menu.addAction(f"{theme} Mode").triggered.connect(
+                lambda _, t=theme: set_theme(t)
+            )
 
-    def update_color_combobox(self):
-        font = int(self.font_combobox.currentText())
-        self.color_combobox.clear()
-        self.color_combobox.addItems(valid_colors_by_font[font])
+    def update_colors(self):
+        self.color_select.clear()
+        font = int(self.font_select.currentText())
+        self.color_select.addItems(FONT_COLORS[font])
 
-    def toggle_words_per_line_spinbox(self):
-        is_checked = self.line_break_checkbox.isChecked()
-        self.words_per_line_label.setVisible(is_checked)
-        self.words_per_line_spinbox.setVisible(is_checked)
+    def toggle_word_limit(self, visible):
+        self.max_words_label.setVisible(visible)
+        self.max_words_input.setVisible(visible)
 
-    def browse_save_location(self):
-        save_location = QFileDialog.getExistingDirectory(
-            self, "Select Image Save Location", self.default_save_location
+    def select_save_path(self):
+        if path := QFileDialog.getExistingDirectory(None, "Select Save Location", str(Path.home() / "Desktop")):
+            self.save_path = path
+
+    def generate_image(self):
+        text = self.text_input.text()
+        if (font := int(self.font_select.currentText())) == 5:
+            text = text.upper()
+
+        ImageProcessor.process_image(
+            text=text,
+            font=font,
+            color=self.color_select.currentText(),
+            save_path=Path.home() / "Desktop",
+            compress=self.compress_option.isChecked(),
+            parent=self,
+            max_words=self.max_words_input.value() if self.line_break_option.isChecked() else None
         )
-        if save_location:
-            self.save_location_entry.setText(save_location)
-
-    def generate_and_display_image(self):
-        text = self.text_entry.text()
-        font = int(self.font_combobox.currentText())
-        color = self.color_combobox.currentText()
-        save_location = self.save_location_entry.text()
-        compress = self.compress_checkbox.isChecked()
-
-        max_words_per_line = (self.words_per_line_spinbox.value() if self.line_break_checkbox.isChecked() else None)
-
-        text = text.upper() if font == 5 else text
-        ImageGenerator.generate_and_display_message(text, font, color, save_location, compress, self, max_words_per_line)
-
 
 if __name__ == "__main__":
     app = QApplication([])
     app.setStyle("Fusion")
-    window = MetalSlugFontReborn()
+    window = MainWindow()
     window.show()
     app.exec()
