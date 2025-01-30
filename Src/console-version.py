@@ -3,11 +3,10 @@ from time import time
 from PIL import Image
 from pathlib import Path
 from prompt_toolkit import prompt
-from platform import system, architecture
 from prompt_toolkit.completion import WordCompleter
 from image_generation import generate_filename, generate_image, get_font_paths, compress_image
 from info import msfr_version, build_date
-from qt_utils import readable_size
+from qt_utils import readable_size, get_os_info
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
@@ -25,119 +24,110 @@ save_locations = {
     "Pictures": Path.home() / "Pictures",
 }
 
-
 def startup_message():
-    print(f"\nMetalSlugFontReborn {msfr_version}, {system()} ({architecture()[0]}), Build Date {build_date}.")
-    print("Maintained by VermeilChan, GPL-3.0 Licensed.")
-    print("Repository: https://github.com/VermeilChan/MetalSlugFontReborn\n")
-    print("You can check the supported characters in SUPPORTED.txt.")
-    print("Type 'exit' or press CTRL+C to close the program.")
+    print(f"MetalSlugFontReborn {msfr_version}, {get_os_info()}.")
+    print(f"Build Date: {build_date}.\nSupported characters in SUPPORTED.txt.")
+    print("Type 'exit' or press CTRL+C to close.")
 
-
-def get_valid_input(prompt_text, valid_values):
-    completer = WordCompleter(valid_values)
+def get_valid_input(prompt_text, valid_options):
+    completer = WordCompleter(valid_options, ignore_case=True)
     while True:
         user_input = prompt(prompt_text, completer=completer).title()
         if user_input == "Exit":
             sys.exit("Closing...")
-        if user_input in valid_values:
+        if user_input in valid_options: 
             return user_input
         print("Invalid input. Please try again.")
 
-
 def select_font():
-    return int(get_valid_input("\nChoose a font (1-5): ", list(map(str, range(1, 6)))))
+    return int(get_valid_input("\nChoose a font (1-5): ", [str(n) for n in range(1, 6)]))
 
-
-def select_color(font):
-    valid_colors = valid_colors_by_font[font]
-    return get_valid_input(f"Available colors: {', '.join(valid_colors)}\nChoose a color: ", valid_colors)
-
+def select_color(font_number):
+    colors = valid_colors_by_font[font_number]
+    return get_valid_input(f"Available colors: {', '.join(colors)}\nChoose color: ", colors)
 
 def select_save_location():
     options = list(save_locations.keys()) + ["Custom"]
-    choice = get_valid_input(f"Select save location:\n{', '.join(options)}: ", options)
+    while True:
+        choice = get_valid_input(f"Save location ({', '.join(options)}): ", options)
+        if choice != "Custom":
+            return save_locations[choice]
+        
+        custom_path = Path(prompt("Enter custom path: "))
+        try:
+            custom_path.mkdir(parents=True, exist_ok=True)
+            return custom_path
+        except (OSError, PermissionError) as error:
+            print(f"Path creation failed: {error}")
 
-    if choice == "Custom":
-        custom_path = Path(prompt("Enter a custom path for saving: "))
-        if not custom_path.exists():
-            try:
-                custom_path.mkdir(parents=True)
-            except Exception as e:
-                print(f"Could not create the specified path. Error: {e}")
-                return select_save_location()
-        return custom_path
-    return save_locations[choice]
+def get_yes_no(prompt_text):
+    return get_valid_input(prompt_text, ["Yes", "No"]) == "Yes"
 
+def get_positive_integer(prompt_text):
+    while True:
+        try:
+            value = int(prompt(prompt_text))
+            return value if value > 0 else print("Enter positive number.")
+        except ValueError:
+            print("Invalid number. Try again.")
 
-def ask_compression():
-    return get_valid_input("Do you want to compress the image? (Yes/No): ", ["Yes", "No"]) == "Yes"
+def handle_image_creation(text, font_number, color, save_path, max_words):
+    filename = generate_filename(text)
+    font_paths = get_font_paths(font_number, color)
+    image_path, error = generate_image(text, filename, font_paths, save_path, max_words)
+    if image_path:
+        image_path = Path(image_path)
+    return image_path, error
 
+def display_image_info(image_path, start_time):
+    end_time = time()
+    image_path = Path(image_path)
+    with Image.open(image_path) as img:
+        size = readable_size(image_path.stat().st_size)
+        print(f"Image path: {image_path}\n"
+              f"Dimensions: {img.width}x{img.height} | Size: {size} | "
+              f"Time: {end_time - start_time:.3f}s\n")
 
-def ask_line_breaks():
-    line_break_choice = get_valid_input("Do you want to enable line breaks? (Yes/No): ", ["Yes", "No"])
-    if line_break_choice == "Yes":
-        while True:
-            try:
-                max_words_per_line = int(prompt("Enter the maximum number of words per line: "))
-                if max_words_per_line > 0:
-                    return max_words_per_line
-                print("Please enter a positive number.")
-            except ValueError:
-                print("Invalid input. Please enter a number.")
-    return None
-
-
-def generate_and_info(text, font, color, save_location, compress=False, max_words_per_line=None):
+def process_text(text, font_number, color, save_path, compress, max_words):
     if not text:
-        return print("Input text is empty. Please enter some text.")
+        print("Empty input. Please enter text.")
+        return
 
-    text = text.upper() if font == 5 else text
+    processed_text = text.upper() if font_number == 5 else text
+    start_time = time()
 
     try:
-        start_time = time()
-        filename = generate_filename(text)
-        font_paths = get_font_paths(font, color)
-        image_path, error_message = generate_image(text, filename, font_paths, save_location, max_words_per_line)
-
-        if error_message:
-            print(f"Error generating image: {error_message}")
+        image_path, error = handle_image_creation(
+            processed_text, font_number, color, save_path, max_words
+        )
+        if error:
+            print(f"Generation error: {error}")
             return
 
         if compress:
             compress_image(image_path)
 
-        end_time = time()
-        image_path = Path(image_path)
-        with Image.open(image_path) as image:
-            width, height = image.size
-            size_bytes = image_path.stat().st_size
-            size_human_readable = readable_size(size_bytes)
-            success_message = (
-                f"Image path: {image_path}\n"
-                f"Width: {width}, Height: {height} | Size: {size_human_readable} | Generation time: {end_time - start_time:.3f}s\n")
-            print(success_message)
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
+        display_image_info(image_path, start_time)
+    except Exception as error:
+        print(f"Processing error: {error}")
 
 def main():
     startup_message()
     font = select_font()
     color = select_color(font)
-    save_location = select_save_location()
+    save_path = select_save_location()
+    compress = get_yes_no("Compress image? (Yes/No): ")
+    max_words = None
 
-    compress = ask_compression()
-    max_words_per_line = ask_line_breaks()
+    if get_yes_no("Enable line breaks? (Yes/No): "):
+        max_words = get_positive_integer("Enter max words per line: ")
 
     try:
         while True:
-            text = prompt("Enter the text you want to generate: ")
-            generate_and_info(text, font, color, save_location, compress, max_words_per_line)
+            text = prompt("Enter text to generate: ")
+            process_text(text, font, color, save_path, compress, max_words)
     except KeyboardInterrupt:
         sys.exit("Closing...")
-
 
 if __name__ == "__main__":
     main()
