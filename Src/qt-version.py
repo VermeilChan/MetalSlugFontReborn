@@ -155,12 +155,12 @@ class MainWindow(QMainWindow):
         text = self.text_input.text()
         if (font := int(self.font_select.currentText())) == 5:
             text = text.upper()
-
+        save_path = getattr(self, "save_path", Path.home() / "Desktop")
         ImageProcessor.process_image(
             text=text,
             font=font,
             color=self.color_select.currentText(),
-            save_path=Path.home() / "Desktop",
+            save_path=save_path,
             compress=self.compress_option.isChecked(),
             parent=self,
             max_words=self.max_words_input.value() if self.line_break_option.isChecked() else None
