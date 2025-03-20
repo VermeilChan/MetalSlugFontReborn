@@ -47,14 +47,14 @@ class ImageProcessor:
         path = Path(image_path)
         with Image.open(path) as img:
             size = readable_size(path.stat().st_size)
-            message = f"""
-            Successfully generated image :)
-            Path: \n{path}
-            Dimensions: {img.width}x{img.height}
-            Size: {size}
-            Time: {time() - start_time:.3f}s
-            """
-            QMessageBox.information(parent, "Success", message.strip())
+            message = (
+                "Successfully generated image :)\n\n"
+                f"Path: {path}\n"
+                f"Dimensions: {img.width} x {img.height}\n"
+                f"Size: {size}\n"
+                f"Time: {time() - start_time:.3f} seconds"
+            )
+            QMessageBox.information(parent, "Success", message)
 
 class MainWindow(QMainWindow):
     def __init__(self):
