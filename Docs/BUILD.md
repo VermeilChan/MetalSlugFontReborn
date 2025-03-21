@@ -40,16 +40,16 @@ git pull
 To compile MetalSlugFontReborn you will need the following:
 
 - [Python](https://www.python.org/) 3.10 or later
-- [PyInstaller](https://pyinstaller.org/en/stable/) 6.11.1 or later
-- [PySide6-Essentials](https://pypi.org/project/PySide6/) 6.8.1 or later
+- [PyInstaller](https://pyinstaller.org/en/stable/) 6.12.0 or later
+- [PySide6-Essentials](https://pypi.org/project/PySide6/) 6.8.2 or later
 - [Pillow](https://pillow.readthedocs.io/en/stable/) 11.1.0 or later
-- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/) 3.0.48 or later
+- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/) 3.0.50 or later
 
 # Compiling
 
 ## Windows details
 
-Open a the command prompt (`cmd.exe`) and run:
+Open Powershell and run:
 
 ```sh
 cd MetalSlugFontReborn
@@ -58,11 +58,10 @@ py -m venv .venv
 pip install -r requirements.txt
 ```
 ```sh
-pyinstaller --noconfirm --onedir --windowed --optimize "2" --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --version-file "versionfile.txt" --add-data "Assets;Assets/" --add-data "Src/special_characters.py;." --add-data "Src/image_generation.py;." --add-data "Src/themes.py;." --add-data "Src/qt_utils.py;." --add-data "Src/info.py;." --add-data "Docs/SUPPORTED.txt;."  "Src/qt-version.py"
+pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --optimize "2" --version-file "versionfile.txt" --add-data "Src/image_generation.py;." --add-data "Src/qt_utils.py;." --add-data "Src/special_characters.py;." --add-data "Src/themes.py;." --add-data "Src/utils.py;." --add-data "Docs/SUPPORTED.txt;." --add-data "Assets;Assets/"  "Src/qt-version.py"
+Move-Item -Path "Src\_internal\Assets" -Destination "dist\MetalSlugFontReborn"
+Move-Item -Path "Src\_internal\SUPPORTED.txt" -Destination "dist\MetalSlugFontReborn"
 ```
-
-- Move the `Assets` folder and `SUPPORTED.txt` out of `_internal` folder to `dist/MetalSlugFontReborn`.
-- The executable will be located at `dist/MetalSlugFontReborn/MetalSlugFontReborn.exe`
 
 ---
 
@@ -96,8 +95,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 ```sh
-pyinstaller --noconfirm --onedir --windowed --optimize "2" --strip --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/qt_utils.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
+pyinstaller --noconfirm --onedir --windowed --strip --name "MetalSlugFontReborn" --clean --optimize "2" --add-data "Src/image_generation.py:." --add-data "Src/qt_utils.py:." --add-data "Src/special_characters.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Docs/SUPPORTED.txt:." --add-data "Assets:Assets/"  "Src/qt-version.py"
+mv Src/_internal/Assets dist/MetalSlugFontReborn/
+mv Src/_internal/SUPPORTED.txt dist/MetalSlugFontReborn/
 ```
-
-- Move the `Assets` folder and `SUPPORTED.txt` out of `_internal` folder to `dist/MetalSlugFontReborn`.
-- The executable will be located at `dist/MetalSlugFontReborn/MetalSlugFontReborn`
