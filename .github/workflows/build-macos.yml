@@ -16,10 +16,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: '3.10.11'
           architecture: 'arm64'
@@ -27,7 +27,7 @@ jobs:
 
       - name: Get Shortened Commit SHA
         id: shorten_commit_sha
-        uses: iendeavor/shorten-commit-sha@v2.0.3
+        uses: iendeavor/shorten-commit-sha@v2.0.4
         with:
           length: 7
 
@@ -42,7 +42,7 @@ jobs:
 
       - name: Build with PyInstaller
         run: |
-          pyinstaller --noconfirm --onedir --windowed --optimize "2" --strip --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/qt_utils.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
+          pyinstaller --noconfirm --onedir --windowed --strip --name "MetalSlugFontReborn" --clean --optimize "2" --add-data "Src/image_generation.py:." --add-data "Src/qt_utils.py:." --add-data "Src/special_characters.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Docs/SUPPORTED.txt:." --add-data "Assets:Assets/"  "Src/qt-version.py"
 
       - name: Move Assets and SUPPORTED.txt
         run: |
@@ -50,8 +50,8 @@ jobs:
           mv dist/MetalSlugFontReborn/_internal/SUPPORTED.txt dist/MetalSlugFontReborn/
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
-          name: MetalSlugFontReborn-${{ steps.shorten_commit_sha.outputs.shortened_commit_sha }}-macOS-Arm64-Qt
+          name: MetalSlugFontReborn-${{ steps.shorten_commit_sha.outputs.shortened_commit_sha }}-macOS-ARM64-PySide6
           path: dist/MetalSlugFontReborn
           compression-level: 9

@@ -1,5 +1,0 @@
-msfr_version = "1.10.1 ()"
-pyinstaller_version = "6.11.1"
-pyside6_version = "6.8.1"
-pillow_version = "11.0.0"
-build_date = "2024-12-20 (Friday, December 20, 2024)"
