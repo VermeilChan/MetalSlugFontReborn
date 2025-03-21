@@ -5,8 +5,7 @@ from pathlib import Path
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 from image_generation import generate_filename, generate_image, get_font_paths, compress_image
-from info import msfr_version, build_date
-from qt_utils import readable_size, get_os_info
+from utils import msfr_version, build_date, readable_size, get_os_info
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],

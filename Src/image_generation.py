@@ -29,7 +29,7 @@ def get_character_path(character, font_paths):
 
 def create_character_image(character, font_paths):
     if character.isspace():
-        return Image.new("RGBA", (30, 0), (0, 0, 0, 0))
+        return Image.new("RGBA", (25, 0), (0, 0, 0, 0))
     
     if (path := get_character_path(character, font_paths)) and path.is_file():
         return Image.open(path)

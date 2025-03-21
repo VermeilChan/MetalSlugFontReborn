@@ -3,12 +3,11 @@ from pathlib import Path
 from PIL import Image
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
-                            QHBoxLayout, QLabel, QLineEdit, QMainWindow,
-                            QMessageBox, QPushButton, QSpinBox, QVBoxLayout,
-                            QWidget)
-from qt_utils import about_section, load_theme, readable_size, set_theme
-from image_generation import (compress_image, generate_filename,
-                            generate_image, get_font_paths)
+                               QHBoxLayout, QLabel, QLineEdit, QMainWindow, QWidget,
+                               QMessageBox, QPushButton, QSpinBox, QVBoxLayout)
+from utils import readable_size
+from qt_utils import about_section, load_theme, set_theme
+from image_generation import (compress_image, generate_filename, generate_image, get_font_paths)
 
 FONT_COLORS = {
     1: ["Blue", "Orange", "Gold"],
