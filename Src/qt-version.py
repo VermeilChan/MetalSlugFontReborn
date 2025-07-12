@@ -168,8 +168,8 @@ class MainWindow(QMainWindow):
         )
 
 def detect_windows_version():
-    if system() == "Windows":
-        version = version()
+    if platform.system() == "Windows":
+        version = platform.version()
         build = int(version.split('.')[-1])
         if build >= 22000:
             return 11
@@ -180,14 +180,14 @@ def detect_windows_version():
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    system = platform.system()
-    if system == "Windows":
+    os_name = platform.system()
+    if os_name == "Windows":
         win_ver = detect_windows_version()
         if win_ver == 11:
             app.setStyle("FluentWinUI3")
         else:
             app.setStyle("Fusion")
-    elif system == "Darwin":
+    elif os_name == "Darwin":
         app.setStyle("macOS")
     else:
         app.setStyle("Fusion")
