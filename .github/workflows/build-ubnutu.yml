@@ -1,5 +1,8 @@
 name: Build Ubuntu
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
