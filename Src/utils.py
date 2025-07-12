@@ -67,5 +67,5 @@ def get_os_info():
     handler = handlers.get(system_name)
     return handler() if handler else f"Unknown OS (System: {system_name})"
 
-msfr_version = f"1.11.0 (bb7f19d)"
-build_date = "2025-03-21 (Friday, March 21, 2025)"
+msfr_version = f"1.11.1 (49234ed)"
+build_date = "2025-07-12 (Saturday, July 12, 2025)"
