@@ -1,4 +1,4 @@
-PySide6-Essentials>=6.8.2
-prompt_toolkit>=3.0.50
-pillow>=11.1.0
-pyinstaller>=6.11.1
+PySide6-Essentials>=6.9.1
+prompt_toolkit>=3.0.51
+pillow>=11.3.0
+pyinstaller>=6.14.2

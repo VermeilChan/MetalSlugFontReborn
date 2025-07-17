@@ -1,3 +1,5 @@
+import sys
+import platform
 from time import time
 from pathlib import Path
 from PIL import Image
@@ -165,9 +167,31 @@ class MainWindow(QMainWindow):
             max_words=self.max_words_input.value() if self.line_break_option.isChecked() else None
         )
 
+def detect_windows_version():
+    if platform.system() == "Windows":
+        version = platform.version()
+        build = int(version.split('.')[-1])
+        if build >= 22000:
+            return 11
+        else:
+            return 10
+    return None
+
 if __name__ == "__main__":
-    app = QApplication([])
-    app.setStyle("Fusion")
+    app = QApplication(sys.argv)
+
+    os_name = platform.system()
+    if os_name == "Windows":
+        win_ver = detect_windows_version()
+        if win_ver == 11:
+            app.setStyle("FluentWinUI3")
+        else:
+            app.setStyle("Fusion")
+    elif os_name == "Darwin":
+        app.setStyle("macOS")
+    else:
+        app.setStyle("Fusion")
+
     window = MainWindow()
     window.show()
     app.exec()
