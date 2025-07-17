@@ -1,9 +1,12 @@
 name: Build Ubuntu
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
-      - Development
+      - Development-OpenCV
     paths:
       - '.github/workflows/**'
       - 'Assets/**'
@@ -12,18 +15,24 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.6.0
         with:
-          python-version: '3.9.20'
+          python-version: '3.13.5'
           architecture: 'x64'
           cache: 'pip'
+
+      - name: Get Shortened Commit SHA
+        id: shorten_commit_sha
+        uses: iendeavor/shorten-commit-sha@v2.0.4
+        with:
+          length: 7
 
       - name: Create virtual environment
         run: python3 -m venv .venv
@@ -31,12 +40,12 @@ jobs:
       - name: Activate virtual environment
         run: source .venv/bin/activate
 
-      - name: Install python dependencies
+      - name: Install dependencies
         run: pip install --upgrade PySide6-Essentials pyinstaller pillow
 
       - name: Build with PyInstaller
         run: |
-          pyinstaller --noconfirm --onedir --windowed --optimize "2" --strip --name "MetalSlugFontReborn" --clean --add-data "Assets:Assets/" --add-data "Src/special_characters.py:." --add-data "Src/image_generation.py:." --add-data "Src/themes.py:." --add-data "Src/qt_utils.py:." --add-data "Src/info.py:." --add-data "Docs/SUPPORTED.txt:."  "Src/qt-version.py"
+          pyinstaller --noconfirm --onedir --windowed --strip --name "MetalSlugFontReborn" --clean --optimize "2" --add-data "Src/image_generation.py:." --add-data "Src/qt_utils.py:." --add-data "Src/special_characters.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Docs/SUPPORTED.txt:." --add-data "Assets:Assets/"  "Src/qt-version.py"
 
       - name: Move Assets and SUPPORTED.txt
         run: |
@@ -44,8 +53,8 @@ jobs:
           mv dist/MetalSlugFontReborn/_internal/SUPPORTED.txt dist/MetalSlugFontReborn/
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
-          name: MetalSlugFontReborn-v1.x.x-Linux-x64-Qt
+          name: MetalSlugFontReborn-${{ steps.shorten_commit_sha.outputs.shortened_commit_sha }}-Linux-x64
           path: dist/MetalSlugFontReborn
           compression-level: 9
