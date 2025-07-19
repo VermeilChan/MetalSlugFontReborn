@@ -3,10 +3,11 @@ import platform
 from time import time
 from pathlib import Path
 from PIL import Image
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
                                QHBoxLayout, QLabel, QLineEdit, QMainWindow, QWidget,
-                               QMessageBox, QPushButton, QSpinBox, QVBoxLayout)
+                               QMessageBox, QPushButton, QSpinBox, QVBoxLayout, QSlider)
 from utils import readable_size
 from qt_utils import about_section, load_theme, set_theme
 from image_generation import (compress_image, generate_filename, generate_image, get_font_paths)
@@ -21,7 +22,7 @@ FONT_COLORS = {
 
 class ImageProcessor:
     @staticmethod
-    def process_image(text, font, color, save_path, compress, parent, max_words=None):
+    def process_image(text, font, color, save_path, compress, compress_level, parent, max_words=None):
         if not text.strip():
             QMessageBox.critical(parent, "Error", "Input text cannot be empty")
             return
@@ -36,7 +37,7 @@ class ImageProcessor:
                 raise RuntimeError(error)
 
             if compress:
-                compress_image(image_path)
+                compress_image(image_path, compress_level)
 
             ImageProcessor.show_success_message(image_path, start, parent)
         
@@ -99,23 +100,42 @@ class MainWindow(QMainWindow):
         self.update_colors()
 
     def add_options(self, layout):
-        options = QHBoxLayout()
+        options_h_layout = QHBoxLayout()
+
         self.compress_option = QCheckBox("Compression")
+        self.compress_option.setChecked(True)
+        options_h_layout.addWidget(self.compress_option)
+
+        self.compress_level_label = QLabel("Compression Level: 6")
+        self.compress_level_slider = QSlider(Qt.Horizontal)
+        self.compress_level_slider.setRange(0, 9)
+        self.compress_level_slider.setValue(6)
+        self.compress_level_slider.setTickPosition(QSlider.TicksBelow)
+        self.compress_level_slider.setTickInterval(1)
+        self.compress_level_slider.setFixedWidth(150)
+
+        options_h_layout.addWidget(self.compress_level_label)
+        options_h_layout.addWidget(self.compress_level_slider)
+
+        self.compress_option.toggled.connect(self.toggle_compression_options)
+        self.compress_level_slider.valueChanged.connect(self.update_compress_level_label)
+
         self.line_break_option = QCheckBox("Line Break")
-        
         self.max_words_label = QLabel("Max Words Per Line:")
         self.max_words_input = QSpinBox()
         self.max_words_input.setRange(1, 100)
+        self.max_words_input.setValue(10)
         self.max_words_input.setFixedWidth(50)
         
         self.line_break_option.toggled.connect(self.toggle_word_limit)
         self.toggle_word_limit(False)
+
+        options_h_layout.addWidget(self.line_break_option)
+        options_h_layout.addWidget(self.max_words_label)
+        options_h_layout.addWidget(self.max_words_input)
         
-        options.addWidget(self.compress_option)
-        options.addWidget(self.line_break_option)
-        options.addWidget(self.max_words_label)
-        options.addWidget(self.max_words_input)
-        layout.addLayout(options)
+        layout.addLayout(options_h_layout)
+        self.toggle_compression_options(self.compress_option.isChecked())
 
     def add_action_buttons(self, layout):
         browse_btn = QPushButton("Browse")
@@ -148,21 +168,34 @@ class MainWindow(QMainWindow):
         self.max_words_label.setVisible(visible)
         self.max_words_input.setVisible(visible)
 
+    def toggle_compression_options(self, checked):
+        self.compress_level_label.setVisible(checked)
+        self.compress_level_slider.setVisible(checked)
+
+    def update_compress_level_label(self, value):
+        self.compress_level_label.setText(f"Compression Level: {value}")
+
     def select_save_path(self):
-        if path := QFileDialog.getExistingDirectory(None, "Select Save Location", str(Path.home() / "Desktop")):
-            self.save_path = path
+        if path := QFileDialog.getExistingDirectory(self, "Select Save Location", str(Path.home() / "Desktop")):
+            self.save_path = Path(path)
 
     def generate_image(self):
         text = self.text_input.text()
         if (font := int(self.font_select.currentText())) == 5:
             text = text.upper()
+
         save_path = getattr(self, "save_path", Path.home() / "Desktop")
+
+        compress_enabled = self.compress_option.isChecked()
+        compress_level = self.compress_level_slider.value() if compress_enabled else 6
+
         ImageProcessor.process_image(
             text=text,
             font=font,
             color=self.color_select.currentText(),
             save_path=save_path,
-            compress=self.compress_option.isChecked(),
+            compress=compress_enabled,
+            compress_level=compress_level,
             parent=self,
             max_words=self.max_words_input.value() if self.line_break_option.isChecked() else None
         )
@@ -194,4 +227,4 @@ if __name__ == "__main__":
 
     window = MainWindow()
     window.show()
-    app.exec()
+    sys.exit(app.exec())

@@ -38,9 +38,9 @@ def create_character_image(character, font_paths):
         f"The character '{character}' is not supported. Please check SUPPORTED.txt"
     )
 
-def compress_image(image_path):
+def compress_image(image_path, compress_level=6):
     with Image.open(image_path) as img:
-        img.save(image_path, optimize=True)
+        img.save(image_path, compress_level=compress_level)
 
 def split_into_lines(text, max_words):
     words = text.split()
