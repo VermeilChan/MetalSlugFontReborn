@@ -51,7 +51,7 @@ def about_section(parent):
     info.addWidget(QLabel("MetalSlugFontReborn"))
     info.addWidget(QLabel("GPL-3.0 Licensed"))
     
-    github = QLabel('<a href="https://github.com/VermeilChan/MetalSlugFontReborn">GitHub Repository</a>')
+    github = QLabel('<a href="https://github.com/Mitra-88/MetalSlugFontReborn">GitHub Repository</a>')
     github.setOpenExternalLinks(True)
     info.addWidget(github)
 
