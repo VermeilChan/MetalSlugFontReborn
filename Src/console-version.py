@@ -70,6 +70,15 @@ def get_positive_integer(prompt_text):
         except ValueError:
             print("Invalid number. Try again.")
 
+def get_compression_level():
+    levels = [str(i) for i in range(10)]
+    completer = WordCompleter(levels, ignore_case=False)
+    while True:
+        user_input = prompt("Compression level (0-9): ", completer=completer)
+        if user_input in levels:
+            return int(user_input)
+        print("Invalid input. Use a number from 0 to 9.")
+
 def handle_image_creation(text, font_number, color, save_path, max_words):
     filename = generate_filename(text)
     font_paths = get_font_paths(font_number, color)
@@ -87,7 +96,7 @@ def display_image_info(image_path, start_time):
               f"Dimensions: {img.width}x{img.height} | Size: {size} | "
               f"Time: {end_time - start_time:.3f}s\n")
 
-def process_text(text, font_number, color, save_path, compress, max_words):
+def process_text(text, font_number, color, save_path, compress, compression_level, max_words):
     if not text:
         print("Empty input. Please enter text.")
         return
@@ -104,7 +113,7 @@ def process_text(text, font_number, color, save_path, compress, max_words):
             return
 
         if compress:
-            compress_image(image_path)
+            compress_image(image_path, compression_level)
 
         display_image_info(image_path, start_time)
     except Exception as error:
@@ -116,15 +125,19 @@ def main():
     color = select_color(font)
     save_path = select_save_location()
     compress = get_yes_no("Compress image? (Yes/No): ")
-    max_words = None
+    compression_level = 6
 
+    if compress:
+        compression_level = get_compression_level()
+
+    max_words = None
     if get_yes_no("Enable line breaks? (Yes/No): "):
         max_words = get_positive_integer("Enter max words per line: ")
 
     try:
         while True:
             text = prompt("Enter text to generate: ")
-            process_text(text, font, color, save_path, compress, max_words)
+            process_text(text, font, color, save_path, compress, compression_level, max_words)
     except KeyboardInterrupt:
         sys.exit("Closing...")
 

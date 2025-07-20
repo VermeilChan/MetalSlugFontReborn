@@ -1,32 +1,32 @@
 # MetalSlugFontReborn
 
 <p align="center">
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/graphs/contributors">
-    <img alt="Contributors" src="https://img.shields.io/github/contributors/VermeilChan/MetalSlugFontReborn?color=green" />
+  <a href="https://github.com/Mitra-88/MetalSlugFontReborn/graphs/contributors">
+    <img alt="Contributors" src="https://img.shields.io/github/contributors/Mitra-88/MetalSlugFontReborn?color=green" />
   </a>
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/releases">
-    <img alt="Latest Release" src="https://img.shields.io/github/release/VermeilChan/MetalSlugFontReborn?color=blue" />
+  <a href="https://github.com/Mitra-88/MetalSlugFontReborn/releases">
+    <img alt="Latest Release" src="https://img.shields.io/github/release/Mitra-88/MetalSlugFontReborn?color=blue" />
   </a>
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/releases">
-    <img alt="Downloads" src="https://img.shields.io/github/downloads/VermeilChan/MetalSlugFontReborn/total?color=orange" />
+  <a href="https://github.com/Mitra-88/MetalSlugFontReborn/releases">
+    <img alt="Downloads" src="https://img.shields.io/github/downloads/Mitra-88/MetalSlugFontReborn/total?color=orange" />
   </a>
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/LICENSE">
-    <img alt="License" src="https://img.shields.io/github/license/VermeilChan/MetalSlugFontReborn?color=purple" />
+  <a href="https://github.com/Mitra-88/MetalSlugFontReborn/LICENSE">
+    <img alt="License" src="https://img.shields.io/github/license/Mitra-88/MetalSlugFontReborn?color=purple" />
   </a>
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/issues">
-    <img alt="Open Issues" src="https://img.shields.io/github/issues/VermeilChan/MetalSlugFontReborn?color=red" />
+  <a href="https://github.com/Mitra-88/MetalSlugFontReborn/issues">
+    <img alt="Open Issues" src="https://img.shields.io/github/issues/Mitra-88/MetalSlugFontReborn?color=red" />
   </a>
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/pulls">
-    <img alt="Open Pull Requests" src="https://img.shields.io/github/issues-pr/VermeilChan/MetalSlugFontReborn?color=yellow" />
+  <a href="https://github.com/Mitra-88/MetalSlugFontReborn/pulls">
+    <img alt="Open Pull Requests" src="https://img.shields.io/github/issues-pr/Mitra-88/MetalSlugFontReborn?color=yellow" />
   </a>
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn/commits">
-    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/VermeilChan/MetalSlugFontReborn?color=darkcyan" />
+  <a href="https://github.com/Mitra-88/MetalSlugFontReborn/commits">
+    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/Mitra-88/MetalSlugFontReborn?color=darkcyan" />
   </a>
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn">
-    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/VermeilChan/MetalSlugFontReborn?color=yellowgreen" />
+  <a href="https://github.com/Mitra-88/MetalSlugFontReborn">
+    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/Mitra-88/MetalSlugFontReborn?color=yellowgreen" />
   </a>
-  <a href="https://github.com/VermeilChan/MetalSlugFontReborn">
-    <img alt="GitHub forks" src="https://img.shields.io/github/forks/VermeilChan/MetalSlugFontReborn?color=lightcoral" />
+  <a href="https://github.com/Mitra-88/MetalSlugFontReborn">
+    <img alt="GitHub forks" src="https://img.shields.io/github/forks/Mitra-88/MetalSlugFontReborn?color=lightcoral" />
   </a>
 </p>
 
@@ -79,8 +79,8 @@ See examples of the [images generated](Docs/EXAMPLES.md) and the [supported char
 
 If you find issues or have ideas for improvements, please:
 
-- [Report an issue](https://github.com/VermeilChan/MetalSlugFontReborn/issues)
-- [Submit a pull request](https://github.com/VermeilChan/MetalSlugFontReborn/pulls)
+- [Report an issue](https://github.com/Mitra-88/MetalSlugFontReborn/issues)
+- [Submit a pull request](https://github.com/Mitra-88/MetalSlugFontReborn/pulls)
 
 ## License
 

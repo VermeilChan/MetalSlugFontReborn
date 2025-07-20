@@ -4,9 +4,9 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 ## Current Status
 
-- **Stable Version**: 1.11.1
-- **Release Date**: 2024-07-12
-- **Maintainer**: VermeilChan
+- **Stable Version**: 1.12.0
+- **Release Date**: 2024-07-20
+- **Maintainer**: Mitra-88
 
 ## Achieved Milestones
 
@@ -32,7 +32,7 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 - **Milestone 6: Reworked Webapp**
   - **Date Achieved**: 2024-02-24
-  - **Description**: Rewrote the webapp version of [MetalSlugFont](https://github.com/VermeilChan/MetalSlugFont/tree/master), improving performance, functionality, compatibility, more fonts and colors. [MetalSlugFontRebornWeb](https://github.com/VermeilChan/MetalSlugFontRebornWeb)
+  - **Description**: Rewrote the webapp version of [MetalSlugFont](https://github.com/Mitra-88/MetalSlugFont/tree/master), improving performance, functionality, compatibility, more fonts and colors. [MetalSlugFontRebornWeb](https://github.com/Mitra-88/MetalSlugFontRebornWeb)
 
 - **Milestone 7: CLI Autocompletion**
   - **Date Achieved**: 2024-03-22

@@ -1,11 +1,11 @@
 # **Linux:**
 
-1. Get the latest release of [MetalSlugFontReborn](https://github.com/VermeilChan/MetalSlugFontReborn/releases/latest).
+1. Get the latest release of [MetalSlugFontReborn](https://github.com/Mitra-88/MetalSlugFontReborn/releases/latest).
 
    ![Download MetalSlugFontReborn](Markdown/Docs/Download.png)
 
 **Extract and Run MetalSlugFontReborn:**
-   - Locate and extract `MetalSlugFontReborn-v1.x.x-Linux-x64-Qt.zip`.
+   - Locate and extract `MetalSlugFontReborn-v1.x.x-Unknow-Linux-x64.zip`.
    - Go to the `MetalSlugFontReborn` folder.
    - Run `MetalSlugFontReborn`.
 
