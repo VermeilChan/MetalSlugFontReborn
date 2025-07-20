@@ -69,5 +69,5 @@ def get_os_info():
     handler = handlers.get(system_name)
     return handler() if handler else f"Unknown OS (System: {system_name})"
 
-msfr_version = f"1.11.1 ({uuid4().hex[:7]})"
+msfr_version = f"1.12.0 ({uuid4().hex[:7]})"
 build_date = datetime.now().strftime("%Y-%m-%d (%A, %B %d, %Y)")
