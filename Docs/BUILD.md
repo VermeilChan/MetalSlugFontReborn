@@ -24,11 +24,11 @@ platforms:
 
 # Get the source code
 
-You can get the source code by downloading the archive `Source code (zip)` from the [latest release](https://github.com/VermeilChan/MetalSlugFontReborn/releases/latest).
+You can get the source code by downloading the archive `Source code (zip)` from the [latest release](https://github.com/Mitra-88/MetalSlugFontReborn/releases/latest).
 
 Or you can clone the repository using the following command:
 ```sh
-git clone https://github.com/VermeilChan/MetalSlugFontReborn.git
+git clone https://github.com/Mitra-88/MetalSlugFontReborn.git
 ```
 To update an existing clone you can use the following commands:
 ```sh
