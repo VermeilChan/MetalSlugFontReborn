@@ -64,8 +64,8 @@ If you have a GitHub account and have found this repository helpful, please cons
 
 #### Resource Requirements
 
-**RAM Usage:** 60MB
-**Disk Space:** 190MB
+**RAM Usage:** 80MB
+**Disk Space:** 230MB
 
 ## Installing MetalSlugFontReborn
 
