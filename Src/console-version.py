@@ -5,7 +5,7 @@ from pathlib import Path
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 from image_generation import generate_filename, generate_image, get_font_paths, compress_image
-from utils import msfr_version, build_date, readable_size, get_os_info
+from utils import msfr_version, build_date, readable_size, get_system_info
 
 valid_colors_by_font = {
     1: ["Blue", "Orange", "Gold"],
@@ -24,7 +24,7 @@ save_locations = {
 }
 
 def startup_message():
-    print(f"MetalSlugFontReborn {msfr_version}, {get_os_info()}.")
+    print(f"MetalSlugFontReborn {msfr_version}, {get_system_info()}.")
     print(f"Build Date: {build_date}.\nSupported characters in SUPPORTED.txt.")
     print("Type 'exit' or press CTRL+C to close.")
 
