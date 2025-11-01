@@ -41,7 +41,7 @@ jobs:
         run: .venv\Scripts\activate
 
       - name: Install dependencies
-        run: pip install --upgrade PySide6-Essentials pyinstaller pillow
+        run: pip install --upgrade PySide6 pyinstaller pillow
 
       - name: Build with PyInstaller
         run: |
