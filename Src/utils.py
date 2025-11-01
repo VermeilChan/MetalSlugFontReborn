@@ -1,73 +1,53 @@
+import math
+import platform
 from uuid import uuid4
 from datetime import datetime
-from platform import system, architecture, win32_ver, win32_edition, freedesktop_os_release, mac_ver, machine
 
 def readable_size(size_bytes):
+    if size_bytes == 0:
+        return "0 bytes"
     units = ["bytes", "KB", "MB"]
-    size = size_bytes
-    for unit in units:
-        if size < 1024 or unit == units[-1]:
-            return f"{size:.2f} {unit}"
-        size /= 1024
+    power = int(math.log(size_bytes, 1024))
+    power = min(power, len(units) - 1)
+    size = size_bytes / (1024 ** power)
+    return f"{size:.2f} {units[power]}"
 
 def normalize_architecture(arch):
-    return {
+    mapping = {
         "x86_64": "64-Bit",
-        "64bit": "64-Bit",
+        "AMD64": "64-Bit",
         "arm64": "ARM64",
         "aarch64": "ARM64",
-    }.get(arch, arch)
-
-def get_windows_info():
-    try:
-        version = win32_ver()[0]
-        edition = win32_edition()
-        arch = normalize_architecture(architecture()[0])
-        return f"Windows {version} {edition} {arch}"
-    except Exception as error:
-        return f"Windows (Error: {error})"
-
-def get_linux_info():
-    try:
-        distro = freedesktop_os_release()
-        name = distro.get("NAME", "Linux")
-        pretty_name = distro.get("PRETTY_NAME", "")
-        version = distro.get("VERSION", "")
-        version_id = distro.get("VERSION_ID", "")
-        arch = normalize_architecture(architecture()[0])
-
-        if pretty_name:
-            return f"{pretty_name} {arch}"
-        if version:
-            return f"{version} {arch}"
-        
-        components = [name]
-        if version_id:
-            components.append(version_id)
-        return f"{' '.join(components)} {arch}"
-
-    except OSError:
-        return f"Linux {normalize_architecture(architecture()[0])}"
-    except Exception as error:
-        return f"Linux (Error: {error})"
-
-def get_macos_info():
-    try:
-        version = mac_ver()[0]
-        arch = normalize_architecture(machine())
-        return f"macOS {version} {arch}"
-    except Exception as error:
-        return f"macOS (Error: {error})"
-
-def get_os_info():
-    system_name = system()
-    handlers = {
-        "Windows": get_windows_info,
-        "Linux": get_linux_info,
-        "Darwin": get_macos_info,
+        "64bit": "64-Bit",
     }
-    handler = handlers.get(system_name)
-    return handler() if handler else f"Unknown OS (System: {system_name})"
+    return mapping.get(arch, arch)
 
-msfr_version = f"1.12.0 ({uuid4().hex[:7]})"
+def get_system_info():
+    system = platform.system()
+    arch = normalize_architecture(platform.architecture()[0])
+
+    try:
+        if system == "Windows":
+            edition = platform.win32_edition()
+            return f"{system} {edition} {arch}"
+
+        elif system == "Linux":
+            os_release = platform.freedesktop_os_release()
+            name = os_release.get("PRETTY_NAME")
+            if not name:
+                name = f"{os_release.get('NAME', 'Linux')} {os_release.get('VERSION', '')}".strip()
+            return f"{name} {arch}"
+
+        elif system == "Darwin":
+            return f"macOS {platform.release()} {normalize_architecture(platform.machine())}"
+
+        else:
+            return f"{system} {arch}"
+
+    except Exception as error:
+        return f"{system} (Error: {error})"
+
+msfr_version = f"1.12.1 ({uuid4().hex[:7]})"
 build_date = datetime.now().strftime("%Y-%m-%d (%A, %B %d, %Y)")
+
+system_info = get_system_info()
