@@ -15,37 +15,41 @@ def readable_size(size_bytes):
 def normalize_architecture(arch):
     mapping = {
         "x86_64": "64-Bit",
-        "AMD64": "64-Bit",
+        "amd64": "AMD64",
         "arm64": "ARM64",
         "aarch64": "ARM64",
         "64bit": "64-Bit",
     }
-    return mapping.get(arch, arch)
+    return mapping.get(arch.lower(), arch)
 
 def get_system_info():
     system = platform.system()
-    arch = normalize_architecture(platform.architecture()[0])
+    arch = normalize_architecture(platform.machine())
 
-    try:
-        if system == "Windows":
-            edition = platform.win32_edition()
-            return f"{system} {edition} {arch}"
+    if system == "Windows":
+        edition = platform.win32_edition()
+        release = platform.release()
+        version = platform.version()
+        return f"{system} {release} {edition} (Build {version}) {arch}".strip()
 
-        elif system == "Linux":
+    elif system == "Linux":
+        try:
             os_release = platform.freedesktop_os_release()
-            name = os_release.get("PRETTY_NAME")
-            if not name:
-                name = f"{os_release.get('NAME', 'Linux')} {os_release.get('VERSION', '')}".strip()
-            return f"{name} {arch}"
+            if "PRETTY_NAME" in os_release:
+                return f"{os_release['PRETTY_NAME']} {arch}"
+            name = os_release.get("NAME", "Linux")
+            version = os_release.get("VERSION", "")
+            if name or version:
+                return f"{name} {version} {arch}".strip()
 
-        elif system == "Darwin":
-            return f"macOS {platform.release()} {normalize_architecture(platform.machine())}"
+        except OSError:
+            system_name = platform.system()
+            release = platform.release()
+            return f"{system_name} {release} {arch}"
 
-        else:
-            return f"{system} {arch}"
-
-    except Exception as error:
-        return f"{system} (Error: {error})"
+    elif system == "Darwin":
+        mac_version, *_ = platform.mac_ver()
+        return f"macOS {mac_version or platform.release()} {arch}"
 
 msfr_version = f"1.12.1 ({uuid4().hex[:7]})"
 build_date = datetime.now().strftime("%Y-%m-%d (%A, %B %d, %Y)")
