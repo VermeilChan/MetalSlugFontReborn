@@ -50,11 +50,11 @@ class ImageProcessor:
         with Image.open(path) as img:
             size = readable_size(path.stat().st_size)
             message = (
-                "Successfully generated image :)\n\n"
-                f"Path: {path}\n"
-                f"Dimensions: {img.width} x {img.height}\n"
-                f"Size: {size}\n"
-                f"Time: {time() - start_time:.3f} seconds"
+                "Successfully generated image!\n\n"
+                f"Image saved at: {path}\n"
+                f"Dimensions: {img.width} x {img.height} pixels\n"
+                f"File size: {size}\n"
+                f"Time taken: {time() - start_time:.3f} seconds"
             )
             QMessageBox.information(parent, "Success", message)
 
@@ -120,8 +120,8 @@ class MainWindow(QMainWindow):
         self.compress_option.toggled.connect(self.toggle_compression_options)
         self.compress_level_slider.valueChanged.connect(self.update_compress_level_label)
 
-        self.line_break_option = QCheckBox("Line Break")
-        self.max_words_label = QLabel("Max Words Per Line:")
+        self.line_break_option = QCheckBox("Automatic line breaks")
+        self.max_words_label = QLabel("Maximum words per lin:")
         self.max_words_input = QSpinBox()
         self.max_words_input.setRange(1, 100)
         self.max_words_input.setValue(10)
@@ -154,10 +154,9 @@ class MainWindow(QMainWindow):
         help_menu.addAction("About").triggered.connect(lambda: about_section(self))
 
         theme_menu = menubar.addMenu("Themes")
-        for theme in ["Light", "Dark", "Dracula", "Monokai", "Arc Dark"]:
+        for theme in ["Light", "Dark", "Dracula", "Monokai", "Arc Dark", "Nord", "Tokyo Night", "Cyberpunk Neon"]:
             theme_menu.addAction(f"{theme} Mode").triggered.connect(
-                lambda _, t=theme: set_theme(t)
-            )
+                lambda _, t=theme: set_theme(t))
 
     def update_colors(self):
         self.color_select.clear()
@@ -204,7 +203,7 @@ def detect_windows_version():
     if platform.system() == "Windows":
         version = platform.version()
         build = int(version.split('.')[-1])
-        if build >= 22000:
+        if build >= 26200:
             return 11
         else:
             return 10
