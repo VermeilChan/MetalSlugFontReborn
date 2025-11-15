@@ -18,7 +18,6 @@ def light_mode():
     palette.setColor(QPalette.HighlightedText, Qt.white)
     return palette
 
-
 def dark_mode():
     palette = QPalette()
     palette.setColor(QPalette.Window, QColor(30, 30, 30))
@@ -36,7 +35,6 @@ def dark_mode():
     palette.setColor(QPalette.HighlightedText, Qt.black)
     return palette
 
-
 def dracula_mode():
     palette = QPalette()
     palette.setColor(QPalette.Window, QColor(40, 42, 54))
@@ -51,7 +49,6 @@ def dracula_mode():
     palette.setColor(QPalette.HighlightedText, Qt.white)
     return palette
 
-
 def monokai_mode():
     palette = QPalette()
     palette.setColor(QPalette.Window, QColor(39, 40, 34))
@@ -65,7 +62,6 @@ def monokai_mode():
     palette.setColor(QPalette.Highlight, QColor(166, 226, 46))
     palette.setColor(QPalette.HighlightedText, QColor(39, 40, 34))
     return palette
-
 
 def arc_dark_mode():
     palette = QPalette()
@@ -95,7 +91,6 @@ def nord_mode():
     palette.setColor(QPalette.HighlightedText, QColor(46, 52, 64))
     return palette
 
-
 def tokyo_night():
     palette = QPalette()
     palette.setColor(QPalette.Window, QColor(26, 27, 38))
@@ -109,7 +104,6 @@ def tokyo_night():
     palette.setColor(QPalette.Highlight, QColor(144, 122, 255))
     palette.setColor(QPalette.HighlightedText, Qt.white)
     return palette
-
 
 def cyberpunk_neon():
     palette = QPalette()
