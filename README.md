@@ -59,13 +59,13 @@ If you have a GitHub account and have found this repository helpful, please cons
 | Operating System | Supported Versions                                         | Architecture |
 |------------------|------------------------------------------------------------|--------------|
 | Windows          | 11, 10 (1809 or later)                                     | 64-Bit       |
-| GNU/Linux        | Debian 12, Ubuntu 22.04, Fedora 42, Arch Linux, OpenSUSE   | 64-Bit       |
+| GNU/Linux        | Debian 13, Ubuntu 24.04.3, Fedora 43, Arch Linux, OpenSUSE | 64-Bit       |
 | macOS            | 15, 14, 13, 12                                             | ARM64        |
 
 #### Resource Requirements
 
-**RAM Usage:** 80MB
-**Disk Space:** 230MB
+**RAM Usage:** 90MB (varies)<br>
+**Disk Space:** 270MB (varies)
 
 ## Installing MetalSlugFontReborn
 
@@ -101,7 +101,7 @@ I want to say a big thank you to the individuals who helped me.
 - [PySide6](https://doc.qt.io/qtforpython-6/): For the GUI
 - [Pillow](https://python-pillow.org): For image processing
 - [PyInstaller](https://pyinstaller.org/en/stable): For compiling the program
-- [Python Prompt Toolkit 3.0](https://python-prompt-toolkit.readthedocs.io/en/master/): For the CLI Autocompletion
+- [Python Prompt Toolkit](https://python-prompt-toolkit.readthedocs.io/en/master/): For the CLI Autocompletion
 - [Ruff](https://docs.astral.sh/ruff/): Python linter and code formatter.
 - [SkyblockerMod](https://github.com/SkyblockerMod/Skyblocker): Issue Template.
 - [Aseprite](https://github.com/aseprite/aseprite): Build template.
