@@ -1,0 +1,79 @@
+name: Build Multi-Platform
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - Development
+    paths:
+      - '.github/workflows/**'
+      - 'Assets/**'
+      - 'Src/**'
+      - 'versionfile.txt'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-22.04, windows-latest]
+        python-arch: [arm64, x64, x64]
+        platform-name: [macOS-ARM64, Linux-x64, Windows-x64]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13.9'
+          architecture: ${{ matrix.python-arch }}
+          cache: 'pip'
+
+      - name: Get Shortened Commit SHA
+        id: shorten_commit_sha
+        uses: iendeavor/shorten-commit-sha@v2.0.5
+        with:
+          length: 7
+
+      - name: Create virtual environment
+        run: |
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            py -m venv .venv
+          else
+            python3 -m venv .venv
+          fi
+
+      - name: Activate virtual environment
+        run: |
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            .venv\Scripts\activate
+          else
+            source .venv/bin/activate
+          fi
+
+      - name: Install dependencies
+        run: pip install --upgrade PySide6-Essentials pyinstaller pillow
+
+      - name: Build with PyInstaller
+        run: |
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --optimize "2" --version-file "versionfile.txt" --add-data "Src/image_generation.py;." --add-data "Src/qt_utils.py;." --add-data "Src/special_characters.py;." --add-data "Src/themes.py;." --add-data "Src/utils.py;." --add-data "Docs/SUPPORTED.txt;." --add-data "Assets;Assets/" "Src/qt-version.py"
+          else
+            pyinstaller --noconfirm --onedir --windowed --strip --name "MetalSlugFontReborn" --clean --optimize "2" --add-data "Src/image_generation.py:." --add-data "Src/qt_utils.py:." --add-data "Src/special_characters.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Docs/SUPPORTED.txt:." --add-data "Assets:Assets/" "Src/qt-version.py"
+          fi
+
+      - name: Move Assets and SUPPORTED.txt
+        run: |
+          mv dist/MetalSlugFontReborn/_internal/Assets dist/MetalSlugFontReborn/
+          mv dist/MetalSlugFontReborn/_internal/SUPPORTED.txt dist/MetalSlugFontReborn/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: MetalSlugFontReborn-${{ steps.shorten_commit_sha.outputs.shortened_commit_sha }}-${{ matrix.platform-name }}
+          path: dist/MetalSlugFontReborn
+          compression-level: 9
