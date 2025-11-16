@@ -3,11 +3,13 @@ import platform
 from time import time
 from pathlib import Path
 from PIL import Image
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
                                QHBoxLayout, QLabel, QLineEdit, QMainWindow, QWidget,
-                               QMessageBox, QPushButton, QSpinBox, QVBoxLayout, QSlider)
+                               QMessageBox, QPushButton, QSpinBox, QVBoxLayout, 
+                               QSlider, QGroupBox, QFormLayout)
+
 from utils import readable_size
 from qt_utils import about_section, load_theme, set_theme
 from image_generation import (compress_image, generate_filename, generate_image, get_font_paths)
@@ -61,91 +63,133 @@ class ImageProcessor:
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("MetalSlugFontReborn")
+        self.setWindowTitle("Metal Slug Font Reborn")
         self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
+        self.setMinimumSize(600, 450)
+        self.save_path = Path.home() / "Desktop"  # Default to Desktop
         self.setup_ui()
         load_theme()
+        
+        # Ask for save location after the window is shown
+        QTimer.singleShot(100, self.prompt_save_location)
 
     def setup_ui(self):
         central = QWidget()
         self.setCentralWidget(central)
-        layout = QVBoxLayout(central)
-
-        self.add_text_input(layout)
-        self.add_font_selector(layout)
-        self.add_color_selector(layout)
-        self.add_options(layout)
-        self.add_action_buttons(layout)
-        self.create_menubar()
-
-        self.setMaximumSize(self.size())
-
-    def add_text_input(self, layout):
-        layout.addWidget(QLabel("Text to Generate:"))
+        
+        main_layout = QVBoxLayout(central)
+        main_layout.setSpacing(15)
+        main_layout.setContentsMargins(20, 20, 20, 20)
+        
+        # Text Input Section
+        text_group = QGroupBox("Text to Generate")
+        text_layout = QVBoxLayout(text_group)
         self.text_input = QLineEdit()
-        self.text_input.setMinimumWidth(600)
-        layout.addWidget(self.text_input)
-
-    def add_font_selector(self, layout):
-        layout.addWidget(QLabel("Select Font:"))
+        self.text_input.setPlaceholderText("Enter your text here...")
+        text_layout.addWidget(self.text_input)
+        main_layout.addWidget(text_group)
+        
+        # Font and Color Section
+        style_group = QGroupBox("Font Settings")
+        style_layout = QFormLayout(style_group)
+        style_layout.setHorizontalSpacing(20)
+        
         self.font_select = QComboBox()
         self.font_select.addItems(map(str, sorted(FONT_COLORS)))
         self.font_select.currentIndexChanged.connect(self.update_colors)
-        layout.addWidget(self.font_select)
-
-    def add_color_selector(self, layout):
-        layout.addWidget(QLabel("Select Color:"))
+        
         self.color_select = QComboBox()
-        layout.addWidget(self.color_select)
-        self.update_colors()
-
-    def add_options(self, layout):
-        options_h_layout = QHBoxLayout()
-
-        self.compress_option = QCheckBox("Compression")
+        
+        style_layout.addRow("Font:", self.font_select)
+        style_layout.addRow("Color:", self.color_select)
+        main_layout.addWidget(style_group)
+        
+        # Options Section
+        options_group = QGroupBox("Options")
+        options_layout = QVBoxLayout(options_group)
+        
+        # Compression settings
+        compress_layout = QVBoxLayout()
+        self.compress_option = QCheckBox("Enable compression")
         self.compress_option.setChecked(True)
-        options_h_layout.addWidget(self.compress_option)
-
-        self.compress_level_label = QLabel("Compression Level: 6")
+        self.compress_option.toggled.connect(self.toggle_compression_options)
+        compress_layout.addWidget(self.compress_option)
+        
+        self.level_layout = QHBoxLayout()
+        self.level_layout.addWidget(QLabel("Compression level:"))
         self.compress_level_slider = QSlider(Qt.Horizontal)
         self.compress_level_slider.setRange(0, 9)
         self.compress_level_slider.setValue(6)
         self.compress_level_slider.setTickPosition(QSlider.TicksBelow)
         self.compress_level_slider.setTickInterval(1)
-        self.compress_level_slider.setFixedWidth(150)
-
-        options_h_layout.addWidget(self.compress_level_label)
-        options_h_layout.addWidget(self.compress_level_slider)
-
-        self.compress_option.toggled.connect(self.toggle_compression_options)
         self.compress_level_slider.valueChanged.connect(self.update_compress_level_label)
-
+        
+        self.compress_level_label = QLabel("6")
+        self.compress_level_label.setFixedWidth(20)
+        
+        self.level_layout.addWidget(self.compress_level_slider)
+        self.level_layout.addWidget(self.compress_level_label)
+        self.level_layout.addStretch()
+        compress_layout.addLayout(self.level_layout)
+        options_layout.addLayout(compress_layout)
+        
+        # Line break settings
+        line_break_layout = QHBoxLayout()
         self.line_break_option = QCheckBox("Automatic line breaks")
-        self.max_words_label = QLabel("Maximum words per lin:")
+        self.line_break_option.toggled.connect(self.toggle_word_limit)
+        
+        line_break_layout.addWidget(self.line_break_option)
+        line_break_layout.addStretch()
+        
+        self.max_words_label = QLabel("Max words per line:")
         self.max_words_input = QSpinBox()
         self.max_words_input.setRange(1, 100)
         self.max_words_input.setValue(10)
-        self.max_words_input.setFixedWidth(50)
+        self.max_words_input.setFixedWidth(60)
         
-        self.line_break_option.toggled.connect(self.toggle_word_limit)
+        line_break_layout.addWidget(self.max_words_label)
+        line_break_layout.addWidget(self.max_words_input)
+        options_layout.addLayout(line_break_layout)
+        
+        main_layout.addWidget(options_group)
+        
+        # Action Buttons
+        button_layout = QHBoxLayout()
+        self.browse_btn = QPushButton("Change Save Location")
+        self.browse_btn.clicked.connect(self.select_save_path)
+        
+        self.generate_btn = QPushButton("Generate Image")
+        self.generate_btn.clicked.connect(self.generate_image)
+        
+        button_layout.addWidget(self.browse_btn)
+        button_layout.addWidget(self.generate_btn)
+        main_layout.addLayout(button_layout)
+        
+        # Save location status
+        self.save_location_label = QLabel("Save location: Desktop (default)")
+        self.save_location_label.setStyleSheet("color: #666; font-style: italic;")
+        main_layout.addWidget(self.save_location_label)
+        
+        # Initialize state
+        self.update_colors()
         self.toggle_word_limit(False)
+        self.toggle_compression_options(True)
+        
+        self.create_menubar()
 
-        options_h_layout.addWidget(self.line_break_option)
-        options_h_layout.addWidget(self.max_words_label)
-        options_h_layout.addWidget(self.max_words_input)
+    def prompt_save_location(self):
+        """Politely ask user if they want to change the save location"""
+        reply = QMessageBox.question(
+            self,
+            "Welcome to Metal Slug Font Reborn!",
+            "Your images will be saved to your Desktop by default.\n\n"
+            "Would you like to choose a different folder?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
         
-        layout.addLayout(options_h_layout)
-        self.toggle_compression_options(self.compress_option.isChecked())
-
-    def add_action_buttons(self, layout):
-        browse_btn = QPushButton("Browse")
-        browse_btn.clicked.connect(self.select_save_path)
-        
-        generate_btn = QPushButton("Generate and Save Image")
-        generate_btn.clicked.connect(self.generate_image)
-        
-        layout.addWidget(browse_btn)
-        layout.addWidget(generate_btn)
+        if reply == QMessageBox.Yes:
+            self.select_save_path()
 
     def create_menubar(self):
         menubar = self.menuBar()
@@ -168,22 +212,37 @@ class MainWindow(QMainWindow):
         self.max_words_input.setVisible(visible)
 
     def toggle_compression_options(self, checked):
-        self.compress_level_label.setVisible(checked)
-        self.compress_level_slider.setVisible(checked)
+        # Hide the entire compression level layout when compression is disabled
+        for i in range(self.level_layout.count()):
+            widget = self.level_layout.itemAt(i).widget()
+            if widget:
+                widget.setVisible(checked)
 
     def update_compress_level_label(self, value):
-        self.compress_level_label.setText(f"Compression Level: {value}")
+        self.compress_level_label.setText(str(value))
 
     def select_save_path(self):
-        if path := QFileDialog.getExistingDirectory(self, "Select Save Location", str(Path.home() / "Desktop")):
+        if path := QFileDialog.getExistingDirectory(
+            self, "Select Save Location", str(self.save_path)
+        ):
             self.save_path = Path(path)
+            folder_name = self.save_path.name
+            self.save_location_label.setText(f"Save location: {folder_name}")
+            QMessageBox.information(
+                self, 
+                "Save Location Updated", 
+                f"Images will now be saved to:\n{path}"
+            )
 
     def generate_image(self):
-        text = self.text_input.text()
-        if (font := int(self.font_select.currentText())) == 5:
-            text = text.upper()
+        text = self.text_input.text().strip()
+        if not text:
+            QMessageBox.critical(self, "Error", "Please enter some text to generate.")
+            return
 
-        save_path = getattr(self, "save_path", Path.home() / "Desktop")
+        font = int(self.font_select.currentText())
+        if font == 5:
+            text = text.upper()
 
         compress_enabled = self.compress_option.isChecked()
         compress_level = self.compress_level_slider.value() if compress_enabled else 6
@@ -192,7 +251,7 @@ class MainWindow(QMainWindow):
             text=text,
             font=font,
             color=self.color_select.currentText(),
-            save_path=save_path,
+            save_path=self.save_path,
             compress=compress_enabled,
             compress_level=compress_level,
             parent=self,
