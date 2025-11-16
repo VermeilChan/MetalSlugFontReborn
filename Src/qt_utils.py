@@ -5,15 +5,18 @@ from PySide6.QtWidgets import (QApplication, QLabel, QVBoxLayout,
 from PIL import __version__ as pillow_version
 from PySide6 import __version__ as pyside6_version
 from PyInstaller import __version__ as pyinstaller_version
-from utils import msfr_version, build_date, get_os_info
-from themes import light_mode, dark_mode, dracula_mode, arc_dark_mode, monokai_mode
+from utils import msfr_version, build_date, get_system_info
+from themes import light_mode, dark_mode, dracula_mode, arc_dark_mode, monokai_mode, nord_mode, tokyo_night, cyberpunk_neon
 
 theme_list = {
     "Light": light_mode,
     "Dark": dark_mode,
     "Dracula": dracula_mode,
+    "Monokai": monokai_mode,
     "Arc Dark": arc_dark_mode,
-    "Monokai": monokai_mode
+    "Nord": nord_mode,
+    "Tokyo Night": tokyo_night,
+    "Cyberpunk Neon": cyberpunk_neon
 }
 
 def set_theme(theme_name):
@@ -60,7 +63,7 @@ def about_section(parent):
     layout.addLayout(header)
 
     os_layout = QVBoxLayout()
-    os_layout.addWidget(QLabel(f"OS: {get_os_info()}"))
+    os_layout.addWidget(QLabel(f"OS: {get_system_info()}"))
     layout.addWidget(create_group("Operating System:", os_layout))
 
     build_info = QVBoxLayout()

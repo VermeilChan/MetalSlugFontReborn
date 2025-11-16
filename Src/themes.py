@@ -1,7 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPalette, QColor
 
-
 def light_mode():
     palette = QPalette()
     palette.setColor(QPalette.Window, QColor(245, 245, 245))
@@ -18,7 +17,6 @@ def light_mode():
     palette.setColor(QPalette.Highlight, QColor(51, 153, 255))
     palette.setColor(QPalette.HighlightedText, Qt.white)
     return palette
-
 
 def dark_mode():
     palette = QPalette()
@@ -37,7 +35,6 @@ def dark_mode():
     palette.setColor(QPalette.HighlightedText, Qt.black)
     return palette
 
-
 def dracula_mode():
     palette = QPalette()
     palette.setColor(QPalette.Window, QColor(40, 42, 54))
@@ -51,7 +48,6 @@ def dracula_mode():
     palette.setColor(QPalette.Highlight, QColor(98, 114, 164))
     palette.setColor(QPalette.HighlightedText, Qt.white)
     return palette
-
 
 def monokai_mode():
     palette = QPalette()
@@ -67,7 +63,6 @@ def monokai_mode():
     palette.setColor(QPalette.HighlightedText, QColor(39, 40, 34))
     return palette
 
-
 def arc_dark_mode():
     palette = QPalette()
     palette.setColor(QPalette.Window, QColor(45, 45, 48))
@@ -80,4 +75,46 @@ def arc_dark_mode():
     palette.setColor(QPalette.Link, QColor(0, 122, 204))
     palette.setColor(QPalette.Highlight, QColor(0, 153, 204))
     palette.setColor(QPalette.HighlightedText, QColor(220, 220, 220))
+    return palette
+
+def nord_mode():
+    palette = QPalette()
+    palette.setColor(QPalette.Window, QColor(46, 52, 64))
+    palette.setColor(QPalette.WindowText, QColor(216, 222, 233))
+    palette.setColor(QPalette.Base, QColor(59, 66, 82))
+    palette.setColor(QPalette.AlternateBase, QColor(46, 52, 64))
+    palette.setColor(QPalette.Text, QColor(216, 222, 233))
+    palette.setColor(QPalette.Button, QColor(67, 76, 94))
+    palette.setColor(QPalette.ButtonText, QColor(216, 222, 233))
+    palette.setColor(QPalette.Link, QColor(136, 192, 208))
+    palette.setColor(QPalette.Highlight, QColor(129, 161, 193))
+    palette.setColor(QPalette.HighlightedText, QColor(46, 52, 64))
+    return palette
+
+def tokyo_night():
+    palette = QPalette()
+    palette.setColor(QPalette.Window, QColor(26, 27, 38))
+    palette.setColor(QPalette.WindowText, QColor(192, 202, 245))
+    palette.setColor(QPalette.Base, QColor(22, 23, 34))
+    palette.setColor(QPalette.AlternateBase, QColor(26, 27, 38))
+    palette.setColor(QPalette.Text, QColor(192, 202, 245))
+    palette.setColor(QPalette.Button, QColor(35, 38, 52))
+    palette.setColor(QPalette.ButtonText, QColor(192, 202, 245))
+    palette.setColor(QPalette.Link, QColor(125, 207, 255))
+    palette.setColor(QPalette.Highlight, QColor(144, 122, 255))
+    palette.setColor(QPalette.HighlightedText, Qt.white)
+    return palette
+
+def cyberpunk_neon():
+    palette = QPalette()
+    palette.setColor(QPalette.Window, QColor(10, 10, 20))
+    palette.setColor(QPalette.WindowText, QColor(255,255,255))
+    palette.setColor(QPalette.Base, QColor(5,5,15))
+    palette.setColor(QPalette.AlternateBase, QColor(10,10,20))
+    palette.setColor(QPalette.Text, QColor(255,255,255))
+    palette.setColor(QPalette.Button, QColor(20,20,40))
+    palette.setColor(QPalette.ButtonText, QColor(255,0,255))
+    palette.setColor(QPalette.Link, QColor(0,255,255))
+    palette.setColor(QPalette.Highlight, QColor(255, 0, 153))
+    palette.setColor(QPalette.HighlightedText, Qt.black)
     return palette

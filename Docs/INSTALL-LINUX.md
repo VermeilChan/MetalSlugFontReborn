@@ -5,7 +5,7 @@
    ![Download MetalSlugFontReborn](Markdown/Docs/Download.png)
 
 **Extract and Run MetalSlugFontReborn:**
-   - Locate and extract `MetalSlugFontReborn-v1.x.x-Unknow-Linux-x64.zip`.
+   - Locate and extract `MetalSlugFontReborn-v1.x.x-Linux-x64.zip`.
    - Go to the `MetalSlugFontReborn` folder.
    - Run `MetalSlugFontReborn`.
 
@@ -20,7 +20,7 @@
    - Enter the text you want to convert to the metal slug font.
 
 5. **Generate the Image:**
-   - Click `Generate And Save Image` to create the stylized image.
+   - Click `Generate Image` to create the stylized image.
 
 6. **View the Result:**
    - The program will save the stylized image. By default, it will be saved on your desktop. You can choose a different location if desired.

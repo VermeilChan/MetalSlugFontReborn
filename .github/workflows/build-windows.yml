@@ -19,18 +19,18 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5.6.0
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.13.5'
+          python-version: '3.13.9'
           architecture: 'x64'
           cache: 'pip'
 
       - name: Get Shortened Commit SHA
         id: shorten_commit_sha
-        uses: iendeavor/shorten-commit-sha@v2.0.4
+        uses: iendeavor/shorten-commit-sha@v2.0.5
         with:
           length: 7
 
@@ -53,7 +53,7 @@ jobs:
           mv dist/MetalSlugFontReborn/_internal/SUPPORTED.txt dist/MetalSlugFontReborn/
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v5
         with:
           name: MetalSlugFontReborn-${{ steps.shorten_commit_sha.outputs.shortened_commit_sha }}-Windows-x64
           path: dist/MetalSlugFontReborn
