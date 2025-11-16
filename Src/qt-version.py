@@ -66,11 +66,10 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Metal Slug Font Reborn")
         self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
         self.setMinimumSize(600, 450)
-        self.save_path = Path.home() / "Desktop"  # Default to Desktop
+        self.save_path = Path.home() / "Desktop"
         self.setup_ui()
         load_theme()
-        
-        # Ask for save location after the window is shown
+
         QTimer.singleShot(100, self.prompt_save_location)
 
     def setup_ui(self):
@@ -80,16 +79,14 @@ class MainWindow(QMainWindow):
         main_layout = QVBoxLayout(central)
         main_layout.setSpacing(15)
         main_layout.setContentsMargins(20, 20, 20, 20)
-        
-        # Text Input Section
+
         text_group = QGroupBox("Text to Generate")
         text_layout = QVBoxLayout(text_group)
         self.text_input = QLineEdit()
         self.text_input.setPlaceholderText("Enter your text here...")
         text_layout.addWidget(self.text_input)
         main_layout.addWidget(text_group)
-        
-        # Font and Color Section
+
         style_group = QGroupBox("Font Settings")
         style_layout = QFormLayout(style_group)
         style_layout.setHorizontalSpacing(20)
@@ -103,12 +100,10 @@ class MainWindow(QMainWindow):
         style_layout.addRow("Font:", self.font_select)
         style_layout.addRow("Color:", self.color_select)
         main_layout.addWidget(style_group)
-        
-        # Options Section
+
         options_group = QGroupBox("Options")
         options_layout = QVBoxLayout(options_group)
-        
-        # Compression settings
+
         compress_layout = QVBoxLayout()
         self.compress_option = QCheckBox("Enable compression")
         self.compress_option.setChecked(True)
@@ -132,8 +127,7 @@ class MainWindow(QMainWindow):
         self.level_layout.addStretch()
         compress_layout.addLayout(self.level_layout)
         options_layout.addLayout(compress_layout)
-        
-        # Line break settings
+
         line_break_layout = QHBoxLayout()
         self.line_break_option = QCheckBox("Automatic line breaks")
         self.line_break_option.toggled.connect(self.toggle_word_limit)
@@ -152,8 +146,7 @@ class MainWindow(QMainWindow):
         options_layout.addLayout(line_break_layout)
         
         main_layout.addWidget(options_group)
-        
-        # Action Buttons
+
         button_layout = QHBoxLayout()
         self.browse_btn = QPushButton("Change Save Location")
         self.browse_btn.clicked.connect(self.select_save_path)
@@ -164,13 +157,11 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(self.browse_btn)
         button_layout.addWidget(self.generate_btn)
         main_layout.addLayout(button_layout)
-        
-        # Save location status
+
         self.save_location_label = QLabel("Save location: Desktop (default)")
         self.save_location_label.setStyleSheet("color: #666; font-style: italic;")
         main_layout.addWidget(self.save_location_label)
-        
-        # Initialize state
+
         self.update_colors()
         self.toggle_word_limit(False)
         self.toggle_compression_options(True)
@@ -178,7 +169,6 @@ class MainWindow(QMainWindow):
         self.create_menubar()
 
     def prompt_save_location(self):
-        """Politely ask user if they want to change the save location"""
         reply = QMessageBox.question(
             self,
             "Welcome to Metal Slug Font Reborn!",
@@ -212,7 +202,6 @@ class MainWindow(QMainWindow):
         self.max_words_input.setVisible(visible)
 
     def toggle_compression_options(self, checked):
-        # Hide the entire compression level layout when compression is disabled
         for i in range(self.level_layout.count()):
             widget = self.level_layout.itemAt(i).widget()
             if widget:
@@ -262,7 +251,7 @@ def detect_windows_version():
     if platform.system() == "Windows":
         version = platform.version()
         build = int(version.split('.')[-1])
-        if build >= 26200:
+        if build >= 22000:
             return 11
         else:
             return 10
