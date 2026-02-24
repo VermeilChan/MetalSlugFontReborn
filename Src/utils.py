@@ -22,16 +22,31 @@ def normalize_architecture(arch):
     }
     return mapping.get(arch.lower(), arch)
 
+def get_windows_feature_update():
+    if platform.system() != "Windows":
+        return None
+
+    try:
+        import winreg
+        
+        key_path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+        with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path) as key:
+            display_version, _ = winreg.QueryValueEx(key, "DisplayVersion")
+            return display_version
+    except Exception:
+        return None
+
 def get_system_info():
     system = platform.system()
     arch = normalize_architecture(platform.machine())
-
     if system == "Windows":
         edition = platform.win32_edition()
         release = platform.release()
         version = platform.version()
-        return f"{system} {release} {edition} (Build {version}) {arch}".strip()
+        feature_update = get_windows_feature_update()
 
+        feature_part = f"{feature_update} " if feature_update else ""
+        return f"{system} {release} {feature_part}{edition} (Build {version}) {arch}".strip()
     elif system == "Linux":
         try:
             os_release = platform.freedesktop_os_release()
@@ -41,17 +56,15 @@ def get_system_info():
             version = os_release.get("VERSION", "")
             if name or version:
                 return f"{name} {version} {arch}".strip()
-
         except OSError:
             system_name = platform.system()
             release = platform.release()
             return f"{system_name} {release} {arch}"
-
     elif system == "Darwin":
         mac_version, *_ = platform.mac_ver()
         return f"macOS {mac_version or platform.release()} {arch}"
 
-msfr_version = f"1.12.1 ({uuid4().hex[:7]})"
-build_date = datetime.now().strftime("%Y-%m-%d (%A, %B %d, %Y)")
+msfr_version = f"1.12.2 ({uuid4().hex[:7]})"
+build_date = datetime.now().strftime("%Y-%m-%d (%A, %B %d)")
 
 system_info = get_system_info()
