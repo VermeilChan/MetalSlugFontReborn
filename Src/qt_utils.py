@@ -6,17 +6,12 @@ from PIL import __version__ as pillow_version
 from PySide6 import __version__ as pyside6_version
 from PyInstaller import __version__ as pyinstaller_version
 from utils import msfr_version, build_date, get_system_info
-from themes import light_mode, dark_mode, dracula_mode, arc_dark_mode, monokai_mode, nord_mode, tokyo_night, cyberpunk_neon
+from themes import light_mode, dark_mode, tokyo_night
 
 theme_list = {
     "Light": light_mode,
     "Dark": dark_mode,
-    "Dracula": dracula_mode,
-    "Monokai": monokai_mode,
-    "Arc Dark": arc_dark_mode,
-    "Nord": nord_mode,
     "Tokyo Night": tokyo_night,
-    "Cyberpunk Neon": cyberpunk_neon
 }
 
 def set_theme(theme_name):
