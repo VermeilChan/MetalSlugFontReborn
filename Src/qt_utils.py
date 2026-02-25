@@ -14,22 +14,27 @@ theme_list = {
     "Tokyo Night": tokyo_night,
 }
 
-def set_theme(theme_name):
-    palette = theme_list.get(theme_name, dark_mode)()
-    QApplication.setPalette(palette)
-    save_theme(theme_name)
+CONFIG_FILE = "config.ini"
 
-def save_theme(theme_name):
+def save_config(key, value):
     config = ConfigParser()
-    config["Settings"] = {"theme": theme_name}
-    with open("config.ini", "w", encoding="utf-8") as f:
+    config.read(CONFIG_FILE, encoding="utf-8")
+    if "Settings" not in config:
+        config["Settings"] = {}
+    config["Settings"][key] = str(value)
+    with open(CONFIG_FILE, "w", encoding="utf-8") as f:
         config.write(f)
 
-def load_theme():
+def load_config(key, fallback=None):
     config = ConfigParser()
-    config.read("config.ini", encoding="utf-8")
-    if theme_name := config.get("Settings", "theme", fallback=""):
-        set_theme(theme_name)
+    config.read(CONFIG_FILE, encoding="utf-8")
+    return config.get("Settings", key, fallback=fallback)
+
+def set_theme(theme_name=None):
+    theme_name = theme_name or load_config("theme") or "Dark"
+    palette = theme_list.get(theme_name, dark_mode)()
+    QApplication.setPalette(palette)
+    save_config("theme", theme_name)
 
 def create_group(title, content):
     group = QGroupBox(title)
