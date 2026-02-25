@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
                                QSlider, QGroupBox, QFormLayout)
 
 from utils import readable_size
-from qt_utils import about_section, load_theme, set_theme
+from qt_utils import about_section, set_theme, load_config, save_config
 from image_generation import (compress_image, generate_filename, generate_image, get_font_paths)
 
 FONT_COLORS = {
@@ -68,7 +68,7 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(600, 450)
         self.save_path = Path.home() / "Desktop"
         self.setup_ui()
-        load_theme()
+        set_theme()
 
         QTimer.singleShot(100, self.prompt_save_location)
 
@@ -169,16 +169,25 @@ class MainWindow(QMainWindow):
         self.create_menubar()
 
     def prompt_save_location(self):
-        reply = QMessageBox.question(
-            self,
-            "Welcome to Metal Slug Font Reborn!",
-            "Your images will be saved to your Desktop by default.\n\n"
-            "Would you like to choose a different folder?",
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.No
-        )
+        if load_config("skip_location_prompt", fallback="False") == "True":
+            return
+
+        msg_box = QMessageBox(self)
+        msg_box.setWindowTitle("Welcome to Metal Slug Font Reborn!")
+        msg_box.setText("Your images will be saved to your Desktop by default.\n\n"
+                        "Would you like to choose a different folder?")
+        msg_box.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        msg_box.setDefaultButton(QMessageBox.StandardButton.No)
         
-        if reply == QMessageBox.Yes:
+        cb = QCheckBox("Don't ask me again")
+        msg_box.setCheckBox(cb)
+        
+        reply = msg_box.exec()
+        
+        if cb.isChecked():
+            save_config("skip_location_prompt", "True")
+            
+        if reply == QMessageBox.StandardButton.Yes:
             self.select_save_path()
 
     def create_menubar(self):
@@ -188,7 +197,7 @@ class MainWindow(QMainWindow):
         help_menu.addAction("About").triggered.connect(lambda: about_section(self))
 
         theme_menu = menubar.addMenu("Themes")
-        for theme in ["Light", "Dark", "Dracula", "Monokai", "Arc Dark", "Nord", "Tokyo Night", "Cyberpunk Neon"]:
+        for theme in ["Light", "Dark", "Tokyo Night"]:
             theme_menu.addAction(f"{theme} Mode").triggered.connect(
                 lambda _, t=theme: set_theme(t))
 
@@ -248,22 +257,18 @@ class MainWindow(QMainWindow):
         )
 
 def detect_windows_version():
-    if platform.system() == "Windows":
-        version = platform.version()
-        build = int(version.split('.')[-1])
-        if build >= 22000:
-            return 11
-        else:
-            return 10
-    return None
+    system = platform.system()
+    if system == "Windows":
+        release = platform.release()
+        return f"{release}".strip()
+    return platform.system()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-
     os_name = platform.system()
     if os_name == "Windows":
         win_ver = detect_windows_version()
-        if win_ver == 11:
+        if win_ver == "11":
             app.setStyle("FluentWinUI3")
         else:
             app.setStyle("Fusion")
@@ -271,7 +276,6 @@ if __name__ == "__main__":
         app.setStyle("macOS")
     else:
         app.setStyle("Fusion")
-
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
