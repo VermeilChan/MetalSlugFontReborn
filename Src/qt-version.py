@@ -269,7 +269,7 @@ if __name__ == "__main__":
     if os_name == "Windows":
         win_ver = detect_windows_version()
         if win_ver == "11":
-            app.setStyle("FluFusionentWinUI3")
+            app.setStyle("FluentWinUI3")
         else:
             app.setStyle("Fusion")
     elif os_name == "Darwin":
