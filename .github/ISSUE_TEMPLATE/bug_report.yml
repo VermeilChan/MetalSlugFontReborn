@@ -42,13 +42,6 @@ body:
     id: metal-slug-font-reborn-version
     attributes:
       label: What version of MetalSlugFontReborn are you using?
-      placeholder: ex. MetalSlugFontReborn 1.12.1
-    validations:
-      required: true
-  - type: input
-    id: qt-or-console-version
-    attributes:
-      label: What version are you using?
-      placeholder: ex. Qt or Console
+      placeholder: ex. MetalSlugFontReborn 1.12.3
     validations:
       required: true

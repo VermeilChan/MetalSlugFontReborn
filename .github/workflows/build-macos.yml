@@ -30,7 +30,7 @@ jobs:
 
       - name: Get Shortened Commit SHA
         id: shorten_commit_sha
-        uses: iendeavor/shorten-commit-sha@v2.0.5
+        uses: soc221b/shorten-commit-sha@v2.0.5
         with:
           length: 7
 
@@ -53,7 +53,7 @@ jobs:
           mv dist/MetalSlugFontReborn/_internal/SUPPORTED.txt dist/MetalSlugFontReborn/
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: MetalSlugFontReborn-${{ steps.shorten_commit_sha.outputs.shortened_commit_sha }}-macOS-ARM64
           path: dist/MetalSlugFontReborn
