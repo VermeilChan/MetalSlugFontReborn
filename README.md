@@ -60,7 +60,7 @@ If you have a GitHub account and have found this repository helpful, please cons
 |------------------|------------------------------------------------------------|--------------|
 | Windows          | 11, 10 (1809 or later)                                     | 64-Bit       |
 | GNU/Linux        | Debian 13, Ubuntu 24.04.4, Fedora 43, Arch Linux, OpenSUSE | 64-Bit       |
-| macOS            | 15, 14, 13, 12                                             | ARM64        |
+| macOS            | 26, 15, 14, 13                                             | ARM64        |
 
 #### Resource Requirements
 
