@@ -194,7 +194,8 @@ class MainWindow(QMainWindow):
         menubar = self.menuBar()
         
         help_menu = menubar.addMenu("Help")
-        help_menu.addAction("About").triggered.connect(lambda: about_section(self))
+        help_menu.addAction("About MetalSlugFontReborn").triggered.connect(lambda: about_section(self))
+        help_menu.addAction("About Qt").triggered.connect(QApplication.aboutQt)
 
         theme_menu = menubar.addMenu("Themes")
         for theme in ["Light", "Dark", "Tokyo Night"]:
