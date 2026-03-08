@@ -139,7 +139,7 @@ class MainWindow(QMainWindow):
         self.max_words_input = QSpinBox()
         self.max_words_input.setRange(1, 100)
         self.max_words_input.setValue(10)
-        self.max_words_input.setFixedWidth(60)
+        self.max_words_input.setFixedWidth(80)
         
         line_break_layout.addWidget(self.max_words_label)
         line_break_layout.addWidget(self.max_words_input)
@@ -266,12 +266,8 @@ def detect_windows_version():
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     os_name = platform.system()
-    if os_name == "Windows":
-        win_ver = detect_windows_version()
-        if win_ver == "11":
-            app.setStyle("FluentWinUI3")
-        else:
-            app.setStyle("Fusion")
+    if os_name == "Windows" and detect_windows_version() == "11":
+        app.setStyle("FluentWinUI3")
     elif os_name == "Darwin":
         app.setStyle("macOS")
     else:
