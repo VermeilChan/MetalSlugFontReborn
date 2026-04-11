@@ -31,7 +31,7 @@ def load_config(key, fallback=None):
     return config.get("Settings", key, fallback=fallback)
 
 def set_theme(theme_name=None):
-    theme_name = theme_name or load_config("theme") or "Dark"
+    theme_name = theme_name or load_config("theme")
     palette = theme_list.get(theme_name, dark_mode)()
     QApplication.setPalette(palette)
     save_config("theme", theme_name)
