@@ -32,7 +32,8 @@ def load_config(key, fallback=None):
 
 def set_theme(theme_name=None):
     theme_name = theme_name or load_config("theme")
-    palette = theme_list.get(theme_name, dark_mode)()
+    if theme_name not in theme_list: return
+    palette = theme_list[theme_name]()
     QApplication.setPalette(palette)
     save_config("theme", theme_name)
 
