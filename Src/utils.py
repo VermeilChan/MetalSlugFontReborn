@@ -1,7 +1,8 @@
 import math
 import platform
-from uuid import uuid4
 from datetime import datetime
+from uuid import uuid4
+
 
 def readable_size(size_bytes):
     if size_bytes == 0:
@@ -9,7 +10,7 @@ def readable_size(size_bytes):
     units = ["bytes", "KB", "MB"]
     power = int(math.log(size_bytes, 1024))
     power = min(power, len(units) - 1)
-    size = size_bytes / (1024 ** power)
+    size = size_bytes / (1024**power)
     return f"{size:.2f} {units[power]}"
 
 def normalize_architecture(arch):
@@ -28,7 +29,7 @@ def get_windows_feature_update():
 
     try:
         import winreg
-        
+
         key_path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion"
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path) as key:
             display_version, _ = winreg.QueryValueEx(key, "DisplayVersion")

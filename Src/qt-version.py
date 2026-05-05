@@ -1,18 +1,21 @@
-import sys
 import platform
-from time import time
+import sys
 from pathlib import Path
+from time import time
+
 from PIL import Image
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
-                               QHBoxLayout, QLabel, QLineEdit, QMainWindow, QWidget,
-                               QMessageBox, QPushButton, QSpinBox, QVBoxLayout, 
-                               QSlider, QGroupBox, QFormLayout)
+                               QFormLayout, QGroupBox, QHBoxLayout, QLabel,
+                               QLineEdit, QMainWindow, QMessageBox,
+                               QPushButton, QSlider, QSpinBox, QVBoxLayout,
+                               QWidget)
 
+from image_generation import (compress_image, generate_filename,
+                              generate_image, get_font_paths)
+from qt_utils import about_section, load_config, save_config, set_theme
 from utils import readable_size
-from qt_utils import about_section, set_theme, load_config, save_config
-from image_generation import (compress_image, generate_filename, generate_image, get_font_paths)
 
 FONT_COLORS = {
     1: ["Blue", "Orange", "Gold"],
@@ -24,7 +27,9 @@ FONT_COLORS = {
 
 class ImageProcessor:
     @staticmethod
-    def process_image(text, font, color, save_path, compress, compress_level, parent, max_words=None):
+    def process_image(
+        text, font, color, save_path, compress, compress_level, parent, max_words=None
+    ):
         if not text.strip():
             QMessageBox.critical(parent, "Error", "Input text cannot be empty")
             return
@@ -33,8 +38,10 @@ class ImageProcessor:
             start = time()
             filename = generate_filename(text)
             font_paths = get_font_paths(font, color)
-            
-            image_path, error = generate_image(text, filename, font_paths, save_path, max_words)
+
+            image_path, error = generate_image(
+                text, filename, font_paths, save_path, max_words
+            )
             if error:
                 raise RuntimeError(error)
 
@@ -42,7 +49,7 @@ class ImageProcessor:
                 compress_image(image_path, compress_level)
 
             ImageProcessor.show_success_message(image_path, start, parent)
-        
+
         except Exception as e:
             QMessageBox.critical(parent, "Error", str(e))
 
@@ -75,7 +82,7 @@ class MainWindow(QMainWindow):
     def setup_ui(self):
         central = QWidget()
         self.setCentralWidget(central)
-        
+
         main_layout = QVBoxLayout(central)
         main_layout.setSpacing(15)
         main_layout.setContentsMargins(20, 20, 20, 20)
@@ -90,13 +97,13 @@ class MainWindow(QMainWindow):
         style_group = QGroupBox("Font Settings")
         style_layout = QFormLayout(style_group)
         style_layout.setHorizontalSpacing(20)
-        
+
         self.font_select = QComboBox()
         self.font_select.addItems(map(str, sorted(FONT_COLORS)))
         self.font_select.currentIndexChanged.connect(self.update_colors)
-        
+
         self.color_select = QComboBox()
-        
+
         style_layout.addRow("Font:", self.font_select)
         style_layout.addRow("Color:", self.color_select)
         main_layout.addWidget(style_group)
@@ -109,7 +116,7 @@ class MainWindow(QMainWindow):
         self.compress_option.setChecked(True)
         self.compress_option.toggled.connect(self.toggle_compression_options)
         compress_layout.addWidget(self.compress_option)
-        
+
         self.level_layout = QHBoxLayout()
         self.level_layout.addWidget(QLabel("Compression level:"))
         self.compress_level_slider = QSlider(Qt.Horizontal)
@@ -117,11 +124,13 @@ class MainWindow(QMainWindow):
         self.compress_level_slider.setValue(6)
         self.compress_level_slider.setTickPosition(QSlider.TicksBelow)
         self.compress_level_slider.setTickInterval(1)
-        self.compress_level_slider.valueChanged.connect(self.update_compress_level_label)
-        
+        self.compress_level_slider.valueChanged.connect(
+            self.update_compress_level_label
+        )
+
         self.compress_level_label = QLabel("6")
         self.compress_level_label.setFixedWidth(20)
-        
+
         self.level_layout.addWidget(self.compress_level_slider)
         self.level_layout.addWidget(self.compress_level_label)
         self.level_layout.addStretch()
@@ -131,29 +140,29 @@ class MainWindow(QMainWindow):
         line_break_layout = QHBoxLayout()
         self.line_break_option = QCheckBox("Automatic line breaks")
         self.line_break_option.toggled.connect(self.toggle_word_limit)
-        
+
         line_break_layout.addWidget(self.line_break_option)
         line_break_layout.addStretch()
-        
+
         self.max_words_label = QLabel("Max words per line:")
         self.max_words_input = QSpinBox()
         self.max_words_input.setRange(1, 100)
         self.max_words_input.setValue(10)
         self.max_words_input.setFixedWidth(80)
-        
+
         line_break_layout.addWidget(self.max_words_label)
         line_break_layout.addWidget(self.max_words_input)
         options_layout.addLayout(line_break_layout)
-        
+
         main_layout.addWidget(options_group)
 
         button_layout = QHBoxLayout()
         self.browse_btn = QPushButton("Change Save Location")
         self.browse_btn.clicked.connect(self.select_save_path)
-        
+
         self.generate_btn = QPushButton("Generate Image")
         self.generate_btn.clicked.connect(self.generate_image)
-        
+
         button_layout.addWidget(self.browse_btn)
         button_layout.addWidget(self.generate_btn)
         main_layout.addLayout(button_layout)
@@ -165,7 +174,7 @@ class MainWindow(QMainWindow):
         self.update_colors()
         self.toggle_word_limit(False)
         self.toggle_compression_options(True)
-        
+
         self.create_menubar()
 
     def prompt_save_location(self):
@@ -174,33 +183,40 @@ class MainWindow(QMainWindow):
 
         msg_box = QMessageBox(self)
         msg_box.setWindowTitle("Welcome to Metal Slug Font Reborn!")
-        msg_box.setText("Your images will be saved to your Desktop by default.\n\n"
-                        "Would you like to choose a different folder?")
-        msg_box.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        msg_box.setText(
+            "Your images will be saved to your Desktop by default.\n\n"
+            "Would you like to choose a different folder?"
+        )
+        msg_box.setStandardButtons(
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
         msg_box.setDefaultButton(QMessageBox.StandardButton.No)
-        
+
         cb = QCheckBox("Don't ask me again")
         msg_box.setCheckBox(cb)
-        
+
         reply = msg_box.exec()
-        
+
         if cb.isChecked():
             save_config("skip_location_prompt", "True")
-            
+
         if reply == QMessageBox.StandardButton.Yes:
             self.select_save_path()
 
     def create_menubar(self):
         menubar = self.menuBar()
-        
+
         help_menu = menubar.addMenu("Help")
-        help_menu.addAction("About MetalSlugFontReborn").triggered.connect(lambda: about_section(self))
+        help_menu.addAction("About MetalSlugFontReborn").triggered.connect(
+            lambda: about_section(self)
+        )
         help_menu.addAction("About Qt").triggered.connect(QApplication.aboutQt)
 
         theme_menu = menubar.addMenu("Themes")
         for theme in ["Light", "Dark", "Tokyo Night"]:
             theme_menu.addAction(f"{theme} Mode").triggered.connect(
-                lambda _, t=theme: set_theme(t))
+                lambda _, t=theme: set_theme(t)
+            )
 
     def update_colors(self):
         self.color_select.clear()
@@ -228,9 +244,7 @@ class MainWindow(QMainWindow):
             folder_name = self.save_path.name
             self.save_location_label.setText(f"Save location: {folder_name}")
             QMessageBox.information(
-                self, 
-                "Save Location Updated", 
-                f"Images will now be saved to:\n{path}"
+                self, "Save Location Updated", f"Images will now be saved to:\n{path}"
             )
 
     def generate_image(self):
@@ -254,7 +268,9 @@ class MainWindow(QMainWindow):
             compress=compress_enabled,
             compress_level=compress_level,
             parent=self,
-            max_words=self.max_words_input.value() if self.line_break_option.isChecked() else None
+            max_words=self.max_words_input.value()
+            if self.line_break_option.isChecked()
+            else None,
         )
 
 def detect_windows_version():
