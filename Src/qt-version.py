@@ -5,7 +5,7 @@ from time import time
 
 from PIL import Image
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QShortcut, QKeySequence
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
                                QFormLayout, QGroupBox, QHBoxLayout, QLabel,
                                QLineEdit, QMainWindow, QMessageBox,
@@ -186,6 +186,14 @@ class MainWindow(QMainWindow):
         self.toggle_compression_options(True)
 
         self.create_menubar()
+        self.setup_shortcuts()
+
+    def setup_shortcuts(self):
+        enter_shortcut = QShortcut(QKeySequence(Qt.Key_Return), self)
+        enter_shortcut.activated.connect(self.generate_image)
+
+        numpad_enter_shortcut = QShortcut(QKeySequence(Qt.Key_Enter), self)
+        numpad_enter_shortcut.activated.connect(self.generate_image)
 
     def update_character_count(self):
         text = self.text_input.text()
