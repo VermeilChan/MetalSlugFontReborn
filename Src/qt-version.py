@@ -179,6 +179,7 @@ class MainWindow(QMainWindow):
 
         self.save_location_label = QLabel("Save location: Desktop (default)")
         self.save_location_label.setStyleSheet("color: #666; font-style: italic;")
+        self.update_save_location_display()
         main_layout.addWidget(self.save_location_label)
 
         self.update_colors()
@@ -201,6 +202,16 @@ class MainWindow(QMainWindow):
         self.char_count_label.setText(f"Characters: {char_count}")
         self.char_count_label.setStyleSheet("color: #666; font-size: 10pt;")
 
+    def update_save_location_display(self):
+        folder_name = self.save_path.name if self.save_path.name else str(self.save_path)
+        display_text = f"Save location: {folder_name}"
+        if self.save_path == Path.home() / "Desktop":
+            display_text += " (default)"
+        
+        self.save_location_label.setText(display_text)
+        self.save_location_label.setToolTip(f"Full path: {self.save_path}")
+        self.save_location_label.setToolTipDuration(5000)
+
     def prompt_save_location(self):
         if load_config("skip_location_prompt", fallback="False") == "True":
             return
@@ -212,9 +223,9 @@ class MainWindow(QMainWindow):
             "Would you like to choose a different folder?"
         )
         msg_box.setStandardButtons(
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+            QMessageBox.Yes | QMessageBox.No
         )
-        msg_box.setDefaultButton(QMessageBox.StandardButton.No)
+        msg_box.setDefaultButton(QMessageBox.No)
 
         cb = QCheckBox("Don't ask me again")
         msg_box.setCheckBox(cb)
@@ -224,7 +235,7 @@ class MainWindow(QMainWindow):
         if cb.isChecked():
             save_config("skip_location_prompt", "True")
 
-        if reply == QMessageBox.StandardButton.Yes:
+        if reply == QMessageBox.Yes:
             self.select_save_path()
 
     def create_menubar(self):
@@ -265,8 +276,7 @@ class MainWindow(QMainWindow):
             self, "Select Save Location", str(self.save_path)
         ):
             self.save_path = Path(path)
-            folder_name = self.save_path.name
-            self.save_location_label.setText(f"Save location: {folder_name}")
+            self.update_save_location_display()
             QMessageBox.information(
                 self, "Save Location Updated", f"Images will now be saved to:\n{path}"
             )
