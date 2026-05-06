@@ -89,9 +89,19 @@ class MainWindow(QMainWindow):
 
         text_group = QGroupBox("Text to Generate")
         text_layout = QVBoxLayout(text_group)
+        
         self.text_input = QLineEdit()
         self.text_input.setPlaceholderText("Enter your text here...")
+        self.text_input.textChanged.connect(self.update_character_count)
         text_layout.addWidget(self.text_input)
+        
+        self.char_count_layout = QHBoxLayout()
+        self.char_count_label = QLabel("Characters: 0")
+        self.char_count_label.setStyleSheet("color: #666; font-size: 10pt;")
+        self.char_count_layout.addWidget(self.char_count_label)
+        self.char_count_layout.addStretch()
+        text_layout.addLayout(self.char_count_layout)
+        
         main_layout.addWidget(text_group)
 
         style_group = QGroupBox("Font Settings")
@@ -176,6 +186,12 @@ class MainWindow(QMainWindow):
         self.toggle_compression_options(True)
 
         self.create_menubar()
+
+    def update_character_count(self):
+        text = self.text_input.text()
+        char_count = len(text)
+        self.char_count_label.setText(f"Characters: {char_count}")
+        self.char_count_label.setStyleSheet("color: #666; font-size: 10pt;")
 
     def prompt_save_location(self):
         if load_config("skip_location_prompt", fallback="False") == "True":
