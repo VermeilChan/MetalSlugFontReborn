@@ -4,8 +4,8 @@ from pathlib import Path
 from time import time
 
 from PIL import Image
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QIcon, QShortcut, QKeySequence, QColor, QPixmap, QPainter
+from PySide6.QtCore import Qt, QTimer, QUrl
+from PySide6.QtGui import QIcon, QShortcut, QKeySequence, QColor, QPixmap, QPainter, QDesktopServices 
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
                                QFormLayout, QGroupBox, QHBoxLayout, QLabel,
                                QLineEdit, QMainWindow, QMessageBox,
@@ -72,7 +72,20 @@ class ImageProcessor:
                 f"File size: {size}\n"
                 f"Time taken: {time() - start_time:.3f} seconds"
             )
-            QMessageBox.information(parent, "Success", message)
+
+        msg_box = QMessageBox(parent)
+        msg_box.setWindowTitle("Success")
+        msg_box.setText(message)
+        msg_box.setIcon(QMessageBox.Information)
+
+        open_button = msg_box.addButton("Open Image", QMessageBox.AcceptRole)
+        ok_button = msg_box.addButton(QMessageBox.Ok)
+        msg_box.setDefaultButton(ok_button)
+
+        msg_box.exec()
+
+        if msg_box.clickedButton() == open_button:
+            QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
 
 class MainWindow(QMainWindow):
     def __init__(self):
