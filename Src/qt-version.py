@@ -5,7 +5,7 @@ from time import time
 
 from PIL import Image
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QIcon, QShortcut, QKeySequence, QColor, QPixmap
+from PySide6.QtGui import QIcon, QShortcut, QKeySequence, QColor, QPixmap, QPainter
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
                                QFormLayout, QGroupBox, QHBoxLayout, QLabel,
                                QLineEdit, QMainWindow, QMessageBox,
@@ -264,9 +264,20 @@ class MainWindow(QMainWindow):
         self.color_select.clear()
         font = int(self.font_select.currentText())
 
-        for color_name in FONT_COLORS[font]:    
-            pixmap = QPixmap(16, 16)
-            pixmap.fill(QColor(COLORS[color_name]))
+        for color_name in FONT_COLORS[font]:
+            size = 16
+            pixmap = QPixmap(size, size)
+            pixmap.fill(Qt.transparent)
+
+            painter = QPainter(pixmap)
+            painter.setRenderHint(QPainter.Antialiasing)
+            painter.setPen(Qt.NoPen)
+            painter.setBrush(QColor(COLORS[color_name]))
+
+            margin = 1
+            painter.drawEllipse(margin, margin, size - 2 * margin, size - 2 * margin)
+            painter.end()
+
             self.color_select.addItem(QIcon(pixmap), color_name)
 
     def toggle_word_limit(self, visible):
