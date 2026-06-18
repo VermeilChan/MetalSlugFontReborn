@@ -4,7 +4,7 @@ from pathlib import Path
 from time import time
 
 from PIL import Image
-from PySide6.QtCore import Qt, QTimer, QUrl
+from PySide6.QtCore import Qt, QTimer, QUrl, QThread, QObject, Signal, Slot
 from PySide6.QtGui import QIcon, QShortcut, QKeySequence, QColor, QPixmap, QPainter, QDesktopServices 
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
                                QFormLayout, QGroupBox, QHBoxLayout, QLabel,
@@ -32,72 +32,63 @@ COLORS = {
     "Yellow": "#f8f900",
 }
 
-class ImageProcessor:
-    @staticmethod
-    def process_image(
-        text, font, color, save_path, compress, compress_level, parent, max_words=None
-    ):
-        if not text.strip():
-            QMessageBox.critical(parent, "Error", "Input text cannot be empty")
-            return
+class ImageWorker(QObject):
+    finished = Signal(str, float)
+    failed = Signal(str)
 
+    @Slot(dict)
+    def process(self, params):
         try:
             start = time()
-            filename = generate_filename(text)
-            font_paths = get_font_paths(font, color)
+            filename = generate_filename(params["text"])
+            font_paths = get_font_paths(params["font"], params["color"])
 
             image_path, error = generate_image(
-                text, filename, font_paths, save_path, max_words
+                params["text"], filename, font_paths, params["save_path"], params["max_words"]
             )
             if error:
                 raise RuntimeError(error)
 
-            if compress:
-                compress_image(image_path, compress_level)
+            if params["compress"]:
+                compress_image(image_path, params["compress_level"])
 
-            ImageProcessor.show_success_message(image_path, start, parent)
-
+            self.finished.emit(image_path, start)
         except Exception as e:
-            QMessageBox.critical(parent, "Error", str(e))
+            self.failed.emit(str(e))
 
-    @staticmethod
-    def show_success_message(image_path, start_time, parent):
-        path = Path(image_path)
-        with Image.open(path) as img:
-            size = readable_size(path.stat().st_size)
-            message = (
-                "Successfully generated image!\n\n"
-                f"Image saved at: {path}\n"
-                f"Dimensions: {img.width} x {img.height} pixels\n"
-                f"File size: {size}\n"
-                f"Time taken: {time() - start_time:.3f} seconds"
-            )
-
-        msg_box = QMessageBox(parent)
-        msg_box.setWindowTitle("Success")
-        msg_box.setText(message)
-        msg_box.setIcon(QMessageBox.Information)
-
-        open_button = msg_box.addButton("Open Image", QMessageBox.AcceptRole)
-        ok_button = msg_box.addButton(QMessageBox.Ok)
-        msg_box.setDefaultButton(ok_button)
-
-        msg_box.exec()
-
-        if msg_box.clickedButton() == open_button:
-            QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
 
 class MainWindow(QMainWindow):
+    trigger_generation = Signal(dict)
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Metal Slug Font Reborn")
         self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
         self.setMinimumSize(600, 450)
         self.save_path = Path.home() / "Desktop"
+        
+        self.setup_thread()
         self.setup_ui()
         set_theme()
 
         QTimer.singleShot(100, self.prompt_save_location)
+
+    def setup_thread(self):
+        self._thread = QThread()
+        self._worker = ImageWorker()
+        self._worker.moveToThread(self._thread)
+        
+        self._worker.finished.connect(self.on_generation_finished)
+        self._worker.failed.connect(self.on_generation_failed)
+        self.trigger_generation.connect(self._worker.process)
+        
+        self._thread.start()
+
+    def closeEvent(self, event):
+        """Clean up the thread properly when closing the app."""
+        self._thread.quit()
+        self._thread.wait()
+        super().closeEvent(event)
 
     def setup_ui(self):
         central = QWidget()
@@ -329,18 +320,62 @@ class MainWindow(QMainWindow):
         compress_enabled = self.compress_option.isChecked()
         compress_level = self.compress_level_slider.value() if compress_enabled else 6
 
-        ImageProcessor.process_image(
-            text=text,
-            font=font,
-            color=self.color_select.currentText(),
-            save_path=self.save_path,
-            compress=compress_enabled,
-            compress_level=compress_level,
-            parent=self,
-            max_words=self.max_words_input.value()
-            if self.line_break_option.isChecked()
-            else None,
-        )
+        max_words = self.max_words_input.value() if self.line_break_option.isChecked() else None
+
+        params = {
+            "text": text,
+            "font": font,
+            "color": self.color_select.currentText(),
+            "save_path": str(self.save_path),
+            "compress": compress_enabled,
+            "compress_level": compress_level,
+            "max_words": max_words
+        }
+
+        self.generate_btn.setEnabled(False)
+        self.generate_btn.setText("Generating...")
+
+        self.trigger_generation.emit(params)
+
+    @Slot(str, float)
+    def on_generation_finished(self, image_path, start_time):
+        self.generate_btn.setEnabled(True)
+        self.generate_btn.setText("Generate Image")
+        
+        path = Path(image_path)
+        try:
+            with Image.open(path) as img:
+                size = readable_size(path.stat().st_size)
+                message = (
+                    "Successfully generated image!\n\n"
+                    f"Image saved at: {path}\n"
+                    f"Dimensions: {img.width} x {img.height} pixels\n"
+                    f"File size: {size}\n"
+                    f"Time taken: {time() - start_time:.3f} seconds"
+                )
+
+            msg_box = QMessageBox(self)
+            msg_box.setWindowTitle("Success")
+            msg_box.setText(message)
+            msg_box.setIcon(QMessageBox.Information)
+
+            open_button = msg_box.addButton("Open Image", QMessageBox.AcceptRole)
+            ok_button = msg_box.addButton(QMessageBox.Ok)
+            msg_box.setDefaultButton(ok_button)
+
+            msg_box.exec()
+
+            if msg_box.clickedButton() == open_button:
+                QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to read generated image:\n{str(e)}")
+
+    @Slot(str)
+    def on_generation_failed(self, error_msg):
+        self.generate_btn.setEnabled(True)
+        self.generate_btn.setText("Generate Image")
+        QMessageBox.critical(self, "Error", error_msg)
+
 
 def detect_windows_version():
     system = platform.system()
