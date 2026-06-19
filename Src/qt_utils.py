@@ -1,4 +1,6 @@
-from configparser import ConfigParser
+import tomllib
+from pathlib import Path
+
 from platform import python_version
 
 from PIL import __version__ as pillow_version
@@ -28,21 +30,41 @@ theme_list = {
     "Tokyo Night": tokyo_night,
 }
 
-CONFIG_FILE = "config.ini"
+CONFIG_FILE = Path("config.toml")
 
-def save_config(key, value):
-    config = ConfigParser()
-    config.read(CONFIG_FILE, encoding="utf-8")
-    if "Settings" not in config:
-        config["Settings"] = {}
-    config["Settings"][key] = str(value)
-    with open(CONFIG_FILE, "w", encoding="utf-8") as f:
-        config.write(f)
+class Config:
+    def __init__(self, path: Path = CONFIG_FILE):
+        self._path = path
+        self._data: dict = {}
+        self._load()
+    
+    def _load(self):
+        if self._path.exists():
+            with open(self._path, "rb") as f:
+                self._data = tomllib.load(f)
+    
+    def get(self, key: str, fallback=None):
+        return self._data.get(key, fallback)
+    
+    def set(self, key: str, value):
+        self._data[key] = value
+        self._save()
+    
+    def _save(self):
+        with open(self._path, "w", encoding="utf-8") as f:
+            for key, value in self._data.items():
+                if isinstance(value, str):
+                    f.write(f'{key} = "{value}"\n')
+                else:
+                    f.write(f'{key} = {value}\n')
+
+config = Config()
 
 def load_config(key, fallback=None):
-    config = ConfigParser()
-    config.read(CONFIG_FILE, encoding="utf-8")
-    return config.get("Settings", key, fallback=fallback)
+    return config.get(key, fallback)
+
+def save_config(key, value):
+    config.set(key, value)
 
 def set_theme(theme_name=None):
     theme_name = theme_name or load_config("theme")
