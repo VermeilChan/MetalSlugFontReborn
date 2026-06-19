@@ -30,11 +30,15 @@
   </a>
 </p>
 
-A tool for creating images with the Metal Slug font.
-
 <p style="font-size: medium">
 If you have a GitHub account and have found this repository helpful, please consider starring ★ it.
 </p>
+
+# Overview
+
+MetalSlugFontReborn is a desktop app built with PySide6 and Pillow that generates images from text using sprite-based fonts extracted from the Metal Slug series. It supports multiple font styles, color variations, live previews, automatic line wrapping, compression options.
+
+![MetalSlugFontRebornShowCase](Docs/Markdown/Showcase.png)
 
 ## Table of Contents
 
@@ -48,19 +52,22 @@ If you have a GitHub account and have found this repository helpful, please cons
 
 ## Features
 
-- Easily transform text into images using the Metal Slug font.
-- Supports uppercase and lowercase letters (A-Z, a-z), digits (0-9), symbols (♥-★), and multiple colors.
-- Supports operating systems, including Windows, Linux, macOS.
+- **Multiple Font Styles** - Choose from 5 Metal Slug font variations
+- **Rich Color Palette** - Blue, Orange, Gold, and Yellow variants
+- **Real-time Preview** - See your text rendered instantly as you type
+- **Smart Line Breaks** - Automatic word wrapping with configurable line limits
+- **Theme Support** - Light, Dark, and Tokyo Night themes
+- **Cross-platform** - Works on Windows, macOS, and Linux
 
 ## System Requirements
 
 #### Operating Systems
 
-| Operating System | Supported Versions                                         | Architecture |
-|------------------|------------------------------------------------------------|--------------|
-| Windows          | 11, 10 (1809 or later)                                     | 64-Bit       |
-| GNU/Linux        | Debian 13, Ubuntu 24.04.4, Fedora 43, Arch Linux, OpenSUSE | 64-Bit       |
-| macOS            | 26, 15, 14, 13                                             | ARM64        |
+| Operating System | Supported Versions                                       | Architecture |
+|------------------|----------------------------------------------------------|--------------|
+| Windows          | 11, 10 (1809 or later)                                   | 64-Bit       |
+| GNU/Linux        | Debian 13, Ubuntu 26.04, Fedora 44, Arch Linux, OpenSUSE | 64-Bit       |
+| macOS            | 27, 26, 15, 14, 13                                       | ARM64        |
 
 #### Resource Requirements
 
@@ -105,3 +112,5 @@ I want to say a big thank you to the individuals who helped me.
 - [Ruff](https://docs.astral.sh/ruff/): Python linter and code formatter.
 - [SkyblockerMod](https://github.com/SkyblockerMod/Skyblocker): Issue Template.
 - [Aseprite](https://github.com/aseprite/aseprite): Build template.
+
+_Made with ❤️ by Mitra-88_

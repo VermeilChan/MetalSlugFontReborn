@@ -24,15 +24,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.12.10'
+          python-version: '3.14.6'
           architecture: 'x64'
           cache: 'pip'
 
-      - name: Get Shortened Commit SHA
-        id: shorten_commit_sha
-        uses: soc221b/shorten-commit-sha@v2.0.5
-        with:
-          length: 7
+      - name: Get short SHA
+        id: sha
+        run: echo "short_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+        shell: bash
 
       - name: Create virtual environment
         run: py -m venv .venv
@@ -55,6 +54,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
-          name: MetalSlugFontReborn-${{ steps.shorten_commit_sha.outputs.shortened_commit_sha }}-Windows-x64
+          name: MetalSlugFontReborn-${{ steps.sha.outputs.short_sha }}-Windows-x64
           path: dist/MetalSlugFontReborn
           compression-level: 9

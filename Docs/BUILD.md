@@ -16,11 +16,11 @@
 You should be able to compile MetalSlugFontReborn successfully on the following
 platforms:
 
-| Operating System | Supported Versions                                         | Architecture |
-|------------------|------------------------------------------------------------|--------------|
-| Windows          | 11, 10 (1809 or later)                                     | 64-Bit       |
-| GNU/Linux        | Debian 13, Ubuntu 24.04.4, Fedora 43, Arch Linux, OpenSUSE | 64-Bit       |
-| macOS            | 26, 15, 14, 13                                             | ARM64        |
+| Operating System | Supported Versions                                       | Architecture |
+|------------------|----------------------------------------------------------|--------------|
+| Windows          | 11, 10 (1809 or later)                                   | 64-Bit       |
+| GNU/Linux        | Debian 13, Ubuntu 26.04, Fedora 44, Arch Linux, OpenSUSE | 64-Bit       |
+| macOS            | 27, 26, 15, 14, 13                                       | ARM64        |
 
 # Get the source code
 
@@ -40,9 +40,9 @@ git pull
 To compile MetalSlugFontReborn you will need the following:
 
 - [Python](https://www.python.org/) 3.12 or later
-- [PyInstaller](https://pyinstaller.org/en/stable/) 6.19.0 or later
-- [PySide6-Essentials](https://pypi.org/project/PySide6/) 6.10.2 or later
-- [Pillow](https://pillow.readthedocs.io/en/stable/) 12.1.1 or later
+- [PyInstaller](https://pyinstaller.org/en/stable/) 6.21.0 or later
+- [PySide6-Essentials](https://pypi.org/project/PySide6/) 6.11.1 or later
+- [Pillow](https://pillow.readthedocs.io/en/stable/) 12.2.0 or later
 
 # Compiling
 
@@ -95,6 +95,6 @@ pip install -r requirements.txt
 ```
 ```sh
 pyinstaller --noconfirm --onedir --windowed --strip --name "MetalSlugFontReborn" --clean --optimize "2" --add-data "Src/image_generation.py:." --add-data "Src/qt_utils.py:." --add-data "Src/special_characters.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Docs/SUPPORTED.txt:." --add-data "Assets:Assets/"  "Src/qt-version.py"
-mv dist/MetalSlugFontReborn/_internal/Assets/ dist/MetalSlug FontReborn/
+mv dist/MetalSlugFontReborn/_internal/Assets dist/MetalSlugFontReborn/
 mv dist/MetalSlugFontReborn/_internal/SUPPORTED.txt dist/MetalSlugFontReborn/
 ```

@@ -1,14 +1,16 @@
 import math
 import platform
 
+
 def readable_size(size_bytes):
     if size_bytes == 0:
         return "0 bytes"
     units = ["bytes", "KB", "MB"]
     power = int(math.log(size_bytes, 1024))
     power = min(power, len(units) - 1)
-    size = size_bytes / (1024 ** power)
+    size = size_bytes / (1024**power)
     return f"{size:.2f} {units[power]}"
+
 
 def normalize_architecture(arch):
     mapping = {
@@ -20,19 +22,21 @@ def normalize_architecture(arch):
     }
     return mapping.get(arch.lower(), arch)
 
+
 def get_windows_feature_update():
     if platform.system() != "Windows":
         return None
 
     try:
         import winreg
-        
+
         key_path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion"
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path) as key:
             display_version, _ = winreg.QueryValueEx(key, "DisplayVersion")
             return display_version
     except Exception:
         return None
+
 
 def get_system_info():
     system = platform.system()
@@ -62,7 +66,8 @@ def get_system_info():
         mac_version, *_ = platform.mac_ver()
         return f"macOS {mac_version or platform.release()} {arch}"
 
-msfr_version = f"1.12.3 (a6cd6a8)"
-build_date = "2026-03-08 (Wednesday, March 8)"
+
+msfr_version = f"2.1.0 (3eea6a1)"
+build_date = "2026-06-19 (Friday, June 19)"
 
 system_info = get_system_info()

@@ -1,5 +1,6 @@
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QPalette, QColor
+from PySide6.QtGui import QColor, QPalette
+
 
 def light_mode():
     palette = QPalette()
@@ -18,6 +19,7 @@ def light_mode():
     palette.setColor(QPalette.HighlightedText, Qt.white)
     return palette
 
+
 def dark_mode():
     palette = QPalette()
     palette.setColor(QPalette.Window, QColor(30, 30, 30))
@@ -34,6 +36,7 @@ def dark_mode():
     palette.setColor(QPalette.Highlight, QColor(117, 180, 255))
     palette.setColor(QPalette.HighlightedText, Qt.black)
     return palette
+
 
 def tokyo_night():
     palette = QPalette()
