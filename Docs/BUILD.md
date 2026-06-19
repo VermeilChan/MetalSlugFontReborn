@@ -16,11 +16,11 @@
 You should be able to compile MetalSlugFontReborn successfully on the following
 platforms:
 
-| Operating System | Supported Versions                                         | Architecture |
-|------------------|------------------------------------------------------------|--------------|
-| Windows          | 11, 10 (1809 or later)                                     | 64-Bit       |
-| GNU/Linux        | Debian 13, Ubuntu 24.04.4, Fedora 43, Arch Linux, OpenSUSE | 64-Bit       |
-| macOS            | 26, 15, 14, 13                                             | ARM64        |
+| Operating System | Supported Versions                                       | Architecture |
+|------------------|----------------------------------------------------------|--------------|
+| Windows          | 11, 10 (1809 or later)                                   | 64-Bit       |
+| GNU/Linux        | Debian 13, Ubuntu 26.04, Fedora 44, Arch Linux, OpenSUSE | 64-Bit       |
+| macOS            | 27, 26, 15, 14, 13                                       | ARM64        |
 
 # Get the source code
 
