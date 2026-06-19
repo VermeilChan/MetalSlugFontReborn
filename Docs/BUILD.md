@@ -95,6 +95,6 @@ pip install -r requirements.txt
 ```
 ```sh
 pyinstaller --noconfirm --onedir --windowed --strip --name "MetalSlugFontReborn" --clean --optimize "2" --add-data "Src/image_generation.py:." --add-data "Src/qt_utils.py:." --add-data "Src/special_characters.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Docs/SUPPORTED.txt:." --add-data "Assets:Assets/"  "Src/qt-version.py"
-mv dist/MetalSlugFontReborn/_internal/Assets/ dist/MetalSlug FontReborn/
+mv dist/MetalSlugFontReborn/_internal/Assets dist/MetalSlugFontReborn/
 mv dist/MetalSlugFontReborn/_internal/SUPPORTED.txt dist/MetalSlugFontReborn/
 ```
