@@ -1,13 +1,13 @@
 import platform
 import sys
-import tempfile
 from pathlib import Path
 from time import time
 
-from PIL import Image as PILImage
-from PySide6.QtCore import QObject, Qt, QThread, QTimer, QUrl, Signal, Slot
-from PySide6.QtGui import (QColor, QDesktopServices, QIcon, QKeySequence,
-                           QPainter, QPixmap, QShortcut)
+from PIL import Image as PILImage, ImageQt
+from PySide6.QtCore import QObject, Qt, QThread, QTimer, QUrl, Signal, Slot, QRectF
+from PySide6.QtGui import (QColor, QDesktopServices, QFont, QIcon, QKeySequence,
+                           QLinearGradient, QPainter, QPaintEvent,
+                           QPen, QBrush, QPixmap, QShortcut)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
                                QFormLayout, QGroupBox, QHBoxLayout, QLabel,
                                QMainWindow, QMessageBox, QPlainTextEdit,
@@ -22,8 +22,8 @@ DEFAULT_COMPRESS_LEVEL = 6
 PREVIEW_COMPRESS_LEVEL = 1
 DISABLE_COMPRESSION = 0
 
-WINDOW_MIN_WIDTH = 600
-WINDOW_MIN_HEIGHT = 550
+WINDOW_MIN_WIDTH = 680
+WINDOW_MIN_HEIGHT = 640
 INITIAL_PROMPT_DELAY = 100
 
 MAIN_LAYOUT_SPACING = 15
@@ -52,6 +52,8 @@ TOOLTIP_DURATION = 5000
 COLOR_ICON_SIZE = 16
 COLOR_ICON_MARGIN = 1
 
+WARNING_LABEL_HEIGHT = 28
+
 FONT_COLORS = {
     1: ["Blue", "Orange", "Gold"],
     2: ["Blue", "Orange", "Gold"],
@@ -67,6 +69,53 @@ COLORS = {
     "Yellow": "#f8f900",
 }
 
+
+class ChromaWarningLabel(QWidget):
+    def __init__(self, text, parent=None):
+        super().__init__(parent)
+        self.text = text
+        self.offset = 0.0
+        self.font = QFont()
+        self.font.setPointSize(10)
+        self.font.setItalic(True)
+        self.font.setBold(True)
+
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self._update_chroma)
+
+        self.setFixedHeight(WARNING_LABEL_HEIGHT)
+
+    def showEvent(self, event):
+        self.timer.start(16)
+        super().showEvent(event)
+
+    def hideEvent(self, event):
+        self.timer.stop()
+        super().hideEvent(event)
+
+    def _update_chroma(self):
+        self.offset = (self.offset + 0.005) % 1.0
+        self.update()
+
+    def paintEvent(self, event: QPaintEvent):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.TextAntialiasing)
+
+        rect = self.rect()
+        gradient = QLinearGradient(rect.left(), 0, rect.right(), 0)
+
+        for i in range(11):
+            pos = i / 10
+            hue = int(((pos - self.offset) % 1.0) * 359)
+            gradient.setColorAt(pos, QColor.fromHsv(hue, 255, 255))
+
+        painter.setFont(self.font)
+        painter.setPen(QPen(QBrush(gradient), 1))
+        painter.drawText(QRectF(rect), Qt.AlignmentFlag.AlignCenter, self.text)
+        painter.end()
+
+
 class ImageWorker(QObject):
     finished = Signal(str, float)
     failed = Signal(str)
@@ -78,7 +127,6 @@ class ImageWorker(QObject):
             filename = generate_filename(params["text"])
             font_paths = get_font_paths(params["font"], params["color"])
 
-            # FIX: Trust the compress_level sent by the UI instead of overriding it
             compress_lvl = params["compress_level"]
             
             image_path, error = generate_image(
@@ -180,6 +228,13 @@ class MainWindow(QMainWindow):
 
         style_layout.addRow("Font:", self.font_select)
         style_layout.addRow("Color:", self.color_select)
+
+        self.font5_warning = ChromaWarningLabel(
+            "Font 5 only supports uppercase letters. " \
+            "Your text will be automatically converted to UPPERCASE."
+        )
+        self.font5_warning.setVisible(False)
+        style_layout.addRow(self.font5_warning)
 
         self.preview_label = QLabel()
         self.preview_label.setAlignment(Qt.AlignCenter)
@@ -304,57 +359,69 @@ class MainWindow(QMainWindow):
 
         try:
             font_paths = get_font_paths(font, color)
-            preview_dir = Path(tempfile.gettempdir()) / "msf_preview"
-            preview_dir.mkdir(exist_ok=True)
-
-            image_path, error = generate_image(
-                text, "preview.png", font_paths, str(preview_dir), max_words, compress_level=PREVIEW_COMPRESS_LEVEL
+            pil_image, error = generate_image(
+                text, 
+                "preview", 
+                font_paths, 
+                None,            
+                max_words, 
+                compress_level=PREVIEW_COMPRESS_LEVEL,
+                return_image=True
             )
 
-            if error:
+            if error or pil_image is None:
                 self.preview_label.setPixmap(QPixmap())
                 self.preview_label.setText("Preview unavailable")
                 self.dimensions_label.setText("Resolution: -")
                 return
 
-            with PILImage.open(image_path) as img:
-                width, height = img.width, img.height
-                self.dimensions_label.setText(f"Resolution: {width} x {height}")
-                
-                if width > PREVIEW_MAX_DIMENSION or height > PREVIEW_MAX_DIMENSION:
-                    self.preview_label.setPixmap(QPixmap())
-                    self.preview_label.setText(
-                        "Preview is too large to display!\n"
-                        "The image is perfectly fine, but it exceeds the 32,000 pixel width limit for live previews.\n"
-                        "It will still generate successfully, but please be aware it may fail to open in some image viewers."
-                    )
-                    return
+            width, height = pil_image.width, pil_image.height
+            self.dimensions_label.setText(f"Resolution: {width} x {height}")
+            
+            if width > PREVIEW_MAX_DIMENSION or height > PREVIEW_MAX_DIMENSION:
+                self.preview_label.setPixmap(QPixmap())
+                self.preview_label.setText(
+                    "Preview is too large to display!\n"
+                    "The image is perfectly fine, but it exceeds the 32,000 pixel width limit for live previews.\n"
+                    "It will still generate successfully, but please be aware it may fail to open in some image viewers."
+                )
+                return
 
-            pixmap = QPixmap(image_path)
+            qimage = ImageQt.ImageQt(pil_image)
+
+            target_size = self.preview_label.size()
+            scaled_qimage = qimage.scaled(
+                target_size.width(),
+                target_size.height(),
+                Qt.KeepAspectRatio,
+                Qt.FastTransformation
+            )
+            pixmap = QPixmap.fromImage(scaled_qimage)
+            self.preview_label.setPixmap(pixmap)
+
             if pixmap.isNull():
                 self.preview_label.setPixmap(QPixmap())
                 self.preview_label.setText("Preview unavailable")
                 self.dimensions_label.setText("Resolution: -")
                 return
 
-            scaled = pixmap.scaled(
-                PREVIEW_SCALE_WIDTH, PREVIEW_SCALE_HEIGHT, 
-                Qt.KeepAspectRatio, 
-                Qt.FastTransformation
-            )
-
-            self.preview_label.setPixmap(scaled)
+            self.preview_label.setPixmap(pixmap)
+            
         except PILImage.DecompressionBombError:
             self.preview_label.setPixmap(QPixmap())
             self.preview_label.setText("Image is too large to generate!")
             self.dimensions_label.setText("Resolution: -")
-        except FileNotFoundError:
+        except FileNotFoundError as e:
             self.preview_label.setPixmap(QPixmap())
-            self.preview_label.setText("Preview: unsupported character in text")
+            self.preview_label.setText(f"{e}\n\nPlease remove it to see the preview.")
             self.dimensions_label.setText("Resolution: -")
-        except Exception:
+        except Exception as e:
+            error_msg = str(e)
             self.preview_label.setPixmap(QPixmap())
-            self.preview_label.setText("Preview unavailable")
+            self.preview_label.setText(
+                "Preview unavailable.\n\n"
+                f"Error: {error_msg}"
+            )
             self.dimensions_label.setText("Resolution: -")
 
     def update_character_count(self):
@@ -417,6 +484,8 @@ class MainWindow(QMainWindow):
     def update_colors(self):
         self.color_select.clear()
         font = int(self.font_select.currentText())
+
+        self.font5_warning.setVisible(font == 5)
 
         for color_name in FONT_COLORS[font]:
             size = COLOR_ICON_SIZE

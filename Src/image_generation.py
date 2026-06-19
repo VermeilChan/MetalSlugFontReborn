@@ -93,6 +93,7 @@ def generate_image(
     save_dir,
     max_words=DEFAULT_MAX_WORDS,
     compress_level=DEFAULT_COMPRESS_LEVEL,
+    return_image=False,
 ):
     lines = split_into_lines(text, max_words)
     all_chars = {c for line in lines for c in line if c != "\n"}
@@ -128,6 +129,9 @@ def generate_image(
     for img in line_images:
         final_image.paste(img, (0, y), img)
         y += img.height
+
+    if return_image:
+        return final_image, None
 
     save_path = Path(save_dir) / filename
     final_image.save(save_path, compress_level=compress_level)
