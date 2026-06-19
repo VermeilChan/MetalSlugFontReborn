@@ -60,6 +60,8 @@ PREVIEW_MIN_HEIGHT = 100
 PREVIEW_TIMER_INTERVAL = 150
 PREVIEW_MAX_DIMENSION = 32768
 
+CHAR_COUNT_TIMER_INTERVAL = 150
+
 COMPRESS_SLIDER_MIN = 0
 COMPRESS_SLIDER_MAX = 9
 COMPRESS_SLIDER_TICK_INTERVAL = 1
@@ -234,7 +236,7 @@ class MainWindow(QMainWindow):
         self.text_input = QPlainTextEdit()
         self.text_input.setPlaceholderText("Enter your text here...")
         self.text_input.setMaximumHeight(TEXT_INPUT_MAX_HEIGHT)
-        self.text_input.textChanged.connect(self.update_character_count)
+        self.text_input.textChanged.connect(self.schedule_char_count_update)
         text_layout.addWidget(self.text_input)
 
         self.text_info_layout = QHBoxLayout()
@@ -281,6 +283,11 @@ class MainWindow(QMainWindow):
         self.preview_timer.setSingleShot(True)
         self.preview_timer.setInterval(PREVIEW_TIMER_INTERVAL)
         self.preview_timer.timeout.connect(self.update_preview)
+
+        self.char_count_timer = QTimer(self)
+        self.char_count_timer.setSingleShot(True)
+        self.char_count_timer.setInterval(CHAR_COUNT_TIMER_INTERVAL)
+        self.char_count_timer.timeout.connect(self.update_character_count)
 
         main_layout.addWidget(style_group)
 
@@ -371,6 +378,9 @@ class MainWindow(QMainWindow):
 
     def schedule_preview_update(self):
         self.preview_timer.start()
+
+    def schedule_char_count_update(self):
+        self.char_count_timer.start()
 
     def update_preview(self):
         if not self.font_select.currentText() or not self.color_select.currentText():
