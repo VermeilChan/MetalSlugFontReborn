@@ -4,7 +4,7 @@ from pathlib import Path
 from time import time
 
 from PIL import Image as PILImage, ImageQt
-from PySide6.QtCore import QObject, Qt, QThread, QTimer, QUrl, Signal, Slot, QRectF
+from PySide6.QtCore import QObject, Qt, QThread, QTimer, QUrl, Signal, Slot
 from PySide6.QtGui import (QColor, QDesktopServices, QFont, QIcon, QKeySequence,
                            QLinearGradient, QPainter, QPaintEvent,
                            QPen, QGradient, QPixmap, QShortcut)
