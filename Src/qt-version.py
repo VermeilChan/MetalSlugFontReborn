@@ -1,18 +1,19 @@
 import platform
 import sys
+import tempfile
 from pathlib import Path
 from time import time
 
 from PIL import Image
 from PySide6.QtCore import Qt, QTimer, QUrl, QThread, QObject, Signal, Slot
-from PySide6.QtGui import QIcon, QShortcut, QKeySequence, QColor, QPixmap, QPainter, QDesktopServices 
+from PySide6.QtGui import QIcon, QShortcut, QKeySequence, QColor, QPixmap, QPainter, QDesktopServices, QImageReader
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
                                QFormLayout, QGroupBox, QHBoxLayout, QLabel,
                                QLineEdit, QMainWindow, QMessageBox,
                                QPushButton, QSlider, QSpinBox, QVBoxLayout,
                                QWidget)
 
-from image_generation import (compress_image, generate_filename,
+from image_generation import (generate_filename,
                               generate_image, get_font_paths)
 from qt_utils import about_section, load_config, save_config, set_theme
 from utils import readable_size
@@ -43,14 +44,19 @@ class ImageWorker(QObject):
             filename = generate_filename(params["text"])
             font_paths = get_font_paths(params["font"], params["color"])
 
+            compress_lvl = params["compress_level"] if params["compress"] else 6
+            
             image_path, error = generate_image(
-                params["text"], filename, font_paths, params["save_path"], params["max_words"]
+                params["text"], 
+                filename, 
+                font_paths, 
+                params["save_path"], 
+                params["max_words"],
+                compress_level=compress_lvl
             )
+            
             if error:
                 raise RuntimeError(error)
-
-            if params["compress"]:
-                compress_image(image_path, params["compress_level"])
 
             self.finished.emit(image_path, start)
         except Exception as e:
@@ -64,7 +70,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Metal Slug Font Reborn")
         self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
-        self.setMinimumSize(600, 450)
+        self.setMinimumSize(600, 550)
         self.save_path = Path.home() / "Desktop"
         
         self.setup_thread()
@@ -85,7 +91,6 @@ class MainWindow(QMainWindow):
         self._thread.start()
 
     def closeEvent(self, event):
-        """Clean up the thread properly when closing the app."""
         self._thread.quit()
         self._thread.wait()
         super().closeEvent(event)
@@ -127,6 +132,18 @@ class MainWindow(QMainWindow):
 
         style_layout.addRow("Font:", self.font_select)
         style_layout.addRow("Color:", self.color_select)
+
+        self.preview_label = QLabel()
+        self.preview_label.setAlignment(Qt.AlignCenter)
+        self.preview_label.setMinimumHeight(100)
+        self.preview_label.setText("Loading preview...")
+        style_layout.addRow(self.preview_label)
+
+        self.preview_timer = QTimer(self)
+        self.preview_timer.setSingleShot(True)
+        self.preview_timer.setInterval(150)
+        self.preview_timer.timeout.connect(self.update_preview)
+
         main_layout.addWidget(style_group)
 
         options_group = QGroupBox("Options")
@@ -197,6 +214,13 @@ class MainWindow(QMainWindow):
         self.toggle_word_limit(False)
         self.toggle_compression_options(True)
 
+        self.text_input.textChanged.connect(self.schedule_preview_update)
+        self.font_select.currentIndexChanged.connect(self.schedule_preview_update)
+        self.color_select.currentTextChanged.connect(self.schedule_preview_update)
+        self.line_break_option.toggled.connect(self.schedule_preview_update)
+        self.max_words_input.valueChanged.connect(self.schedule_preview_update)
+        self.schedule_preview_update()
+
         self.create_menubar()
         self.setup_shortcuts()
 
@@ -206,6 +230,63 @@ class MainWindow(QMainWindow):
 
         numpad_enter_shortcut = QShortcut(QKeySequence(Qt.Key_Enter), self)
         numpad_enter_shortcut.activated.connect(self.generate_image)
+
+    def schedule_preview_update(self):
+        self.preview_timer.start()
+
+    def update_preview(self):
+        if not self.font_select.currentText() or not self.color_select.currentText():
+            return
+
+        font = int(self.font_select.currentText())
+        color = self.color_select.currentText()
+        text = self.text_input.text().strip()
+
+        if not text:
+            text = "METAL SLUG IS PEAK!"
+
+        if font == 5:
+            text = text.upper()
+
+        max_words = (
+            self.max_words_input.value()
+            if self.line_break_option.isChecked()
+            else None
+        )
+
+        try:
+            font_paths = get_font_paths(font, color)
+            preview_dir = Path(tempfile.gettempdir()) / "msf_preview"
+            preview_dir.mkdir(exist_ok=True)
+
+            image_path, error = generate_image(
+                text, "preview.png", font_paths, str(preview_dir), max_words, compress_level=0
+            )
+
+            if error:
+                self.preview_label.setPixmap(QPixmap())
+                self.preview_label.setText("Preview unavailable")
+                return
+
+            pixmap = QPixmap(image_path)
+            if pixmap.isNull():
+                self.preview_label.setPixmap(QPixmap())
+                self.preview_label.setText("Preview unavailable")
+                return
+
+            scaled = pixmap.scaled(
+                400, 80, 
+                Qt.KeepAspectRatio, 
+                Qt.FastTransformation
+            )
+
+            self.preview_label.setPixmap(scaled)
+        except FileNotFoundError:
+            self.preview_label.setPixmap(QPixmap())
+            self.preview_label.setText("Preview: unsupported character in text")
+        except Exception:
+            self.preview_label.setPixmap(QPixmap())
+            self.preview_label.setText("Preview unavailable")
 
     def update_character_count(self):
         text = self.text_input.text()
