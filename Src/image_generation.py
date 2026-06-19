@@ -1,6 +1,8 @@
 from pathlib import Path
 from uuid import uuid4
+
 from PIL import Image
+
 from special_characters import special_characters
 
 Image.MAX_IMAGE_PIXELS = 220434240

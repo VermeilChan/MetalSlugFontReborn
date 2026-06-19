@@ -5,16 +5,16 @@ from pathlib import Path
 from time import time
 
 from PIL import Image as PILImage
-from PySide6.QtCore import Qt, QTimer, QUrl, QThread, QObject, Signal, Slot
-from PySide6.QtGui import QIcon, QShortcut, QKeySequence, QColor, QPixmap, QPainter, QDesktopServices 
+from PySide6.QtCore import QObject, Qt, QThread, QTimer, QUrl, Signal, Slot
+from PySide6.QtGui import (QColor, QDesktopServices, QIcon, QKeySequence,
+                           QPainter, QPixmap, QShortcut)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
                                QFormLayout, QGroupBox, QHBoxLayout, QLabel,
-                               QPlainTextEdit, QMainWindow, QMessageBox,
+                               QMainWindow, QMessageBox, QPlainTextEdit,
                                QPushButton, QSlider, QSpinBox, QVBoxLayout,
                                QWidget)
 
-from image_generation import (generate_filename,
-                              generate_image, get_font_paths)
+from image_generation import generate_filename, generate_image, get_font_paths
 from qt_utils import about_section, load_config, save_config, set_theme
 from utils import readable_size
 
