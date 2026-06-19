@@ -7,7 +7,7 @@ from PIL import Image as PILImage, ImageQt
 from PySide6.QtCore import QObject, Qt, QThread, QTimer, QUrl, Signal, Slot, QRectF
 from PySide6.QtGui import (QColor, QDesktopServices, QFont, QIcon, QKeySequence,
                            QLinearGradient, QPainter, QPaintEvent,
-                           QPen, QBrush, QPixmap, QShortcut)
+                           QPen, QGradient, QPixmap, QShortcut)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
                                QFormLayout, QGroupBox, QHBoxLayout, QLabel,
                                QMainWindow, QMessageBox, QPlainTextEdit,
@@ -69,24 +69,35 @@ COLORS = {
     "Yellow": "#f8f900",
 }
 
-
 class ChromaWarningLabel(QWidget):
     def __init__(self, text, parent=None):
         super().__init__(parent)
         self.text = text
-        self.offset = 0.0
+        self.offset = 0
+
         self.font = QFont()
         self.font.setPointSize(10)
         self.font.setItalic(True)
         self.font.setBold(True)
 
+        self._gradient_width = 300 
+        self._gradient = QLinearGradient(0, 0, self._gradient_width, 0)
+        self._gradient.setSpread(QGradient.Spread.RepeatSpread)
+
+        for i in range(11):
+            pos = i / 10.0
+            hue = int(pos * 359)
+            self._gradient.setColorAt(pos, QColor.fromHsv(hue, 255, 255))
+
+        self._pen = QPen(self._gradient, 1)
+
         self.timer = QTimer(self)
         self.timer.timeout.connect(self._update_chroma)
-
+        
         self.setFixedHeight(WARNING_LABEL_HEIGHT)
 
     def showEvent(self, event):
-        self.timer.start(16)
+        self.timer.start(41) 
         super().showEvent(event)
 
     def hideEvent(self, event):
@@ -94,27 +105,21 @@ class ChromaWarningLabel(QWidget):
         super().hideEvent(event)
 
     def _update_chroma(self):
-        self.offset = (self.offset + 0.005) % 1.0
+        self.offset = (self.offset + 5) % self._gradient_width
         self.update()
 
-    def paintEvent(self, event: QPaintEvent):
+    def paintEvent(self, _: QPaintEvent):
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         painter.setRenderHint(QPainter.RenderHint.TextAntialiasing)
 
-        rect = self.rect()
-        gradient = QLinearGradient(rect.left(), 0, rect.right(), 0)
-
-        for i in range(11):
-            pos = i / 10
-            hue = int(((pos - self.offset) % 1.0) * 359)
-            gradient.setColorAt(pos, QColor.fromHsv(hue, 255, 255))
-
         painter.setFont(self.font)
-        painter.setPen(QPen(QBrush(gradient), 1))
-        painter.drawText(QRectF(rect), Qt.AlignmentFlag.AlignCenter, self.text)
-        painter.end()
+        painter.setPen(self._pen)
 
+        painter.translate(self.offset, 0)
+        text_rect = self.rect().translated(-self.offset, 0)
+        painter.drawText(text_rect, Qt.AlignmentFlag.AlignCenter, self.text)
+        
+        painter.end()
 
 class ImageWorker(QObject):
     finished = Signal(str, float)
