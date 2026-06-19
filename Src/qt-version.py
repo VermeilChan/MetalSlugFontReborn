@@ -152,12 +152,17 @@ class MainWindow(QMainWindow):
         self.text_input.textChanged.connect(self.update_character_count)
         text_layout.addWidget(self.text_input)
         
-        self.char_count_layout = QHBoxLayout()
+        self.text_info_layout = QHBoxLayout()
         self.char_count_label = QLabel("Characters: 0")
         self.char_count_label.setStyleSheet("color: #666; font-size: 10pt;")
-        self.char_count_layout.addWidget(self.char_count_label)
-        self.char_count_layout.addStretch()
-        text_layout.addLayout(self.char_count_layout)
+        self.text_info_layout.addWidget(self.char_count_label)
+        self.text_info_layout.addStretch()
+        
+        self.dimensions_label = QLabel("Resolution: -")
+        self.dimensions_label.setStyleSheet("color: #666; font-size: 10pt;")
+        self.text_info_layout.addWidget(self.dimensions_label)
+        
+        text_layout.addLayout(self.text_info_layout)
         
         main_layout.addWidget(text_group)
 
@@ -307,10 +312,14 @@ class MainWindow(QMainWindow):
             if error:
                 self.preview_label.setPixmap(QPixmap())
                 self.preview_label.setText("Preview unavailable")
+                self.dimensions_label.setText("Resolution: -")
                 return
 
             with PILImage.open(image_path) as img:
-                if img.width > PREVIEW_MAX_DIMENSION or img.height > PREVIEW_MAX_DIMENSION:
+                width, height = img.width, img.height
+                self.dimensions_label.setText(f"Resolution: {width} x {height}")
+                
+                if width > PREVIEW_MAX_DIMENSION or height > PREVIEW_MAX_DIMENSION:
                     self.preview_label.setPixmap(QPixmap())
                     self.preview_label.setText(
                         "Preview is too large to display!\n"
@@ -323,6 +332,7 @@ class MainWindow(QMainWindow):
             if pixmap.isNull():
                 self.preview_label.setPixmap(QPixmap())
                 self.preview_label.setText("Preview unavailable")
+                self.dimensions_label.setText("Resolution: -")
                 return
 
             scaled = pixmap.scaled(
@@ -335,12 +345,15 @@ class MainWindow(QMainWindow):
         except PILImage.DecompressionBombError:
             self.preview_label.setPixmap(QPixmap())
             self.preview_label.setText("Image is too large to generate!")
+            self.dimensions_label.setText("Resolution: -")
         except FileNotFoundError:
             self.preview_label.setPixmap(QPixmap())
             self.preview_label.setText("Preview: unsupported character in text")
+            self.dimensions_label.setText("Resolution: -")
         except Exception:
             self.preview_label.setPixmap(QPixmap())
             self.preview_label.setText("Preview unavailable")
+            self.dimensions_label.setText("Resolution: -")
 
     def update_character_count(self):
         text = self.text_input.toPlainText()
