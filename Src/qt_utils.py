@@ -1,12 +1,17 @@
 from configparser import ConfigParser
+from platform import python_version
 
 from PIL import __version__ as pillow_version
 from PyInstaller import __version__ as pyinstaller_version
 from PySide6 import __version__ as pyside6_version
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import (QApplication, QDialog, QGroupBox, QHBoxLayout,
-                               QLabel, QVBoxLayout)
+from PySide6.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
+                               QGridLayout, QGroupBox, QHBoxLayout, QLabel,
+                               QPlainTextEdit, QTabWidget, QVBoxLayout,
+                               QWidget)
 
+from special_characters import LICENSE_TEXT
 from themes import dark_mode, light_mode, tokyo_night
 from utils import build_date, get_system_info, msfr_version
 
@@ -47,41 +52,102 @@ def create_group(title, content):
 
 def about_section(parent):
     dialog = QDialog(parent)
-    dialog.setWindowTitle("About")
-    layout = QVBoxLayout()
+    dialog.setWindowTitle("About MetalSlugFontReborn")
+    dialog.setMinimumWidth(450)
+
+    main_layout = QVBoxLayout()
+    tab_widget = QTabWidget()
+
+    about_tab = QWidget()
+    about_layout = QVBoxLayout(about_tab)
+    about_layout.setSpacing(15)
 
     header = QHBoxLayout()
+    
     icon = QLabel()
-    icon.setPixmap(QPixmap("Assets/Icons/Raubtier.png"))
-
+    pixmap = QPixmap("Assets/Icons/Raubtier.png")
+    if not pixmap.isNull():
+        icon.setPixmap(pixmap.scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+    
     info = QVBoxLayout()
-    info.addWidget(QLabel("MetalSlugFontReborn"))
-    info.addWidget(QLabel("GPL-3.0 Licensed"))
+    info.setSpacing(2)
+    
+    app_name = QLabel("MetalSlugFontReborn")
+    font = app_name.font()
+    font.setPointSize(14)
+    font.setBold(True)
+    app_name.setFont(font)
+    
+    license_label = QLabel("GPL-3.0 Licensed")
 
     github = QLabel(
         '<a href="https://github.com/Mitra-88/MetalSlugFontReborn">GitHub Repository</a>'
     )
     github.setOpenExternalLinks(True)
+
+    info.addWidget(app_name)
+    info.addWidget(license_label)
     info.addWidget(github)
 
-    header.addWidget(icon)
+    header.addWidget(icon, alignment=Qt.AlignTop)
     header.addLayout(info)
-    layout.addLayout(header)
+    header.addStretch()
+    
+    about_layout.addLayout(header)
 
     os_layout = QVBoxLayout()
-    os_layout.addWidget(QLabel(f"OS: {get_system_info()}"))
-    layout.addWidget(create_group("Operating System:", os_layout))
+    os_label = QLabel(f"OS: {get_system_info()}")
+    os_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
+    os_label.setWordWrap(True)
+    os_layout.addWidget(os_label)
+    
+    about_layout.addWidget(create_group("Operating System:", os_layout))
+    build_info = QGridLayout()
+    build_info.setVerticalSpacing(4)
+    
+    build_items = [
+        ("Version:", msfr_version),
+        ("Python:", python_version()),
+        ("PyInstaller:", pyinstaller_version),
+        ("PySide6:", pyside6_version),
+        ("Pillow:", pillow_version),
+        ("Build date:", build_date),
+    ]
 
-    build_info = QVBoxLayout()
-    for text in [
-        f"Version: {msfr_version}",
-        f"Pyinstaller: {pyinstaller_version}",
-        f"PySide6: {pyside6_version}",
-        f"Pillow: {pillow_version}",
-        f"Build date: {build_date}",
-    ]:
-        build_info.addWidget(QLabel(text))
+    for row, (label_text, value) in enumerate(build_items):
+        lbl = QLabel(f"<b>{label_text}</b>")
+        val = QLabel(str(value))
+        
+        lbl.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        val.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        
+        build_info.addWidget(lbl, row, 0)
+        build_info.addWidget(val, row, 1)
 
-    layout.addWidget(create_group("Build Information:", build_info))
-    dialog.setLayout(layout)
+    build_group = create_group("Build Information:", build_info)
+    about_layout.addWidget(build_group)
+    
+    about_layout.addStretch()
+    tab_widget.addTab(about_tab, "About")
+
+    license_tab = QWidget()
+    license_layout = QVBoxLayout(license_tab)
+    
+    license_text_edit = QPlainTextEdit()
+    license_text_edit.setPlainText(LICENSE_TEXT)
+    license_text_edit.setReadOnly(True)
+    license_text_edit.setLineWrapMode(QPlainTextEdit.WidgetWidth) 
+    
+    license_layout.addWidget(license_text_edit)
+    tab_widget.addTab(license_tab, "License")
+
+    main_layout.addWidget(tab_widget)
+
+    button_box = QDialogButtonBox(QDialogButtonBox.Ok)
+    button_box.button(QDialogButtonBox.Ok).setText("Close")
+    button_box.accepted.connect(dialog.accept)
+    
+    main_layout.addWidget(button_box, alignment=Qt.AlignRight)
+
+    dialog.setLayout(main_layout)
     dialog.exec()
