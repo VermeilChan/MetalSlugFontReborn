@@ -20,6 +20,7 @@ from utils import readable_size
 
 DEFAULT_COMPRESS_LEVEL = 6
 PREVIEW_COMPRESS_LEVEL = 1
+DISABLE_COMPRESSION = 0
 
 WINDOW_MIN_WIDTH = 600
 WINDOW_MIN_HEIGHT = 550
@@ -77,7 +78,8 @@ class ImageWorker(QObject):
             filename = generate_filename(params["text"])
             font_paths = get_font_paths(params["font"], params["color"])
 
-            compress_lvl = params["compress_level"] if params["compress"] else DEFAULT_COMPRESS_LEVEL
+            # FIX: Trust the compress_level sent by the UI instead of overriding it
+            compress_lvl = params["compress_level"]
             
             image_path, error = generate_image(
                 params["text"], 
@@ -466,7 +468,7 @@ class MainWindow(QMainWindow):
             text = text.upper()
 
         compress_enabled = self.compress_option.isChecked()
-        compress_level = self.compress_level_slider.value() if compress_enabled else DEFAULT_COMPRESS_LEVEL
+        compress_level = self.compress_level_slider.value() if compress_enabled else DISABLE_COMPRESSION
 
         max_words = self.max_words_input.value() if self.line_break_option.isChecked() else None
 
