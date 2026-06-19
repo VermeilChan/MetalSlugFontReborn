@@ -1,5 +1,6 @@
-import platform
 import sys
+import platform
+from os import environ
 from pathlib import Path
 from time import time
 
@@ -43,7 +44,7 @@ from qt_utils import about_section, load_config, save_config, set_theme
 from utils import readable_size
 
 DEFAULT_COMPRESS_LEVEL = 6
-PREVIEW_COMPRESS_LEVEL = 1
+PREVIEW_COMPRESS_LEVEL = 0
 DISABLE_COMPRESSION = 0
 
 WINDOW_MIN_WIDTH = 680
@@ -58,8 +59,6 @@ FORM_LAYOUT_H_SPACING = 20
 PREVIEW_MIN_HEIGHT = 100
 PREVIEW_TIMER_INTERVAL = 150
 PREVIEW_MAX_DIMENSION = 32768
-PREVIEW_SCALE_WIDTH = 400
-PREVIEW_SCALE_HEIGHT = 80
 
 COMPRESS_SLIDER_MIN = 0
 COMPRESS_SLIDER_MAX = 9
@@ -122,7 +121,7 @@ class ChromaWarningLabel(QWidget):
         self.setFixedHeight(WARNING_LABEL_HEIGHT)
 
     def showEvent(self, event):
-        self.timer.start(41)
+        self.timer.start(66)
         super().showEvent(event)
 
     def hideEvent(self, event):
@@ -209,7 +208,7 @@ class MainWindow(QMainWindow):
         self._worker.failed.connect(self.on_generation_failed)
         self.trigger_generation.connect(self._worker.process)
 
-        self._thread.start()
+        self._thread.start(QThread.Priority.LowPriority)
 
     def closeEvent(self, event):
         self._thread.quit()
@@ -421,16 +420,16 @@ class MainWindow(QMainWindow):
                 )
                 return
 
-            qimage = ImageQt.ImageQt(pil_image)
-
             target_size = self.preview_label.size()
-            scaled_qimage = qimage.scaled(
-                target_size.width(),
-                target_size.height(),
-                Qt.KeepAspectRatio,
-                Qt.FastTransformation,
+
+            preview_image = pil_image.copy()
+            preview_image.thumbnail(
+                (target_size.width(), target_size.height()),
+                PILImage.Resampling.NEAREST,
             )
-            pixmap = QPixmap.fromImage(scaled_qimage)
+
+            qimage = ImageQt.ImageQt(preview_image)
+            pixmap = QPixmap.fromImage(qimage)
             self.preview_label.setPixmap(pixmap)
 
             if pixmap.isNull():
@@ -459,7 +458,6 @@ class MainWindow(QMainWindow):
         text = self.text_input.toPlainText()
         char_count = len(text)
         self.char_count_label.setText(f"Characters: {char_count}")
-        self.char_count_label.setStyleSheet("color: #666; font-size: 10pt;")
 
     def update_save_location_display(self):
         folder_name = (
@@ -622,23 +620,21 @@ class MainWindow(QMainWindow):
             msg_box.exec()
 
             if msg_box.clickedButton() == open_button:
-                import os
-
-                current_ld = os.environ.get("LD_LIBRARY_PATH")
-                original_ld = os.environ.get("LD_LIBRARY_PATH_ORIG")
+                current_ld = environ.get("LD_LIBRARY_PATH")
+                original_ld = environ.get("LD_LIBRARY_PATH_ORIG")
 
                 if original_ld is not None:
-                    os.environ["LD_LIBRARY_PATH"] = original_ld
+                    environ["LD_LIBRARY_PATH"] = original_ld
                 else:
-                    os.environ.pop("LD_LIBRARY_PATH", None)
+                    environ.pop("LD_LIBRARY_PATH", None)
 
                 try:
                     QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
                 finally:
                     if current_ld is not None:
-                        os.environ["LD_LIBRARY_PATH"] = current_ld
+                        environ["LD_LIBRARY_PATH"] = current_ld
                     else:
-                        os.environ.pop("LD_LIBRARY_PATH", None)
+                        environ.pop("LD_LIBRARY_PATH", None)
 
         except Exception as e:
             QMessageBox.critical(
@@ -652,19 +648,16 @@ class MainWindow(QMainWindow):
         QMessageBox.critical(self, "Error", error_msg)
 
 
-def detect_windows_version():
-    system = platform.system()
-    if system == "Windows":
-        release = platform.release()
-        return f"{release}".strip()
-    return platform.system()
-
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     os_name = platform.system()
-    if os_name == "Windows" and detect_windows_version() == "11":
+    release = platform.release()
+    if os_name == "Windows" and release == "11":
         app.setStyle("FluentWinUI3")
+    elif os_name == "Windows" and release == "10":
+        app.setStyle("Fusion")
+    elif os_name == "Linux":
+        app.setStyle("Fusion")
     elif os_name == "Darwin":
         app.setStyle("macOS")
     else:
