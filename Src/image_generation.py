@@ -51,20 +51,22 @@ def split_into_lines(text, max_words):
         words = paragraph.split()
         if max_words and words:
             lines.extend([" ".join(words[i : i + max_words]) for i in range(0, len(words), max_words)])
+        elif not words:
+            lines.append("\n")
         else:
             lines.append(paragraph)
     return lines
 
 def generate_image(text, filename, font_paths, save_dir, max_words=None, compress_level=6):
     lines = split_into_lines(text, max_words)
-    all_chars = {c for line in lines for c in line}
+    all_chars = {c for line in lines for c in line if c != "\n"}
     char_images = {char: create_character_image(char, font_paths) for char in all_chars}
 
     line_images = []
     max_width = total_height = 0
 
     for line in lines:
-        if not line:
+        if line == "\n":
             line_height = 50 
             line_img = Image.new("RGBA", (1, line_height), (0, 0, 0, 0))
             line_images.append(line_img)
@@ -72,7 +74,7 @@ def generate_image(text, filename, font_paths, save_dir, max_words=None, compres
             continue
 
         line_width = sum(char_images[c].width for c in line)
-        line_height = max(char_images[c].height for c in line)
+        line_height = max(char_images[c].height for c in line) if line else 0
         line_img = Image.new("RGBA", (line_width, line_height), (0, 0, 0, 0))
 
         x = 0
@@ -92,6 +94,5 @@ def generate_image(text, filename, font_paths, save_dir, max_words=None, compres
         y += img.height
 
     save_path = Path(save_dir) / filename
-
     final_image.save(save_path, compress_level=compress_level)
     return str(save_path), None
