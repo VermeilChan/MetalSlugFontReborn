@@ -590,7 +590,29 @@ class MainWindow(QMainWindow):
             msg_box.exec()
 
             if msg_box.clickedButton() == open_button:
-                QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
+                import os
+                # --- ENVIRONMENT CLEANUP FIX FOR PYINSTALLER + LINUX SHELL ---
+                # Back up PyInstaller's current environment pollution
+                current_ld = os.environ.get('LD_LIBRARY_PATH')
+                original_ld = os.environ.get('LD_LIBRARY_PATH_ORIG')
+                
+                # Restore host system paths so /bin/sh uses modern system libs
+                if original_ld is not None:
+                    os.environ['LD_LIBRARY_PATH'] = original_ld
+                else:
+                    os.environ.pop('LD_LIBRARY_PATH', None)
+                
+                try:
+                    # Fire the URL handler unpolluted
+                    QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
+                finally:
+                    # Always restore original state so PySide6 doesn't crash elsewhere
+                    if current_ld is not None:
+                        os.environ['LD_LIBRARY_PATH'] = current_ld
+                    else:
+                        os.environ.pop('LD_LIBRARY_PATH', None)
+                # -------------------------------------------------------------
+                
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to read generated image:\n{str(e)}")
 
