@@ -36,6 +36,7 @@ def get_font_paths(font, color):
         "symbols": base / "Symbols",
     }
 
+
 def get_character_path(character, font_paths):
     if character.isspace():
         return None
@@ -53,6 +54,7 @@ def get_character_path(character, font_paths):
 
     return font_paths["symbols"] / f"{special_characters[character]}.png"
 
+
 def create_character_image(character, font_paths):
     if character.isspace():
         return Image.new(
@@ -69,9 +71,10 @@ def create_character_image(character, font_paths):
         f"The character '{character}' is not supported. Please check SUPPORTED.txt"
     )
 
+
 def split_into_lines(text, max_words):
     lines = []
-    for paragraph in text.split('\n'):
+    for paragraph in text.split("\n"):
         words = paragraph.split()
         if max_words and words:
             lines.extend(
@@ -85,6 +88,7 @@ def split_into_lines(text, max_words):
         else:
             lines.append(paragraph)
     return lines
+
 
 def generate_image(
     text,

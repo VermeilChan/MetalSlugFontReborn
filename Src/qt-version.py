@@ -5,14 +5,38 @@ from time import time
 
 from PIL import Image as PILImage, ImageQt
 from PySide6.QtCore import QObject, Qt, QThread, QTimer, QUrl, Signal, Slot
-from PySide6.QtGui import (QColor, QDesktopServices, QFont, QIcon, QKeySequence,
-                           QLinearGradient, QPainter, QPaintEvent,
-                           QPen, QGradient, QPixmap, QShortcut)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
-                               QFormLayout, QGroupBox, QHBoxLayout, QLabel,
-                               QMainWindow, QMessageBox, QPlainTextEdit,
-                               QPushButton, QSlider, QSpinBox, QVBoxLayout,
-                               QWidget)
+from PySide6.QtGui import (
+    QColor,
+    QDesktopServices,
+    QFont,
+    QIcon,
+    QKeySequence,
+    QLinearGradient,
+    QPainter,
+    QPaintEvent,
+    QPen,
+    QGradient,
+    QPixmap,
+    QShortcut,
+)
+from PySide6.QtWidgets import (
+    QApplication,
+    QCheckBox,
+    QComboBox,
+    QFileDialog,
+    QFormLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QMessageBox,
+    QPlainTextEdit,
+    QPushButton,
+    QSlider,
+    QSpinBox,
+    QVBoxLayout,
+    QWidget,
+)
 
 from image_generation import generate_filename, generate_image, get_font_paths
 from qt_utils import about_section, load_config, save_config, set_theme
@@ -64,10 +88,11 @@ FONT_COLORS = {
 
 COLORS = {
     "Blue": "#2596be",
-    "Orange": "#f89000", 
+    "Orange": "#f89000",
     "Gold": "#f99010",
     "Yellow": "#f8f900",
 }
+
 
 class ChromaWarningLabel(QWidget):
     def __init__(self, text, parent=None):
@@ -80,7 +105,7 @@ class ChromaWarningLabel(QWidget):
         self.font.setItalic(True)
         self.font.setBold(True)
 
-        self._gradient_width = 300 
+        self._gradient_width = 300
         self._gradient = QLinearGradient(0, 0, self._gradient_width, 0)
         self._gradient.setSpread(QGradient.Spread.RepeatSpread)
 
@@ -93,11 +118,11 @@ class ChromaWarningLabel(QWidget):
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self._update_chroma)
-        
+
         self.setFixedHeight(WARNING_LABEL_HEIGHT)
 
     def showEvent(self, event):
-        self.timer.start(41) 
+        self.timer.start(41)
         super().showEvent(event)
 
     def hideEvent(self, event):
@@ -118,8 +143,9 @@ class ChromaWarningLabel(QWidget):
         painter.translate(self.offset, 0)
         text_rect = self.rect().translated(-self.offset, 0)
         painter.drawText(text_rect, Qt.AlignmentFlag.AlignCenter, self.text)
-        
+
         painter.end()
+
 
 class ImageWorker(QObject):
     finished = Signal(str, float)
@@ -133,16 +159,16 @@ class ImageWorker(QObject):
             font_paths = get_font_paths(params["font"], params["color"])
 
             compress_lvl = params["compress_level"]
-            
+
             image_path, error = generate_image(
-                params["text"], 
-                filename, 
-                font_paths, 
-                params["save_path"], 
+                params["text"],
+                filename,
+                font_paths,
+                params["save_path"],
                 params["max_words"],
-                compress_level=compress_lvl
+                compress_level=compress_lvl,
             )
-            
+
             if error:
                 raise RuntimeError(error)
 
@@ -167,7 +193,7 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
         self.setMinimumSize(WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT)
         self.save_path = Path.home() / "Desktop"
-        
+
         self.setup_thread()
         self.setup_ui()
         set_theme()
@@ -178,11 +204,11 @@ class MainWindow(QMainWindow):
         self._thread = QThread()
         self._worker = ImageWorker()
         self._worker.moveToThread(self._thread)
-        
+
         self._worker.finished.connect(self.on_generation_finished)
         self._worker.failed.connect(self.on_generation_failed)
         self.trigger_generation.connect(self._worker.process)
-        
+
         self._thread.start()
 
     def closeEvent(self, event):
@@ -196,29 +222,34 @@ class MainWindow(QMainWindow):
 
         main_layout = QVBoxLayout(central)
         main_layout.setSpacing(MAIN_LAYOUT_SPACING)
-        main_layout.setContentsMargins(MAIN_LAYOUT_MARGIN, MAIN_LAYOUT_MARGIN, MAIN_LAYOUT_MARGIN, MAIN_LAYOUT_MARGIN)
+        main_layout.setContentsMargins(
+            MAIN_LAYOUT_MARGIN,
+            MAIN_LAYOUT_MARGIN,
+            MAIN_LAYOUT_MARGIN,
+            MAIN_LAYOUT_MARGIN,
+        )
 
         text_group = QGroupBox("Text to Generate")
         text_layout = QVBoxLayout(text_group)
-        
+
         self.text_input = QPlainTextEdit()
         self.text_input.setPlaceholderText("Enter your text here...")
         self.text_input.setMaximumHeight(TEXT_INPUT_MAX_HEIGHT)
         self.text_input.textChanged.connect(self.update_character_count)
         text_layout.addWidget(self.text_input)
-        
+
         self.text_info_layout = QHBoxLayout()
         self.char_count_label = QLabel("Characters: 0")
         self.char_count_label.setStyleSheet("color: #666; font-size: 10pt;")
         self.text_info_layout.addWidget(self.char_count_label)
         self.text_info_layout.addStretch()
-        
+
         self.dimensions_label = QLabel("Resolution: -")
         self.dimensions_label.setStyleSheet("color: #666; font-size: 10pt;")
         self.text_info_layout.addWidget(self.dimensions_label)
-        
+
         text_layout.addLayout(self.text_info_layout)
-        
+
         main_layout.addWidget(text_group)
 
         style_group = QGroupBox("Font Settings")
@@ -235,7 +266,7 @@ class MainWindow(QMainWindow):
         style_layout.addRow("Color:", self.color_select)
 
         self.font5_warning = ChromaWarningLabel(
-            "Font 5 only supports uppercase letters. " \
+            "Font 5 only supports uppercase letters. "
             "Your text will be automatically converted to UPPERCASE."
         )
         self.font5_warning.setVisible(False)
@@ -357,21 +388,19 @@ class MainWindow(QMainWindow):
             text = text.upper()
 
         max_words = (
-            self.max_words_input.value()
-            if self.line_break_option.isChecked()
-            else None
+            self.max_words_input.value() if self.line_break_option.isChecked() else None
         )
 
         try:
             font_paths = get_font_paths(font, color)
             pil_image, error = generate_image(
-                text, 
-                "preview", 
-                font_paths, 
-                None,            
-                max_words, 
+                text,
+                "preview",
+                font_paths,
+                None,
+                max_words,
                 compress_level=PREVIEW_COMPRESS_LEVEL,
-                return_image=True
+                return_image=True,
             )
 
             if error or pil_image is None:
@@ -382,7 +411,7 @@ class MainWindow(QMainWindow):
 
             width, height = pil_image.width, pil_image.height
             self.dimensions_label.setText(f"Resolution: {width} x {height}")
-            
+
             if width > PREVIEW_MAX_DIMENSION or height > PREVIEW_MAX_DIMENSION:
                 self.preview_label.setPixmap(QPixmap())
                 self.preview_label.setText(
@@ -399,7 +428,7 @@ class MainWindow(QMainWindow):
                 target_size.width(),
                 target_size.height(),
                 Qt.KeepAspectRatio,
-                Qt.FastTransformation
+                Qt.FastTransformation,
             )
             pixmap = QPixmap.fromImage(scaled_qimage)
             self.preview_label.setPixmap(pixmap)
@@ -411,7 +440,7 @@ class MainWindow(QMainWindow):
                 return
 
             self.preview_label.setPixmap(pixmap)
-            
+
         except PILImage.DecompressionBombError:
             self.preview_label.setPixmap(QPixmap())
             self.preview_label.setText("Image is too large to generate!")
@@ -423,10 +452,7 @@ class MainWindow(QMainWindow):
         except Exception as e:
             error_msg = str(e)
             self.preview_label.setPixmap(QPixmap())
-            self.preview_label.setText(
-                "Preview unavailable.\n\n"
-                f"Error: {error_msg}"
-            )
+            self.preview_label.setText(f"Preview unavailable.\n\nError: {error_msg}")
             self.dimensions_label.setText("Resolution: -")
 
     def update_character_count(self):
@@ -436,11 +462,13 @@ class MainWindow(QMainWindow):
         self.char_count_label.setStyleSheet("color: #666; font-size: 10pt;")
 
     def update_save_location_display(self):
-        folder_name = self.save_path.name if self.save_path.name else str(self.save_path)
+        folder_name = (
+            self.save_path.name if self.save_path.name else str(self.save_path)
+        )
         display_text = f"Save location: {folder_name}"
         if self.save_path == Path.home() / "Desktop":
             display_text += " (default)"
-        
+
         self.save_location_label.setText(display_text)
         self.save_location_label.setToolTip(f"Full path: {self.save_path}")
         self.save_location_label.setToolTipDuration(TOOLTIP_DURATION)
@@ -455,9 +483,7 @@ class MainWindow(QMainWindow):
             "Your images will be saved to your Desktop by default.\n\n"
             "Would you like to choose a different folder?"
         )
-        msg_box.setStandardButtons(
-            QMessageBox.Yes | QMessageBox.No
-        )
+        msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         msg_box.setDefaultButton(QMessageBox.No)
 
         cb = QCheckBox("Don't ask me again")
@@ -542,9 +568,15 @@ class MainWindow(QMainWindow):
             text = text.upper()
 
         compress_enabled = self.compress_option.isChecked()
-        compress_level = self.compress_level_slider.value() if compress_enabled else DISABLE_COMPRESSION
+        compress_level = (
+            self.compress_level_slider.value()
+            if compress_enabled
+            else DISABLE_COMPRESSION
+        )
 
-        max_words = self.max_words_input.value() if self.line_break_option.isChecked() else None
+        max_words = (
+            self.max_words_input.value() if self.line_break_option.isChecked() else None
+        )
 
         params = {
             "text": text,
@@ -553,7 +585,7 @@ class MainWindow(QMainWindow):
             "save_path": str(self.save_path),
             "compress": compress_enabled,
             "compress_level": compress_level,
-            "max_words": max_words
+            "max_words": max_words,
         }
 
         self.generate_btn.setEnabled(False)
@@ -565,7 +597,7 @@ class MainWindow(QMainWindow):
     def on_generation_finished(self, image_path, start_time):
         self.generate_btn.setEnabled(True)
         self.generate_btn.setText("Generate Image")
-        
+
         path = Path(image_path)
         try:
             with PILImage.open(path) as img:
@@ -591,24 +623,27 @@ class MainWindow(QMainWindow):
 
             if msg_box.clickedButton() == open_button:
                 import os
-                current_ld = os.environ.get('LD_LIBRARY_PATH')
-                original_ld = os.environ.get('LD_LIBRARY_PATH_ORIG')
+
+                current_ld = os.environ.get("LD_LIBRARY_PATH")
+                original_ld = os.environ.get("LD_LIBRARY_PATH_ORIG")
 
                 if original_ld is not None:
-                    os.environ['LD_LIBRARY_PATH'] = original_ld
+                    os.environ["LD_LIBRARY_PATH"] = original_ld
                 else:
-                    os.environ.pop('LD_LIBRARY_PATH', None)
-                
+                    os.environ.pop("LD_LIBRARY_PATH", None)
+
                 try:
                     QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
                 finally:
                     if current_ld is not None:
-                        os.environ['LD_LIBRARY_PATH'] = current_ld
+                        os.environ["LD_LIBRARY_PATH"] = current_ld
                     else:
-                        os.environ.pop('LD_LIBRARY_PATH', None)
-                
+                        os.environ.pop("LD_LIBRARY_PATH", None)
+
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"Failed to read generated image:\n{str(e)}")
+            QMessageBox.critical(
+                self, "Error", f"Failed to read generated image:\n{str(e)}"
+            )
 
     @Slot(str)
     def on_generation_failed(self, error_msg):
@@ -623,6 +658,7 @@ def detect_windows_version():
         release = platform.release()
         return f"{release}".strip()
     return platform.system()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
