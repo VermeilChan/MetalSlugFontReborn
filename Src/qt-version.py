@@ -4,12 +4,12 @@ import tempfile
 from pathlib import Path
 from time import time
 
-from PIL import Image
+from PIL import Image as PILImage
 from PySide6.QtCore import Qt, QTimer, QUrl, QThread, QObject, Signal, Slot
-from PySide6.QtGui import QIcon, QShortcut, QKeySequence, QColor, QPixmap, QPainter, QDesktopServices, QImageReader
+from PySide6.QtGui import QIcon, QShortcut, QKeySequence, QColor, QPixmap, QPainter, QDesktopServices 
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
                                QFormLayout, QGroupBox, QHBoxLayout, QLabel,
-                               QLineEdit, QMainWindow, QMessageBox,
+                               QPlainTextEdit, QMainWindow, QMessageBox,
                                QPushButton, QSlider, QSpinBox, QVBoxLayout,
                                QWidget)
 
@@ -59,6 +59,13 @@ class ImageWorker(QObject):
                 raise RuntimeError(error)
 
             self.finished.emit(image_path, start)
+        except PILImage.DecompressionBombError:
+            self.failed.emit(
+                "Whoa, that's a massive image!\n\n"
+                "The text you entered is so long that the generated image exceeds the system's maximum pixel limit. "
+                "Computers have a hard cap on how wide or tall an image can be.\n\n"
+                "To fix this, try shortening your text or turning on 'Automatic line breaks' to stack the text vertically."
+            )
         except Exception as e:
             self.failed.emit(str(e))
 
@@ -106,8 +113,9 @@ class MainWindow(QMainWindow):
         text_group = QGroupBox("Text to Generate")
         text_layout = QVBoxLayout(text_group)
         
-        self.text_input = QLineEdit()
+        self.text_input = QPlainTextEdit()
         self.text_input.setPlaceholderText("Enter your text here...")
+        self.text_input.setMaximumHeight(55)
         self.text_input.textChanged.connect(self.update_character_count)
         text_layout.addWidget(self.text_input)
         
@@ -240,7 +248,7 @@ class MainWindow(QMainWindow):
 
         font = int(self.font_select.currentText())
         color = self.color_select.currentText()
-        text = self.text_input.text().strip()
+        text = self.text_input.toPlainText().strip()
 
         if not text:
             text = "METAL SLUG IS PEAK!"
@@ -260,13 +268,23 @@ class MainWindow(QMainWindow):
             preview_dir.mkdir(exist_ok=True)
 
             image_path, error = generate_image(
-                text, "preview.png", font_paths, str(preview_dir), max_words, compress_level=0
+                text, "preview.png", font_paths, str(preview_dir), max_words, compress_level=1
             )
 
             if error:
                 self.preview_label.setPixmap(QPixmap())
                 self.preview_label.setText("Preview unavailable")
                 return
+
+            with PILImage.open(image_path) as img:
+                if img.width > 32768 or img.height > 32768:
+                    self.preview_label.setPixmap(QPixmap())
+                    self.preview_label.setText(
+                        "Preview is too large to display!\n"
+                        "The image is perfectly fine, but it exceeds the 32,000 pixel width limit for live previews.\n"
+                        "It will still generate successfully, but please be aware it may fail to open in some image viewers."
+                    )
+                    return
 
             pixmap = QPixmap(image_path)
             if pixmap.isNull():
@@ -281,6 +299,9 @@ class MainWindow(QMainWindow):
             )
 
             self.preview_label.setPixmap(scaled)
+        except PILImage.DecompressionBombError:
+            self.preview_label.setPixmap(QPixmap())
+            self.preview_label.setText("Image is too large to generate!")
         except FileNotFoundError:
             self.preview_label.setPixmap(QPixmap())
             self.preview_label.setText("Preview: unsupported character in text")
@@ -289,7 +310,7 @@ class MainWindow(QMainWindow):
             self.preview_label.setText("Preview unavailable")
 
     def update_character_count(self):
-        text = self.text_input.text()
+        text = self.text_input.toPlainText()
         char_count = len(text)
         self.char_count_label.setText(f"Characters: {char_count}")
         self.char_count_label.setStyleSheet("color: #666; font-size: 10pt;")
@@ -389,7 +410,7 @@ class MainWindow(QMainWindow):
             )
 
     def generate_image(self):
-        text = self.text_input.text().strip()
+        text = self.text_input.toPlainText().strip()
         if not text:
             QMessageBox.critical(self, "Error", "Please enter some text to generate.")
             return
@@ -425,7 +446,7 @@ class MainWindow(QMainWindow):
         
         path = Path(image_path)
         try:
-            with Image.open(path) as img:
+            with PILImage.open(path) as img:
                 size = readable_size(path.stat().st_size)
                 message = (
                     "Successfully generated image!\n\n"
