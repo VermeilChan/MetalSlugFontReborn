@@ -620,21 +620,22 @@ class MainWindow(QMainWindow):
             msg_box.exec()
 
             if msg_box.clickedButton() == open_button:
-                current_ld = environ.get("LD_LIBRARY_PATH")
-                original_ld = environ.get("LD_LIBRARY_PATH_ORIG")
-
-                if original_ld is not None:
-                    environ["LD_LIBRARY_PATH"] = original_ld
-                else:
-                    environ.pop("LD_LIBRARY_PATH", None)
-
-                try:
-                    QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
-                finally:
-                    if current_ld is not None:
-                        environ["LD_LIBRARY_PATH"] = current_ld
+                if platform.system() == "Linux":
+                    current_ld = environ.get("LD_LIBRARY_PATH")
+                    original_ld = environ.get("LD_LIBRARY_PATH_ORIG")
+                    if original_ld is not None:
+                        environ["LD_LIBRARY_PATH"] = original_ld
                     else:
                         environ.pop("LD_LIBRARY_PATH", None)
+                    try:
+                        QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
+                    finally:
+                        if current_ld is not None:
+                            environ["LD_LIBRARY_PATH"] = current_ld
+                        else:
+                            environ.pop("LD_LIBRARY_PATH", None)
+                else:
+                    QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
 
         except Exception as e:
             QMessageBox.critical(
