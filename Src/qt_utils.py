@@ -15,6 +15,13 @@ from special_characters import LICENSE_TEXT
 from themes import dark_mode, light_mode, tokyo_night
 from utils import build_date, get_system_info, msfr_version
 
+ABOUT_DIALOG_MIN_WIDTH = 450
+ABOUT_LAYOUT_SPACING = 15
+INFO_LAYOUT_SPACING = 2
+APP_ICON_SIZE = 64
+APP_NAME_FONT_SIZE = 14
+BUILD_INFO_V_SPACING = 4
+
 theme_list = {
     "Light": light_mode,
     "Dark": dark_mode,
@@ -53,28 +60,28 @@ def create_group(title, content):
 def about_section(parent):
     dialog = QDialog(parent)
     dialog.setWindowTitle("About MetalSlugFontReborn")
-    dialog.setMinimumWidth(450)
+    dialog.setMinimumWidth(ABOUT_DIALOG_MIN_WIDTH)
 
     main_layout = QVBoxLayout()
     tab_widget = QTabWidget()
 
     about_tab = QWidget()
     about_layout = QVBoxLayout(about_tab)
-    about_layout.setSpacing(15)
+    about_layout.setSpacing(ABOUT_LAYOUT_SPACING)
 
     header = QHBoxLayout()
     
     icon = QLabel()
     pixmap = QPixmap("Assets/Icons/Raubtier.png")
     if not pixmap.isNull():
-        icon.setPixmap(pixmap.scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        icon.setPixmap(pixmap.scaled(APP_ICON_SIZE, APP_ICON_SIZE, Qt.KeepAspectRatio, Qt.SmoothTransformation))
     
     info = QVBoxLayout()
-    info.setSpacing(2)
+    info.setSpacing(INFO_LAYOUT_SPACING)
     
     app_name = QLabel("MetalSlugFontReborn")
     font = app_name.font()
-    font.setPointSize(14)
+    font.setPointSize(APP_NAME_FONT_SIZE)
     font.setBold(True)
     app_name.setFont(font)
     
@@ -103,7 +110,7 @@ def about_section(parent):
     
     about_layout.addWidget(create_group("Operating System:", os_layout))
     build_info = QGridLayout()
-    build_info.setVerticalSpacing(4)
+    build_info.setVerticalSpacing(BUILD_INFO_V_SPACING)
     
     build_items = [
         ("Version:", msfr_version),

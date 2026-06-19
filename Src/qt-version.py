@@ -18,6 +18,39 @@ from image_generation import generate_filename, generate_image, get_font_paths
 from qt_utils import about_section, load_config, save_config, set_theme
 from utils import readable_size
 
+DEFAULT_COMPRESS_LEVEL = 6
+PREVIEW_COMPRESS_LEVEL = 1
+
+WINDOW_MIN_WIDTH = 600
+WINDOW_MIN_HEIGHT = 550
+INITIAL_PROMPT_DELAY = 100
+
+MAIN_LAYOUT_SPACING = 15
+MAIN_LAYOUT_MARGIN = 20
+TEXT_INPUT_MAX_HEIGHT = 55
+FORM_LAYOUT_H_SPACING = 20
+
+PREVIEW_MIN_HEIGHT = 100
+PREVIEW_TIMER_INTERVAL = 150
+PREVIEW_MAX_DIMENSION = 32768
+PREVIEW_SCALE_WIDTH = 400
+PREVIEW_SCALE_HEIGHT = 80
+
+COMPRESS_SLIDER_MIN = 0
+COMPRESS_SLIDER_MAX = 9
+COMPRESS_SLIDER_TICK_INTERVAL = 1
+COMPRESS_LEVEL_LABEL_WIDTH = 20
+
+MAX_WORDS_MIN = 1
+MAX_WORDS_MAX = 100
+MAX_WORDS_DEFAULT = 10
+MAX_WORDS_INPUT_WIDTH = 80
+
+TOOLTIP_DURATION = 5000
+
+COLOR_ICON_SIZE = 16
+COLOR_ICON_MARGIN = 1
+
 FONT_COLORS = {
     1: ["Blue", "Orange", "Gold"],
     2: ["Blue", "Orange", "Gold"],
@@ -44,7 +77,7 @@ class ImageWorker(QObject):
             filename = generate_filename(params["text"])
             font_paths = get_font_paths(params["font"], params["color"])
 
-            compress_lvl = params["compress_level"] if params["compress"] else 6
+            compress_lvl = params["compress_level"] if params["compress"] else DEFAULT_COMPRESS_LEVEL
             
             image_path, error = generate_image(
                 params["text"], 
@@ -77,14 +110,14 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Metal Slug Font Reborn")
         self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
-        self.setMinimumSize(600, 550)
+        self.setMinimumSize(WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT)
         self.save_path = Path.home() / "Desktop"
         
         self.setup_thread()
         self.setup_ui()
         set_theme()
 
-        QTimer.singleShot(100, self.prompt_save_location)
+        QTimer.singleShot(INITIAL_PROMPT_DELAY, self.prompt_save_location)
 
     def setup_thread(self):
         self._thread = QThread()
@@ -107,15 +140,15 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central)
 
         main_layout = QVBoxLayout(central)
-        main_layout.setSpacing(15)
-        main_layout.setContentsMargins(20, 20, 20, 20)
+        main_layout.setSpacing(MAIN_LAYOUT_SPACING)
+        main_layout.setContentsMargins(MAIN_LAYOUT_MARGIN, MAIN_LAYOUT_MARGIN, MAIN_LAYOUT_MARGIN, MAIN_LAYOUT_MARGIN)
 
         text_group = QGroupBox("Text to Generate")
         text_layout = QVBoxLayout(text_group)
         
         self.text_input = QPlainTextEdit()
         self.text_input.setPlaceholderText("Enter your text here...")
-        self.text_input.setMaximumHeight(55)
+        self.text_input.setMaximumHeight(TEXT_INPUT_MAX_HEIGHT)
         self.text_input.textChanged.connect(self.update_character_count)
         text_layout.addWidget(self.text_input)
         
@@ -130,7 +163,7 @@ class MainWindow(QMainWindow):
 
         style_group = QGroupBox("Font Settings")
         style_layout = QFormLayout(style_group)
-        style_layout.setHorizontalSpacing(20)
+        style_layout.setHorizontalSpacing(FORM_LAYOUT_H_SPACING)
 
         self.font_select = QComboBox()
         self.font_select.addItems(map(str, sorted(FONT_COLORS)))
@@ -143,13 +176,13 @@ class MainWindow(QMainWindow):
 
         self.preview_label = QLabel()
         self.preview_label.setAlignment(Qt.AlignCenter)
-        self.preview_label.setMinimumHeight(100)
+        self.preview_label.setMinimumHeight(PREVIEW_MIN_HEIGHT)
         self.preview_label.setText("Loading preview...")
         style_layout.addRow(self.preview_label)
 
         self.preview_timer = QTimer(self)
         self.preview_timer.setSingleShot(True)
-        self.preview_timer.setInterval(150)
+        self.preview_timer.setInterval(PREVIEW_TIMER_INTERVAL)
         self.preview_timer.timeout.connect(self.update_preview)
 
         main_layout.addWidget(style_group)
@@ -166,16 +199,16 @@ class MainWindow(QMainWindow):
         self.level_layout = QHBoxLayout()
         self.level_layout.addWidget(QLabel("Compression level:"))
         self.compress_level_slider = QSlider(Qt.Horizontal)
-        self.compress_level_slider.setRange(0, 9)
-        self.compress_level_slider.setValue(6)
+        self.compress_level_slider.setRange(COMPRESS_SLIDER_MIN, COMPRESS_SLIDER_MAX)
+        self.compress_level_slider.setValue(DEFAULT_COMPRESS_LEVEL)
         self.compress_level_slider.setTickPosition(QSlider.TicksBelow)
-        self.compress_level_slider.setTickInterval(1)
+        self.compress_level_slider.setTickInterval(COMPRESS_SLIDER_TICK_INTERVAL)
         self.compress_level_slider.valueChanged.connect(
             self.update_compress_level_label
         )
 
-        self.compress_level_label = QLabel("6")
-        self.compress_level_label.setFixedWidth(20)
+        self.compress_level_label = QLabel(str(DEFAULT_COMPRESS_LEVEL))
+        self.compress_level_label.setFixedWidth(COMPRESS_LEVEL_LABEL_WIDTH)
 
         self.level_layout.addWidget(self.compress_level_slider)
         self.level_layout.addWidget(self.compress_level_label)
@@ -192,9 +225,9 @@ class MainWindow(QMainWindow):
 
         self.max_words_label = QLabel("Max words per line:")
         self.max_words_input = QSpinBox()
-        self.max_words_input.setRange(1, 100)
-        self.max_words_input.setValue(10)
-        self.max_words_input.setFixedWidth(80)
+        self.max_words_input.setRange(MAX_WORDS_MIN, MAX_WORDS_MAX)
+        self.max_words_input.setValue(MAX_WORDS_DEFAULT)
+        self.max_words_input.setFixedWidth(MAX_WORDS_INPUT_WIDTH)
 
         line_break_layout.addWidget(self.max_words_label)
         line_break_layout.addWidget(self.max_words_input)
@@ -268,7 +301,7 @@ class MainWindow(QMainWindow):
             preview_dir.mkdir(exist_ok=True)
 
             image_path, error = generate_image(
-                text, "preview.png", font_paths, str(preview_dir), max_words, compress_level=1
+                text, "preview.png", font_paths, str(preview_dir), max_words, compress_level=PREVIEW_COMPRESS_LEVEL
             )
 
             if error:
@@ -277,7 +310,7 @@ class MainWindow(QMainWindow):
                 return
 
             with PILImage.open(image_path) as img:
-                if img.width > 32768 or img.height > 32768:
+                if img.width > PREVIEW_MAX_DIMENSION or img.height > PREVIEW_MAX_DIMENSION:
                     self.preview_label.setPixmap(QPixmap())
                     self.preview_label.setText(
                         "Preview is too large to display!\n"
@@ -293,7 +326,7 @@ class MainWindow(QMainWindow):
                 return
 
             scaled = pixmap.scaled(
-                400, 80, 
+                PREVIEW_SCALE_WIDTH, PREVIEW_SCALE_HEIGHT, 
                 Qt.KeepAspectRatio, 
                 Qt.FastTransformation
             )
@@ -323,7 +356,7 @@ class MainWindow(QMainWindow):
         
         self.save_location_label.setText(display_text)
         self.save_location_label.setToolTip(f"Full path: {self.save_path}")
-        self.save_location_label.setToolTipDuration(5000)
+        self.save_location_label.setToolTipDuration(TOOLTIP_DURATION)
 
     def prompt_save_location(self):
         if load_config("skip_location_prompt", fallback="False") == "True":
@@ -371,7 +404,7 @@ class MainWindow(QMainWindow):
         font = int(self.font_select.currentText())
 
         for color_name in FONT_COLORS[font]:
-            size = 16
+            size = COLOR_ICON_SIZE
             pixmap = QPixmap(size, size)
             pixmap.fill(Qt.transparent)
 
@@ -380,7 +413,7 @@ class MainWindow(QMainWindow):
             painter.setPen(Qt.NoPen)
             painter.setBrush(QColor(COLORS[color_name]))
 
-            margin = 1
+            margin = COLOR_ICON_MARGIN
             painter.drawEllipse(margin, margin, size - 2 * margin, size - 2 * margin)
             painter.end()
 
@@ -420,7 +453,7 @@ class MainWindow(QMainWindow):
             text = text.upper()
 
         compress_enabled = self.compress_option.isChecked()
-        compress_level = self.compress_level_slider.value() if compress_enabled else 6
+        compress_level = self.compress_level_slider.value() if compress_enabled else DEFAULT_COMPRESS_LEVEL
 
         max_words = self.max_words_input.value() if self.line_break_option.isChecked() else None
 
