@@ -1,5 +1,6 @@
-import platform
 import sys
+import platform
+from os import environ
 from pathlib import Path
 from time import time
 
@@ -43,7 +44,7 @@ from qt_utils import about_section, load_config, save_config, set_theme
 from utils import readable_size
 
 DEFAULT_COMPRESS_LEVEL = 6
-PREVIEW_COMPRESS_LEVEL = 1
+PREVIEW_COMPRESS_LEVEL = 0
 DISABLE_COMPRESSION = 0
 
 WINDOW_MIN_WIDTH = 680
@@ -58,8 +59,8 @@ FORM_LAYOUT_H_SPACING = 20
 PREVIEW_MIN_HEIGHT = 100
 PREVIEW_TIMER_INTERVAL = 150
 PREVIEW_MAX_DIMENSION = 32768
-PREVIEW_SCALE_WIDTH = 400
-PREVIEW_SCALE_HEIGHT = 80
+
+CHAR_COUNT_TIMER_INTERVAL = 150
 
 COMPRESS_SLIDER_MIN = 0
 COMPRESS_SLIDER_MAX = 9
@@ -122,7 +123,7 @@ class ChromaWarningLabel(QWidget):
         self.setFixedHeight(WARNING_LABEL_HEIGHT)
 
     def showEvent(self, event):
-        self.timer.start(41)
+        self.timer.start(66)
         super().showEvent(event)
 
     def hideEvent(self, event):
@@ -148,7 +149,7 @@ class ChromaWarningLabel(QWidget):
 
 
 class ImageWorker(QObject):
-    finished = Signal(str, float)
+    finished = Signal(str, int, int, float)
     failed = Signal(str)
 
     @Slot(dict)
@@ -160,7 +161,7 @@ class ImageWorker(QObject):
 
             compress_lvl = params["compress_level"]
 
-            image_path, error = generate_image(
+            image_path, width, height, error = generate_image(
                 params["text"],
                 filename,
                 font_paths,
@@ -172,7 +173,7 @@ class ImageWorker(QObject):
             if error:
                 raise RuntimeError(error)
 
-            self.finished.emit(image_path, start)
+            self.finished.emit(image_path, width, height, start)
         except PILImage.DecompressionBombError:
             self.failed.emit(
                 "Whoa, that's a massive image!\n\n"
@@ -187,6 +188,8 @@ class ImageWorker(QObject):
 class MainWindow(QMainWindow):
     trigger_generation = Signal(dict)
 
+    _color_icons: dict[str, QIcon] = {}
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Metal Slug Font Reborn")
@@ -194,11 +197,33 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT)
         self.save_path = Path.home() / "Desktop"
 
+        self._create_color_icons()
         self.setup_thread()
         self.setup_ui()
         set_theme()
 
         QTimer.singleShot(INITIAL_PROMPT_DELAY, self.prompt_save_location)
+
+    @classmethod
+    def _create_color_icons(cls):
+        if cls._color_icons:
+            return
+
+        for color_name, hex_color in COLORS.items():
+            size = COLOR_ICON_SIZE
+            pixmap = QPixmap(size, size)
+            pixmap.fill(Qt.transparent)
+
+            painter = QPainter(pixmap)
+            painter.setRenderHint(QPainter.Antialiasing)
+            painter.setPen(Qt.NoPen)
+            painter.setBrush(QColor(hex_color))
+
+            margin = COLOR_ICON_MARGIN
+            painter.drawEllipse(margin, margin, size - 2 * margin, size - 2 * margin)
+            painter.end()
+
+            cls._color_icons[color_name] = QIcon(pixmap)
 
     def setup_thread(self):
         self._thread = QThread()
@@ -209,7 +234,7 @@ class MainWindow(QMainWindow):
         self._worker.failed.connect(self.on_generation_failed)
         self.trigger_generation.connect(self._worker.process)
 
-        self._thread.start()
+        self._thread.start(QThread.Priority.LowPriority)
 
     def closeEvent(self, event):
         self._thread.quit()
@@ -235,7 +260,7 @@ class MainWindow(QMainWindow):
         self.text_input = QPlainTextEdit()
         self.text_input.setPlaceholderText("Enter your text here...")
         self.text_input.setMaximumHeight(TEXT_INPUT_MAX_HEIGHT)
-        self.text_input.textChanged.connect(self.update_character_count)
+        self.text_input.textChanged.connect(self.schedule_char_count_update)
         text_layout.addWidget(self.text_input)
 
         self.text_info_layout = QHBoxLayout()
@@ -282,6 +307,11 @@ class MainWindow(QMainWindow):
         self.preview_timer.setSingleShot(True)
         self.preview_timer.setInterval(PREVIEW_TIMER_INTERVAL)
         self.preview_timer.timeout.connect(self.update_preview)
+
+        self.char_count_timer = QTimer(self)
+        self.char_count_timer.setSingleShot(True)
+        self.char_count_timer.setInterval(CHAR_COUNT_TIMER_INTERVAL)
+        self.char_count_timer.timeout.connect(self.update_character_count)
 
         main_layout.addWidget(style_group)
 
@@ -373,6 +403,14 @@ class MainWindow(QMainWindow):
     def schedule_preview_update(self):
         self.preview_timer.start()
 
+    def schedule_char_count_update(self):
+        self.char_count_timer.start()
+
+    def _set_preview_error(self, message):
+        self.preview_label.setPixmap(QPixmap())
+        self.preview_label.setText(message)
+        self.dimensions_label.setText("Resolution: -")
+
     def update_preview(self):
         if not self.font_select.currentText() or not self.color_select.currentText():
             return
@@ -393,7 +431,7 @@ class MainWindow(QMainWindow):
 
         try:
             font_paths = get_font_paths(font, color)
-            pil_image, error = generate_image(
+            pil_image, width, height, error = generate_image(
                 text,
                 "preview",
                 font_paths,
@@ -404,62 +442,46 @@ class MainWindow(QMainWindow):
             )
 
             if error or pil_image is None:
-                self.preview_label.setPixmap(QPixmap())
-                self.preview_label.setText("Preview unavailable")
-                self.dimensions_label.setText("Resolution: -")
+                self._set_preview_error("Preview unavailable")
                 return
 
-            width, height = pil_image.width, pil_image.height
             self.dimensions_label.setText(f"Resolution: {width} x {height}")
 
             if width > PREVIEW_MAX_DIMENSION or height > PREVIEW_MAX_DIMENSION:
-                self.preview_label.setPixmap(QPixmap())
-                self.preview_label.setText(
+                self._set_preview_error(
                     "Preview is too large to display!\n"
                     "The image is perfectly fine, but it exceeds the 32,000 pixel width limit for live previews.\n"
                     "It will still generate successfully, but please be aware it may fail to open in some image viewers."
                 )
                 return
 
-            qimage = ImageQt.ImageQt(pil_image)
-
             target_size = self.preview_label.size()
-            scaled_qimage = qimage.scaled(
-                target_size.width(),
-                target_size.height(),
-                Qt.KeepAspectRatio,
-                Qt.FastTransformation,
+
+            preview_image = pil_image.copy()
+            preview_image.thumbnail(
+                (target_size.width(), target_size.height()),
+                PILImage.Resampling.NEAREST,
             )
-            pixmap = QPixmap.fromImage(scaled_qimage)
+
+            qimage = ImageQt.ImageQt(preview_image)
+            pixmap = QPixmap.fromImage(qimage)
             self.preview_label.setPixmap(pixmap)
 
             if pixmap.isNull():
-                self.preview_label.setPixmap(QPixmap())
-                self.preview_label.setText("Preview unavailable")
-                self.dimensions_label.setText("Resolution: -")
+                self._set_preview_error("Preview unavailable")
                 return
 
-            self.preview_label.setPixmap(pixmap)
-
         except PILImage.DecompressionBombError:
-            self.preview_label.setPixmap(QPixmap())
-            self.preview_label.setText("Image is too large to generate!")
-            self.dimensions_label.setText("Resolution: -")
+            self._set_preview_error("Image is too large to generate!")
         except FileNotFoundError as e:
-            self.preview_label.setPixmap(QPixmap())
-            self.preview_label.setText(f"{e}\n\nPlease remove it to see the preview.")
-            self.dimensions_label.setText("Resolution: -")
+            self._set_preview_error(f"{e}\n\nPlease remove it to see the preview.")
         except Exception as e:
-            error_msg = str(e)
-            self.preview_label.setPixmap(QPixmap())
-            self.preview_label.setText(f"Preview unavailable.\n\nError: {error_msg}")
-            self.dimensions_label.setText("Resolution: -")
+            self._set_preview_error(f"Preview unavailable.\n\nError: {str(e)}")
 
     def update_character_count(self):
         text = self.text_input.toPlainText()
         char_count = len(text)
         self.char_count_label.setText(f"Characters: {char_count}")
-        self.char_count_label.setStyleSheet("color: #666; font-size: 10pt;")
 
     def update_save_location_display(self):
         folder_name = (
@@ -519,20 +541,7 @@ class MainWindow(QMainWindow):
         self.font5_warning.setVisible(font == 5)
 
         for color_name in FONT_COLORS[font]:
-            size = COLOR_ICON_SIZE
-            pixmap = QPixmap(size, size)
-            pixmap.fill(Qt.transparent)
-
-            painter = QPainter(pixmap)
-            painter.setRenderHint(QPainter.Antialiasing)
-            painter.setPen(Qt.NoPen)
-            painter.setBrush(QColor(COLORS[color_name]))
-
-            margin = COLOR_ICON_MARGIN
-            painter.drawEllipse(margin, margin, size - 2 * margin, size - 2 * margin)
-            painter.end()
-
-            self.color_select.addItem(QIcon(pixmap), color_name)
+            self.color_select.addItem(self._color_icons[color_name], color_name)
 
     def toggle_word_limit(self, visible):
         self.max_words_label.setVisible(visible)
@@ -593,56 +602,57 @@ class MainWindow(QMainWindow):
 
         self.trigger_generation.emit(params)
 
-    @Slot(str, float)
-    def on_generation_finished(self, image_path, start_time):
+    def _set_env(self, key, value):
+        if value is not None:
+            environ[key] = value
+        else:
+            environ.pop(key, None)
+
+    @Slot(str, int, int, float)
+    def on_generation_finished(self, image_path, width, height, start_time):
         self.generate_btn.setEnabled(True)
         self.generate_btn.setText("Generate Image")
 
         path = Path(image_path)
         try:
-            with PILImage.open(path) as img:
-                size = readable_size(path.stat().st_size)
-                message = (
-                    "Successfully generated image!\n\n"
-                    f"Image saved at: {path}\n"
-                    f"Dimensions: {img.width} x {img.height} pixels\n"
-                    f"File size: {size}\n"
-                    f"Time taken: {time() - start_time:.3f} seconds"
-                )
+            size = readable_size(path.stat().st_size)
+            message = (
+                "Successfully generated image!\n\n"
+                f"Image saved at: {path}\n"
+                f"Dimensions: {width} x {height} pixels\n"
+                f"File size: {size}\n"
+                f"Time taken: {time() - start_time:.3f} seconds"
+            )
 
             msg_box = QMessageBox(self)
             msg_box.setWindowTitle("Success")
             msg_box.setText(message)
             msg_box.setIcon(QMessageBox.Information)
 
-            open_button = msg_box.addButton("Open Image", QMessageBox.AcceptRole)
             ok_button = msg_box.addButton(QMessageBox.Ok)
+            open_button = msg_box.addButton("Open Image", QMessageBox.AcceptRole)
             msg_box.setDefaultButton(ok_button)
 
             msg_box.exec()
 
-            if msg_box.clickedButton() == open_button:
-                import os
+            if msg_box.clickedButton() != open_button:
+                return
 
-                current_ld = os.environ.get("LD_LIBRARY_PATH")
-                original_ld = os.environ.get("LD_LIBRARY_PATH_ORIG")
+            url = QUrl.fromLocalFile(str(path))
 
-                if original_ld is not None:
-                    os.environ["LD_LIBRARY_PATH"] = original_ld
-                else:
-                    os.environ.pop("LD_LIBRARY_PATH", None)
-
+            if platform.system() == "Linux":
+                current_ld = environ.get("LD_LIBRARY_PATH")
+                self._set_env("LD_LIBRARY_PATH", environ.get("LD_LIBRARY_PATH_ORIG"))
                 try:
-                    QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
+                    QDesktopServices.openUrl(url)
                 finally:
-                    if current_ld is not None:
-                        os.environ["LD_LIBRARY_PATH"] = current_ld
-                    else:
-                        os.environ.pop("LD_LIBRARY_PATH", None)
+                    self._set_env("LD_LIBRARY_PATH", current_ld)
+            else:
+                QDesktopServices.openUrl(url)
 
         except Exception as e:
             QMessageBox.critical(
-                self, "Error", f"Failed to read generated image:\n{str(e)}"
+                self, "Error", f"Failed to read generated image metadata:\n{str(e)}"
             )
 
     @Slot(str)
@@ -652,19 +662,16 @@ class MainWindow(QMainWindow):
         QMessageBox.critical(self, "Error", error_msg)
 
 
-def detect_windows_version():
-    system = platform.system()
-    if system == "Windows":
-        release = platform.release()
-        return f"{release}".strip()
-    return platform.system()
-
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     os_name = platform.system()
-    if os_name == "Windows" and detect_windows_version() == "11":
+    release = platform.release()
+    if os_name == "Windows" and release == "11":
         app.setStyle("FluentWinUI3")
+    elif os_name == "Windows" and release == "10":
+        app.setStyle("Fusion")
+    elif os_name == "Linux":
+        app.setStyle("Fusion")
     elif os_name == "Darwin":
         app.setStyle("macOS")
     else:

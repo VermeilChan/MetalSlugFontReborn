@@ -134,9 +134,11 @@ def generate_image(
         final_image.paste(img, (0, y), img)
         y += img.height
 
+    width, height = final_image.size
+
     if return_image:
-        return final_image, None
+        return final_image, width, height, None
 
     save_path = Path(save_dir) / filename
     final_image.save(save_path, compress_level=compress_level)
-    return str(save_path), None
+    return str(save_path), width, height, None

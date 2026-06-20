@@ -40,6 +40,7 @@ theme_list = {
 }
 
 CONFIG_FILE = Path("config.toml")
+MAX_FILE_SIZE_BYTES = 15 * 1024
 
 
 class Config:
@@ -50,6 +51,11 @@ class Config:
 
     def _load(self):
         if self._path.exists():
+            if self._path.stat().st_size > MAX_FILE_SIZE_BYTES:
+                raise ValueError(
+                    f"Config file exceeds safety limit ({self._path.stat().st_size} bytes)."
+                )
+
             with open(self._path, "rb") as f:
                 self._data = tomllib.load(f)
 
@@ -57,16 +63,39 @@ class Config:
         return self._data.get(key, fallback)
 
     def set(self, key: str, value):
+        if isinstance(value, str):
+            cleaned = value.strip().lower()
+            if cleaned == "true":
+                value = True
+            elif cleaned == "false":
+                value = False
+            elif cleaned.isdigit():
+                value = int(cleaned)
+
         self._data[key] = value
         self._save()
 
     def _save(self):
+        def serialize(val):
+            if isinstance(val, bool):
+                return "true" if val else "false"
+            if isinstance(val, (int, float)):
+                return str(val)
+            if isinstance(val, str):
+                escaped = val.replace("\\", "\\\\").replace('"', '\\"')
+                return f'"{escaped}"'
+            if isinstance(val, list):
+                return f"[{', '.join(serialize(item) for item in val)}]"
+            if isinstance(val, dict):
+                pairs = ", ".join(
+                    f'"{k}" = {serialize(v)}' for k, v in val.items()
+                )
+                return f"{{ {pairs} }}"
+            return f'"{str(val)}"'
+
         with open(self._path, "w", encoding="utf-8") as f:
             for key, value in self._data.items():
-                if isinstance(value, str):
-                    f.write(f'{key} = "{value}"\n')
-                else:
-                    f.write(f"{key} = {value}\n")
+                f.write(f"{key} = {serialize(value)}\n")
 
 
 config = Config()
