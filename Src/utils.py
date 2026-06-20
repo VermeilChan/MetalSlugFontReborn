@@ -69,7 +69,7 @@ def get_system_info():
         return f"macOS {mac_version or platform.release()} {arch}"
 
 
-msfr_version = f"2.1.0 ({uuid4().hex[:7]})"
+msfr_version = f"3.0.0 ({uuid4().hex[:7]})"
 build_date = datetime.now().strftime("%Y-%m-%d (%A, %B %d)")
 
 system_info = get_system_info()

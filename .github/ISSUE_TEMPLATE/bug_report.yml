@@ -42,6 +42,6 @@ body:
     id: metal-slug-font-reborn-version
     attributes:
       label: What version of MetalSlugFontReborn are you using?
-      placeholder: ex. MetalSlugFontReborn 2.1.0
+      placeholder: ex. MetalSlugFontReborn 3.0.0
     validations:
       required: true
