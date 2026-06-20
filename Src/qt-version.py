@@ -606,6 +606,12 @@ class MainWindow(QMainWindow):
 
         self.trigger_generation.emit(params)
 
+    def _set_env(self, key, value):
+        if value is not None:
+            environ[key] = value
+        else:
+            environ.pop(key, None)
+
     @Slot(str, float)
     def on_generation_finished(self, image_path, start_time):
         self.generate_btn.setEnabled(True)
@@ -628,29 +634,26 @@ class MainWindow(QMainWindow):
             msg_box.setText(message)
             msg_box.setIcon(QMessageBox.Information)
 
-            open_button = msg_box.addButton("Open Image", QMessageBox.AcceptRole)
             ok_button = msg_box.addButton(QMessageBox.Ok)
+            open_button = msg_box.addButton("Open Image", QMessageBox.AcceptRole)
             msg_box.setDefaultButton(ok_button)
 
             msg_box.exec()
 
-            if msg_box.clickedButton() == open_button:
-                if platform.system() == "Linux":
-                    current_ld = environ.get("LD_LIBRARY_PATH")
-                    original_ld = environ.get("LD_LIBRARY_PATH_ORIG")
-                    if original_ld is not None:
-                        environ["LD_LIBRARY_PATH"] = original_ld
-                    else:
-                        environ.pop("LD_LIBRARY_PATH", None)
-                    try:
-                        QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
-                    finally:
-                        if current_ld is not None:
-                            environ["LD_LIBRARY_PATH"] = current_ld
-                        else:
-                            environ.pop("LD_LIBRARY_PATH", None)
-                else:
-                    QDesktopServices.openUrl(QUrl.fromLocalFile(str(path)))
+            if msg_box.clickedButton() != open_button:
+                return
+
+            url = QUrl.fromLocalFile(str(path))
+
+            if platform.system() == "Linux":
+                current_ld = environ.get("LD_LIBRARY_PATH")
+                self._set_env("LD_LIBRARY_PATH", environ.get("LD_LIBRARY_PATH_ORIG"))
+                try:
+                    QDesktopServices.openUrl(url)
+                finally:
+                    self._set_env("LD_LIBRARY_PATH", current_ld)
+            else:
+                QDesktopServices.openUrl(url)
 
         except Exception as e:
             QMessageBox.critical(
