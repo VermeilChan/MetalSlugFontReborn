@@ -40,6 +40,7 @@ theme_list = {
 }
 
 CONFIG_FILE = Path("config.toml")
+MAX_FILE_SIZE_BYTES = 15 * 1024
 
 
 class Config:
@@ -50,8 +51,13 @@ class Config:
 
     def _load(self):
         if self._path.exists():
-            with open(self._path, "rb") as f:
-                self._data = tomllib.load(f)
+            if self._path.stat().st_size > MAX_FILE_SIZE_BYTES:
+                raise ValueError(
+                    f"Config file exceeds the 15KB security limit ({self._path.stat().st_size} bytes)."
+                )
+
+            with open(self._path, "r", encoding="utf-8") as f:
+                self._data = tomllib.loads(f.read())
 
     def get(self, key: str, fallback=None):
         return self._data.get(key, fallback)
