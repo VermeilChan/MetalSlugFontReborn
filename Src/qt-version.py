@@ -149,7 +149,7 @@ class ChromaWarningLabel(QWidget):
 
 
 class ImageWorker(QObject):
-    finished = Signal(str, float)
+    finished = Signal(str, int, int, float)
     failed = Signal(str)
 
     @Slot(dict)
@@ -161,7 +161,7 @@ class ImageWorker(QObject):
 
             compress_lvl = params["compress_level"]
 
-            image_path, error = generate_image(
+            image_path, width, height, error = generate_image(
                 params["text"],
                 filename,
                 font_paths,
@@ -173,7 +173,7 @@ class ImageWorker(QObject):
             if error:
                 raise RuntimeError(error)
 
-            self.finished.emit(image_path, start)
+            self.finished.emit(image_path, width, height, start)
         except PILImage.DecompressionBombError:
             self.failed.emit(
                 "Whoa, that's a massive image!\n\n"
@@ -383,9 +383,9 @@ class MainWindow(QMainWindow):
         self.char_count_timer.start()
 
     def _set_preview_error(self, message):
-            self.preview_label.setPixmap(QPixmap())
-            self.preview_label.setText(message)
-            self.dimensions_label.setText("Resolution: -")
+        self.preview_label.setPixmap(QPixmap())
+        self.preview_label.setText(message)
+        self.dimensions_label.setText("Resolution: -")
 
     def update_preview(self):
         if not self.font_select.currentText() or not self.color_select.currentText():
@@ -407,7 +407,7 @@ class MainWindow(QMainWindow):
 
         try:
             font_paths = get_font_paths(font, color)
-            pil_image, error = generate_image(
+            pil_image, width, height, error = generate_image(
                 text,
                 "preview",
                 font_paths,
@@ -421,7 +421,6 @@ class MainWindow(QMainWindow):
                 self._set_preview_error("Preview unavailable")
                 return
 
-            width, height = pil_image.width, pil_image.height
             self.dimensions_label.setText(f"Resolution: {width} x {height}")
 
             if width > PREVIEW_MAX_DIMENSION or height > PREVIEW_MAX_DIMENSION:
@@ -454,20 +453,6 @@ class MainWindow(QMainWindow):
             self._set_preview_error(f"{e}\n\nPlease remove it to see the preview.")
         except Exception as e:
             self._set_preview_error(f"Preview unavailable.\n\nError: {str(e)}")
-
-        except PILImage.DecompressionBombError:
-            self.preview_label.setPixmap(QPixmap())
-            self.preview_label.setText("Image is too large to generate!")
-            self.dimensions_label.setText("Resolution: -")
-        except FileNotFoundError as e:
-            self.preview_label.setPixmap(QPixmap())
-            self.preview_label.setText(f"{e}\n\nPlease remove it to see the preview.")
-            self.dimensions_label.setText("Resolution: -")
-        except Exception as e:
-            error_msg = str(e)
-            self.preview_label.setPixmap(QPixmap())
-            self.preview_label.setText(f"Preview unavailable.\n\nError: {error_msg}")
-            self.dimensions_label.setText("Resolution: -")
 
     def update_character_count(self):
         text = self.text_input.toPlainText()
@@ -612,22 +597,21 @@ class MainWindow(QMainWindow):
         else:
             environ.pop(key, None)
 
-    @Slot(str, float)
-    def on_generation_finished(self, image_path, start_time):
+    @Slot(str, int, int, float)
+    def on_generation_finished(self, image_path, width, height, start_time):
         self.generate_btn.setEnabled(True)
         self.generate_btn.setText("Generate Image")
 
         path = Path(image_path)
         try:
-            with PILImage.open(path) as img:
-                size = readable_size(path.stat().st_size)
-                message = (
-                    "Successfully generated image!\n\n"
-                    f"Image saved at: {path}\n"
-                    f"Dimensions: {img.width} x {img.height} pixels\n"
-                    f"File size: {size}\n"
-                    f"Time taken: {time() - start_time:.3f} seconds"
-                )
+            size = readable_size(path.stat().st_size)
+            message = (
+                "Successfully generated image!\n\n"
+                f"Image saved at: {path}\n"
+                f"Dimensions: {width} x {height} pixels\n"
+                f"File size: {size}\n"
+                f"Time taken: {time() - start_time:.3f} seconds"
+            )
 
             msg_box = QMessageBox(self)
             msg_box.setWindowTitle("Success")
@@ -657,7 +641,7 @@ class MainWindow(QMainWindow):
 
         except Exception as e:
             QMessageBox.critical(
-                self, "Error", f"Failed to read generated image:\n{str(e)}"
+                self, "Error", f"Failed to read generated image metadata:\n{str(e)}"
             )
 
     @Slot(str)
