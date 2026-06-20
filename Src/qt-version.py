@@ -188,6 +188,8 @@ class ImageWorker(QObject):
 class MainWindow(QMainWindow):
     trigger_generation = Signal(dict)
 
+    _color_icons: dict[str, QIcon] = {}
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Metal Slug Font Reborn")
@@ -195,11 +197,33 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT)
         self.save_path = Path.home() / "Desktop"
 
+        self._create_color_icons()
         self.setup_thread()
         self.setup_ui()
         set_theme()
 
         QTimer.singleShot(INITIAL_PROMPT_DELAY, self.prompt_save_location)
+
+    @classmethod
+    def _create_color_icons(cls):
+        if cls._color_icons:
+            return
+
+        for color_name, hex_color in COLORS.items():
+            size = COLOR_ICON_SIZE
+            pixmap = QPixmap(size, size)
+            pixmap.fill(Qt.transparent)
+
+            painter = QPainter(pixmap)
+            painter.setRenderHint(QPainter.Antialiasing)
+            painter.setPen(Qt.NoPen)
+            painter.setBrush(QColor(hex_color))
+
+            margin = COLOR_ICON_MARGIN
+            painter.drawEllipse(margin, margin, size - 2 * margin, size - 2 * margin)
+            painter.end()
+
+            cls._color_icons[color_name] = QIcon(pixmap)
 
     def setup_thread(self):
         self._thread = QThread()
@@ -517,20 +541,7 @@ class MainWindow(QMainWindow):
         self.font5_warning.setVisible(font == 5)
 
         for color_name in FONT_COLORS[font]:
-            size = COLOR_ICON_SIZE
-            pixmap = QPixmap(size, size)
-            pixmap.fill(Qt.transparent)
-
-            painter = QPainter(pixmap)
-            painter.setRenderHint(QPainter.Antialiasing)
-            painter.setPen(Qt.NoPen)
-            painter.setBrush(QColor(COLORS[color_name]))
-
-            margin = COLOR_ICON_MARGIN
-            painter.drawEllipse(margin, margin, size - 2 * margin, size - 2 * margin)
-            painter.end()
-
-            self.color_select.addItem(QIcon(pixmap), color_name)
+            self.color_select.addItem(self._color_icons[color_name], color_name)
 
     def toggle_word_limit(self, visible):
         self.max_words_label.setVisible(visible)
