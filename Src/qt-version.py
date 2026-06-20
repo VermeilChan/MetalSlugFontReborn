@@ -382,6 +382,11 @@ class MainWindow(QMainWindow):
     def schedule_char_count_update(self):
         self.char_count_timer.start()
 
+    def _set_preview_error(self, message):
+            self.preview_label.setPixmap(QPixmap())
+            self.preview_label.setText(message)
+            self.dimensions_label.setText("Resolution: -")
+
     def update_preview(self):
         if not self.font_select.currentText() or not self.color_select.currentText():
             return
@@ -413,17 +418,14 @@ class MainWindow(QMainWindow):
             )
 
             if error or pil_image is None:
-                self.preview_label.setPixmap(QPixmap())
-                self.preview_label.setText("Preview unavailable")
-                self.dimensions_label.setText("Resolution: -")
+                self._set_preview_error("Preview unavailable")
                 return
 
             width, height = pil_image.width, pil_image.height
             self.dimensions_label.setText(f"Resolution: {width} x {height}")
 
             if width > PREVIEW_MAX_DIMENSION or height > PREVIEW_MAX_DIMENSION:
-                self.preview_label.setPixmap(QPixmap())
-                self.preview_label.setText(
+                self._set_preview_error(
                     "Preview is too large to display!\n"
                     "The image is perfectly fine, but it exceeds the 32,000 pixel width limit for live previews.\n"
                     "It will still generate successfully, but please be aware it may fail to open in some image viewers."
@@ -443,12 +445,15 @@ class MainWindow(QMainWindow):
             self.preview_label.setPixmap(pixmap)
 
             if pixmap.isNull():
-                self.preview_label.setPixmap(QPixmap())
-                self.preview_label.setText("Preview unavailable")
-                self.dimensions_label.setText("Resolution: -")
+                self._set_preview_error("Preview unavailable")
                 return
 
-            self.preview_label.setPixmap(pixmap)
+        except PILImage.DecompressionBombError:
+            self._set_preview_error("Image is too large to generate!")
+        except FileNotFoundError as e:
+            self._set_preview_error(f"{e}\n\nPlease remove it to see the preview.")
+        except Exception as e:
+            self._set_preview_error(f"Preview unavailable.\n\nError: {str(e)}")
 
         except PILImage.DecompressionBombError:
             self.preview_label.setPixmap(QPixmap())
