@@ -14,7 +14,6 @@ EMPTY_LINE_HEIGHT = 50
 TRANSPARENT_COLOR = (0, 0, 0, 0)
 
 DEFAULT_COMPRESS_LEVEL = 6
-DEFAULT_MAX_WORDS = None
 
 IMAGE_MODE = "RGBA"
 IMAGE_EXTENSION = ".png"
@@ -72,18 +71,10 @@ def create_character_image(character, font_paths):
     )
 
 
-def split_into_lines(text, max_words):
+def split_into_lines(text):
     lines = []
     for paragraph in text.split("\n"):
-        words = paragraph.split()
-        if max_words and words:
-            lines.extend(
-                [
-                    " ".join(words[i : i + max_words])
-                    for i in range(0, len(words), max_words)
-                ]
-            )
-        elif not words:
+        if not paragraph.split():
             lines.append("\n")
         else:
             lines.append(paragraph)
@@ -95,11 +86,10 @@ def generate_image(
     filename,
     font_paths,
     save_dir,
-    max_words=DEFAULT_MAX_WORDS,
     compress_level=DEFAULT_COMPRESS_LEVEL,
     return_image=False,
 ):
-    lines = split_into_lines(text, max_words)
+    lines = split_into_lines(text)
     all_chars = {c for line in lines for c in line if c != "\n"}
     char_images = {char: create_character_image(char, font_paths) for char in all_chars}
 
