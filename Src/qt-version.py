@@ -34,7 +34,6 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QPushButton,
     QSlider,
-    QSpinBox,
     QVBoxLayout,
     QWidget,
 )
@@ -66,11 +65,6 @@ COMPRESS_SLIDER_MIN = 0
 COMPRESS_SLIDER_MAX = 9
 COMPRESS_SLIDER_TICK_INTERVAL = 1
 COMPRESS_LEVEL_LABEL_WIDTH = 20
-
-MAX_WORDS_MIN = 1
-MAX_WORDS_MAX = 100
-MAX_WORDS_DEFAULT = 10
-MAX_WORDS_INPUT_WIDTH = 80
 
 TOOLTIP_DURATION = 5000
 
@@ -166,7 +160,6 @@ class ImageWorker(QObject):
                 filename,
                 font_paths,
                 params["save_path"],
-                params["max_words"],
                 compress_level=compress_lvl,
             )
 
@@ -179,7 +172,7 @@ class ImageWorker(QObject):
                 "Whoa, that's a massive image!\n\n"
                 "The text you entered is so long that the generated image exceeds the system's maximum pixel limit. "
                 "Computers have a hard cap on how wide or tall an image can be.\n\n"
-                "To fix this, try shortening your text or turning on 'Automatic line breaks' to stack the text vertically."
+                "To fix this, try shortening your text."
             )
         except Exception as e:
             self.failed.emit(str(e))
@@ -344,23 +337,6 @@ class MainWindow(QMainWindow):
         compress_layout.addLayout(self.level_layout)
         options_layout.addLayout(compress_layout)
 
-        line_break_layout = QHBoxLayout()
-        self.line_break_option = QCheckBox("Automatic line breaks")
-        self.line_break_option.toggled.connect(self.toggle_word_limit)
-
-        line_break_layout.addWidget(self.line_break_option)
-        line_break_layout.addStretch()
-
-        self.max_words_label = QLabel("Max words per line:")
-        self.max_words_input = QSpinBox()
-        self.max_words_input.setRange(MAX_WORDS_MIN, MAX_WORDS_MAX)
-        self.max_words_input.setValue(MAX_WORDS_DEFAULT)
-        self.max_words_input.setFixedWidth(MAX_WORDS_INPUT_WIDTH)
-
-        line_break_layout.addWidget(self.max_words_label)
-        line_break_layout.addWidget(self.max_words_input)
-        options_layout.addLayout(line_break_layout)
-
         main_layout.addWidget(options_group)
 
         button_layout = QHBoxLayout()
@@ -380,14 +356,11 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(self.save_location_label)
 
         self.update_colors()
-        self.toggle_word_limit(False)
         self.toggle_compression_options(True)
 
         self.text_input.textChanged.connect(self.schedule_preview_update)
         self.font_select.currentIndexChanged.connect(self.schedule_preview_update)
         self.color_select.currentTextChanged.connect(self.schedule_preview_update)
-        self.line_break_option.toggled.connect(self.schedule_preview_update)
-        self.max_words_input.valueChanged.connect(self.schedule_preview_update)
         self.schedule_preview_update()
 
         self.create_menubar()
@@ -425,10 +398,6 @@ class MainWindow(QMainWindow):
         if font == 5:
             text = text.upper()
 
-        max_words = (
-            self.max_words_input.value() if self.line_break_option.isChecked() else None
-        )
-
         try:
             font_paths = get_font_paths(font, color)
             pil_image, width, height, error = generate_image(
@@ -436,7 +405,6 @@ class MainWindow(QMainWindow):
                 "preview",
                 font_paths,
                 None,
-                max_words,
                 compress_level=PREVIEW_COMPRESS_LEVEL,
                 return_image=True,
             )
@@ -496,7 +464,7 @@ class MainWindow(QMainWindow):
         self.save_location_label.setToolTipDuration(TOOLTIP_DURATION)
 
     def prompt_save_location(self):
-        if load_config("skip_location_prompt", fallback="False") == "True":
+        if load_config("skip_location_prompt", fallback=False) is True:
             return
 
         msg_box = QMessageBox(self)
@@ -514,7 +482,7 @@ class MainWindow(QMainWindow):
         reply = msg_box.exec()
 
         if cb.isChecked():
-            save_config("skip_location_prompt", "True")
+            save_config("skip_location_prompt", True)
 
         if reply == QMessageBox.Yes:
             self.select_save_path()
@@ -542,10 +510,6 @@ class MainWindow(QMainWindow):
 
         for color_name in FONT_COLORS[font]:
             self.color_select.addItem(self._color_icons[color_name], color_name)
-
-    def toggle_word_limit(self, visible):
-        self.max_words_label.setVisible(visible)
-        self.max_words_input.setVisible(visible)
 
     def toggle_compression_options(self, checked):
         for i in range(self.level_layout.count()):
@@ -583,10 +547,6 @@ class MainWindow(QMainWindow):
             else DISABLE_COMPRESSION
         )
 
-        max_words = (
-            self.max_words_input.value() if self.line_break_option.isChecked() else None
-        )
-
         params = {
             "text": text,
             "font": font,
@@ -594,7 +554,6 @@ class MainWindow(QMainWindow):
             "save_path": str(self.save_path),
             "compress": compress_enabled,
             "compress_level": compress_level,
-            "max_words": max_words,
         }
 
         self.generate_btn.setEnabled(False)

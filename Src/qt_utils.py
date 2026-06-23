@@ -1,8 +1,8 @@
-import tomllib
 from pathlib import Path
 
 from platform import python_version
 
+import tomlkit
 from PIL import __version__ as pillow_version
 from PyInstaller import __version__ as pyinstaller_version
 from PySide6 import __version__ as pyside6_version
@@ -46,56 +46,27 @@ MAX_FILE_SIZE_BYTES = 15 * 1024
 class Config:
     def __init__(self, path: Path = CONFIG_FILE):
         self._path = path
-        self._data: dict = {}
+        self._doc = tomlkit.document()
         self._load()
 
     def _load(self):
-        if self._path.exists():
-            if self._path.stat().st_size > MAX_FILE_SIZE_BYTES:
-                raise ValueError(
-                    f"Config file exceeds safety limit ({self._path.stat().st_size} bytes)."
-                )
-
-            with open(self._path, "rb") as f:
-                self._data = tomllib.load(f)
+        if not self._path.exists():
+            return
+        if self._path.stat().st_size > MAX_FILE_SIZE_BYTES:
+            raise ValueError(
+                f"Config file exceeds safety limit ({self._path.stat().st_size} bytes)."
+            )
+        self._doc = tomlkit.loads(self._path.read_text(encoding="utf-8"))
 
     def get(self, key: str, fallback=None):
-        return self._data.get(key, fallback)
+        return self._doc.get(key, fallback)
 
     def set(self, key: str, value):
-        if isinstance(value, str):
-            cleaned = value.strip().lower()
-            if cleaned == "true":
-                value = True
-            elif cleaned == "false":
-                value = False
-            elif cleaned.isdigit():
-                value = int(cleaned)
-
-        self._data[key] = value
+        self._doc[key] = value
         self._save()
 
     def _save(self):
-        def serialize(val):
-            if isinstance(val, bool):
-                return "true" if val else "false"
-            if isinstance(val, (int, float)):
-                return str(val)
-            if isinstance(val, str):
-                escaped = val.replace("\\", "\\\\").replace('"', '\\"')
-                return f'"{escaped}"'
-            if isinstance(val, list):
-                return f"[{', '.join(serialize(item) for item in val)}]"
-            if isinstance(val, dict):
-                pairs = ", ".join(
-                    f'"{k}" = {serialize(v)}' for k, v in val.items()
-                )
-                return f"{{ {pairs} }}"
-            return f'"{str(val)}"'
-
-        with open(self._path, "w", encoding="utf-8") as f:
-            for key, value in self._data.items():
-                f.write(f"{key} = {serialize(value)}\n")
+        self._path.write_text(tomlkit.dumps(self._doc), encoding="utf-8")
 
 
 config = Config()
