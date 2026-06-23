@@ -1,45 +1,23 @@
-import sys
 import platform
+import sys
 from os import environ
 from pathlib import Path
 from time import time
 
-from PIL import Image as PILImage, ImageQt
+from PIL import Image as PILImage
+from PIL import ImageQt
 from PySide6.QtCore import QObject, Qt, QThread, QTimer, QUrl, Signal, Slot
-from PySide6.QtGui import (
-    QColor,
-    QDesktopServices,
-    QFont,
-    QIcon,
-    QKeySequence,
-    QLinearGradient,
-    QPainter,
-    QPaintEvent,
-    QPen,
-    QGradient,
-    QPixmap,
-    QShortcut,
-)
-from PySide6.QtWidgets import (
-    QApplication,
-    QCheckBox,
-    QComboBox,
-    QFileDialog,
-    QFormLayout,
-    QGroupBox,
-    QHBoxLayout,
-    QLabel,
-    QMainWindow,
-    QMessageBox,
-    QPlainTextEdit,
-    QPushButton,
-    QSlider,
-    QVBoxLayout,
-    QWidget,
-)
+from PySide6.QtGui import (QColor, QDesktopServices, QFont, QGradient, QIcon,
+                           QKeySequence, QLinearGradient, QPainter,
+                           QPaintEvent, QPen, QPixmap, QShortcut)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
+                               QFormLayout, QGroupBox, QHBoxLayout, QLabel,
+                               QMainWindow, QMessageBox, QPlainTextEdit,
+                               QPushButton, QSlider, QVBoxLayout, QWidget)
 
 from image_generation import generate_filename, generate_image, get_font_paths
-from qt_utils import about_section, load_config, save_config, set_theme
+from qt_utils import (ViewSupportedButton, about_section, load_config,
+                      save_config, set_theme)
 from utils import readable_size
 
 DEFAULT_COMPRESS_LEVEL = 6
@@ -296,6 +274,9 @@ class MainWindow(QMainWindow):
         self.preview_label.setText("Loading preview...")
         style_layout.addRow(self.preview_label)
 
+        self.supported_btn = ViewSupportedButton(self)
+        style_layout.addRow(self.supported_btn)
+
         self.preview_timer = QTimer(self)
         self.preview_timer.setSingleShot(True)
         self.preview_timer.setInterval(PREVIEW_TIMER_INTERVAL)
@@ -345,6 +326,7 @@ class MainWindow(QMainWindow):
 
         self.generate_btn = QPushButton("Generate Image")
         self.generate_btn.clicked.connect(self.generate_image)
+        self.generate_btn.setEnabled(False)
 
         button_layout.addWidget(self.browse_btn)
         button_layout.addWidget(self.generate_btn)
@@ -359,6 +341,7 @@ class MainWindow(QMainWindow):
         self.toggle_compression_options(True)
 
         self.text_input.textChanged.connect(self.schedule_preview_update)
+        self.text_input.textChanged.connect(self.update_generate_button_state)
         self.font_select.currentIndexChanged.connect(self.schedule_preview_update)
         self.color_select.currentTextChanged.connect(self.schedule_preview_update)
         self.schedule_preview_update()
@@ -373,8 +356,13 @@ class MainWindow(QMainWindow):
         numpad_enter_shortcut = QShortcut(QKeySequence(Qt.Key_Enter), self)
         numpad_enter_shortcut.activated.connect(self.generate_image)
 
+    def update_generate_button_state(self):
+        text = self.text_input.toPlainText().strip()
+        self.generate_btn.setEnabled(bool(text))
+
     def schedule_preview_update(self):
         self.preview_timer.start()
+        self.supported_btn.reset_to_normal()
 
     def schedule_char_count_update(self):
         self.char_count_timer.start()
@@ -410,7 +398,9 @@ class MainWindow(QMainWindow):
             )
 
             if error or pil_image is None:
-                self._set_preview_error("Preview unavailable")
+                self._set_preview_error(error or "Preview unavailable")
+                if error:
+                    self.supported_btn.reveal()
                 return
 
             self.dimensions_label.setText(f"Resolution: {width} x {height}")
@@ -445,6 +435,7 @@ class MainWindow(QMainWindow):
             self._set_preview_error(f"{e}\n\nPlease remove it to see the preview.")
         except Exception as e:
             self._set_preview_error(f"Preview unavailable.\n\nError: {str(e)}")
+            self.supported_btn.reveal()
 
     def update_character_count(self):
         text = self.text_input.toPlainText()
@@ -533,7 +524,6 @@ class MainWindow(QMainWindow):
     def generate_image(self):
         text = self.text_input.toPlainText().strip()
         if not text:
-            QMessageBox.critical(self, "Error", "Please enter some text to generate.")
             return
 
         font = int(self.font_select.currentText())
@@ -569,8 +559,9 @@ class MainWindow(QMainWindow):
 
     @Slot(str, int, int, float)
     def on_generation_finished(self, image_path, width, height, start_time):
-        self.generate_btn.setEnabled(True)
         self.generate_btn.setText("Generate Image")
+        self.update_generate_button_state()
+        self.supported_btn.reset_to_normal()
 
         path = Path(image_path)
         try:
@@ -616,9 +607,11 @@ class MainWindow(QMainWindow):
 
     @Slot(str)
     def on_generation_failed(self, error_msg):
-        self.generate_btn.setEnabled(True)
         self.generate_btn.setText("Generate Image")
+        self.update_generate_button_state()
         QMessageBox.critical(self, "Error", error_msg)
+
+        self.supported_btn.reveal()
 
 
 if __name__ == "__main__":

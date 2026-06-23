@@ -48,7 +48,7 @@ def get_character_path(character, font_paths):
 
     if character not in special_characters:
         raise FileNotFoundError(
-            f"The character '{character}' is not supported. Please check SUPPORTED.txt"
+            f"Character '{character}' is not supported. Click on the view supported characters button for the list of allowed characters"
         )
 
     return font_paths["symbols"] / f"{special_characters[character]}.png"
@@ -67,7 +67,7 @@ def create_character_image(character, font_paths):
         return Image.open(path)
 
     raise FileNotFoundError(
-        f"The character '{character}' is not supported. Please check SUPPORTED.txt"
+        f"Character '{character}' is not supported. Click on the view supported characters button for the list of allowed characters"
     )
 
 
