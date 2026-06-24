@@ -4,8 +4,8 @@ This document provides an overview of the latest updates, milestones, and upcomi
 
 ## Current Status
 
-- **Stable Version**: 3.0.0
-- **Release Date**: 2026-06-20
+- **Stable Version**: 3.1.0
+- **Release Date**: 2026-06-24
 - **Maintainer**: Mitra-88
 
 ## Achieved Milestones
