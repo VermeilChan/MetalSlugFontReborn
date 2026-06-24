@@ -88,6 +88,7 @@ def generate_image(
     save_dir,
     compress_level=DEFAULT_COMPRESS_LEVEL,
     return_image=False,
+    scale=1,
 ):
     lines = split_into_lines(text)
     all_chars = {c for line in lines for c in line if c != "\n"}
@@ -123,6 +124,12 @@ def generate_image(
     for img in line_images:
         final_image.paste(img, (0, y), img)
         y += img.height
+
+    if scale > 1:
+        final_image = final_image.resize(
+            (final_image.width * scale, final_image.height * scale),
+            Image.Resampling.NEAREST
+        )
 
     width, height = final_image.size
 

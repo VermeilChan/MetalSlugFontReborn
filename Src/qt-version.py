@@ -5,7 +5,6 @@ from pathlib import Path
 from time import time
 
 from PIL import Image as PILImage
-from PIL import ImageQt
 from PySide6.QtCore import QObject, Qt, QThread, QTimer, QUrl, Signal, Slot
 from PySide6.QtGui import (QColor, QDesktopServices, QFont, QGradient, QIcon,
                            QKeySequence, QLinearGradient, QPainter,
@@ -130,7 +129,6 @@ class ImageWorker(QObject):
             start = time()
             filename = generate_filename(params["text"])
             font_paths = get_font_paths(params["font"], params["color"])
-
             compress_lvl = params["compress_level"]
 
             image_path, width, height, error = generate_image(
@@ -139,6 +137,8 @@ class ImageWorker(QObject):
                 font_paths,
                 params["save_path"],
                 compress_level=compress_lvl,
+                return_image=False,
+                scale=params.get("scale", 1),
             )
 
             if error:
@@ -292,6 +292,15 @@ class MainWindow(QMainWindow):
         options_group = QGroupBox("Options")
         options_layout = QVBoxLayout(options_group)
 
+        scale_layout = QHBoxLayout()
+        scale_layout.addWidget(QLabel("Output Scale:"))
+        self.scale_select = QComboBox()
+        self.scale_select.addItems(["1x (Native)", "2x", "3x", "4x"])
+        self.scale_select.currentIndexChanged.connect(self.schedule_preview_update)
+        scale_layout.addWidget(self.scale_select)
+        scale_layout.addStretch()
+        options_layout.addLayout(scale_layout)
+
         compress_layout = QVBoxLayout()
         self.compress_option = QCheckBox("Enable compression")
         self.compress_option.setChecked(True)
@@ -357,8 +366,8 @@ class MainWindow(QMainWindow):
         numpad_enter_shortcut.activated.connect(self.generate_image)
 
     def update_generate_button_state(self):
-        text = self.text_input.toPlainText().strip()
-        self.generate_btn.setEnabled(bool(text))
+        has_text = bool(self.text_input.toPlainText().strip())
+        self.generate_btn.setEnabled(has_text)
 
     def schedule_preview_update(self):
         self.preview_timer.start()
@@ -403,24 +412,35 @@ class MainWindow(QMainWindow):
                     self.supported_btn.reveal()
                 return
 
+            scale = self.scale_select.currentIndex() + 1
+            width *= scale
+            height *= scale
+
             self.dimensions_label.setText(f"Resolution: {width} x {height}")
 
             if width > PREVIEW_MAX_DIMENSION or height > PREVIEW_MAX_DIMENSION:
                 self._set_preview_error(
                     "Preview is too large to display!\n"
-                    "The image is perfectly fine, but it exceeds the 32,000 pixel width limit for live previews.\n"
-                    "It will still generate successfully, but please be aware it may fail to open in some image viewers."
+                    "The image is perfectly fine, but it exceeds the 32,000 pixel limit for live previews.\n"
+                    "It will still generate successfully."
                 )
                 return
 
             target_size = self.preview_label.size()
 
             preview_image = pil_image.copy()
+            if scale > 1:
+                preview_image = preview_image.resize(
+                    (preview_image.width * scale, preview_image.height * scale),
+                    PILImage.Resampling.NEAREST
+                )
+
             preview_image.thumbnail(
                 (target_size.width(), target_size.height()),
                 PILImage.Resampling.NEAREST,
             )
 
+            from PIL import ImageQt
             qimage = ImageQt.ImageQt(preview_image)
             pixmap = QPixmap.fromImage(qimage)
             self.preview_label.setPixmap(pixmap)
@@ -544,6 +564,7 @@ class MainWindow(QMainWindow):
             "save_path": str(self.save_path),
             "compress": compress_enabled,
             "compress_level": compress_level,
+            "scale": self.scale_select.currentIndex() + 1,
         }
 
         self.generate_btn.setEnabled(False)
@@ -610,7 +631,6 @@ class MainWindow(QMainWindow):
         self.generate_btn.setText("Generate Image")
         self.update_generate_button_state()
         QMessageBox.critical(self, "Error", error_msg)
-
         self.supported_btn.reveal()
 
 
