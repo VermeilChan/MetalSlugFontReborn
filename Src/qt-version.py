@@ -72,10 +72,10 @@ class ChromaWarningLabel(QWidget):
         self.text = text
         self.offset = 0
 
-        self.font = QFont()
-        self.font.setPointSize(10)
-        self.font.setItalic(True)
-        self.font.setBold(True)
+        self.warning_font = QFont()
+        self.warning_font.setPointSize(10)
+        self.warning_font.setItalic(True)
+        self.warning_font.setBold(True)
 
         self._gradient_width = 300
         self._gradient = QLinearGradient(0, 0, self._gradient_width, 0)
@@ -109,7 +109,7 @@ class ChromaWarningLabel(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.TextAntialiasing)
 
-        painter.setFont(self.font)
+        painter.setFont(self.warning_font)
         painter.setPen(self._pen)
 
         painter.translate(self.offset, 0)
