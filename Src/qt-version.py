@@ -601,25 +601,19 @@ class MainWindow(QMainWindow):
             msg_box.setIcon(QMessageBox.Information)
 
             ok_button = msg_box.addButton(QMessageBox.Ok)
-            open_button = msg_box.addButton("Open Image", QMessageBox.AcceptRole)
             msg_box.setDefaultButton(ok_button)
+
+            is_linux = platform.system() == "Linux"
+            if not is_linux:
+                open_button = msg_box.addButton("Open Image", QMessageBox.AcceptRole)
 
             msg_box.exec()
 
-            if msg_box.clickedButton() != open_button:
+            if is_linux or msg_box.clickedButton() != open_button:
                 return
 
             url = QUrl.fromLocalFile(str(path))
-
-            if platform.system() == "Linux":
-                current_ld = environ.get("LD_LIBRARY_PATH")
-                self._set_env("LD_LIBRARY_PATH", environ.get("LD_LIBRARY_PATH_ORIG"))
-                try:
-                    QDesktopServices.openUrl(url)
-                finally:
-                    self._set_env("LD_LIBRARY_PATH", current_ld)
-            else:
-                QDesktopServices.openUrl(url)
+            QDesktopServices.openUrl(url)
 
         except Exception as e:
             QMessageBox.critical(
