@@ -19,7 +19,6 @@ from qt_utils import (ViewSupportedButton, about_section, load_config,
                       save_config, set_theme)
 from utils import readable_size
 
-# ── Constants (unchanged) ───────────────────────────────────────────
 DEFAULT_COMPRESS_LEVEL = 6
 PREVIEW_COMPRESS_LEVEL = 0
 DISABLE_COMPRESSION = 0
