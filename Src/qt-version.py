@@ -171,6 +171,7 @@ class MainWindow(QMainWindow):
         self._create_color_icons()
         self.setup_thread()
         self.setup_ui()
+        self.preview_enabled = False
         set_theme()
 
         QTimer.singleShot(INITIAL_PROMPT_DELAY, self.prompt_save_location)
@@ -382,6 +383,9 @@ class MainWindow(QMainWindow):
         self.dimensions_label.setText("Resolution: -")
 
     def update_preview(self):
+        if not self.preview_enabled:
+            return
+
         if not self.font_select.currentText() or not self.color_select.currentText():
             return
 
@@ -640,16 +644,6 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     os_name = platform.system()
     release = platform.release()
-    if os_name == "Windows" and release == "11":
-        app.setStyle("FluentWinUI3")
-    elif os_name == "Windows" and release == "10":
-        app.setStyle("Fusion")
-    elif os_name == "Linux":
-        app.setStyle("Fusion")
-    elif os_name == "Darwin":
-        app.setStyle("macOS")
-    else:
-        app.setStyle("Fusion")
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
