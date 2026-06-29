@@ -92,10 +92,7 @@ MetalSlugFontReborn is a free, open-source desktop app built with PySide6 and Pi
 
 > **macOS:** Built for Apple Silicon. I don't own a Mac to verify, but it should work.
 
-> **Linux:** The desktop app is tested on the distributions listed above.
-> If you run into issues on other versions
-> try the [web app](https://vermeil.pythonanywhere.com/) same features, no install.
-> Advanced users can also [build from source](Docs/BUILD.md). (It's really simple trust me!)
+> **Linux:** Tested on the distributions above with Wayland. If the app crashes when typing, switch your display server to Wayland that usually fixes it. You can also use the [web app](https://vermeil.pythonanywhere.com/) (same features, no install) or [build from source](Docs/BUILD.md) (it's easy, trust me!)
 
 ### Resource Footprint
 - **RAM Usage:** ~35-110MB (varies with OS)
