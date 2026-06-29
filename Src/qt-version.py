@@ -1,6 +1,6 @@
-import os
 import platform
 import sys
+from os import environ
 from pathlib import Path
 from time import time
 
@@ -171,7 +171,6 @@ class MainWindow(QMainWindow):
         self._create_color_icons()
         self.setup_thread()
         self.setup_ui()
-        self.preview_enabled = False
         set_theme()
 
         QTimer.singleShot(INITIAL_PROMPT_DELAY, self.prompt_save_location)
@@ -383,9 +382,6 @@ class MainWindow(QMainWindow):
         self.dimensions_label.setText("Resolution: -")
 
     def update_preview(self):
-        if not self.preview_enabled:
-            return
-
         if not self.font_select.currentText() or not self.color_select.currentText():
             return
 
@@ -576,23 +572,11 @@ class MainWindow(QMainWindow):
 
         self.trigger_generation.emit(params)
 
-    def _open_file(self, path: str):
-        if platform.system() == "Linux":
-            try:
-                import subprocess
-                env = os.environ.copy()
-                env.pop("LD_LIBRARY_PATH", None) 
-                subprocess.Popen(
-                    ["xdg-open", path],
-                    env=env,
-                    start_new_session=True,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                )
-                return True
-            except Exception:
-                pass
-        return QDesktopServices.openUrl(QUrl.fromLocalFile(path))
+    def _set_env(self, key, value):
+        if value is not None:
+            environ[key] = value
+        else:
+            environ.pop(key, None)
 
     @Slot(str, int, int, float)
     def on_generation_finished(self, image_path, width, height, start_time):
@@ -622,8 +606,20 @@ class MainWindow(QMainWindow):
 
             msg_box.exec()
 
-            if msg_box.clickedButton() == open_button:
-                self._open_file(str(path))
+            if msg_box.clickedButton() != open_button:
+                return
+
+            url = QUrl.fromLocalFile(str(path))
+
+            if platform.system() == "Linux":
+                current_ld = environ.get("LD_LIBRARY_PATH")
+                self._set_env("LD_LIBRARY_PATH", environ.get("LD_LIBRARY_PATH_ORIG"))
+                try:
+                    QDesktopServices.openUrl(url)
+                finally:
+                    self._set_env("LD_LIBRARY_PATH", current_ld)
+            else:
+                QDesktopServices.openUrl(url)
 
         except Exception as e:
             QMessageBox.critical(
@@ -639,11 +635,19 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    os.environ["QT_NO_GLIB"] = "1"
-
     app = QApplication(sys.argv)
     os_name = platform.system()
     release = platform.release()
+    if os_name == "Windows" and release == "11":
+        app.setStyle("FluentWinUI3")
+    elif os_name == "Windows" and release == "10":
+        app.setStyle("Fusion")
+    elif os_name == "Linux":
+        app.setStyle("Fusion")
+    elif os_name == "Darwin":
+        app.setStyle("macOS")
+    else:
+        app.setStyle("Fusion")
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
