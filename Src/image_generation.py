@@ -14,7 +14,6 @@ EMPTY_LINE_HEIGHT = 50
 TRANSPARENT_COLOR = (0, 0, 0, 0)
 
 DEFAULT_COMPRESS_LEVEL = 6
-DEFAULT_MAX_WORDS = None
 
 IMAGE_MODE = "RGBA"
 IMAGE_EXTENSION = ".png"
@@ -49,7 +48,7 @@ def get_character_path(character, font_paths):
 
     if character not in special_characters:
         raise FileNotFoundError(
-            f"The character '{character}' is not supported. Please check SUPPORTED.txt"
+            f"Character '{character}' is not supported. Click on the view supported characters button for the list of allowed characters"
         )
 
     return font_paths["symbols"] / f"{special_characters[character]}.png"
@@ -68,22 +67,14 @@ def create_character_image(character, font_paths):
         return Image.open(path)
 
     raise FileNotFoundError(
-        f"The character '{character}' is not supported. Please check SUPPORTED.txt"
+        f"Character '{character}' is not supported. Click on the view supported characters button for the list of allowed characters"
     )
 
 
-def split_into_lines(text, max_words):
+def split_into_lines(text):
     lines = []
     for paragraph in text.split("\n"):
-        words = paragraph.split()
-        if max_words and words:
-            lines.extend(
-                [
-                    " ".join(words[i : i + max_words])
-                    for i in range(0, len(words), max_words)
-                ]
-            )
-        elif not words:
+        if not paragraph.split():
             lines.append("\n")
         else:
             lines.append(paragraph)
@@ -95,11 +86,11 @@ def generate_image(
     filename,
     font_paths,
     save_dir,
-    max_words=DEFAULT_MAX_WORDS,
     compress_level=DEFAULT_COMPRESS_LEVEL,
     return_image=False,
+    scale=1,
 ):
-    lines = split_into_lines(text, max_words)
+    lines = split_into_lines(text)
     all_chars = {c for line in lines for c in line if c != "\n"}
     char_images = {char: create_character_image(char, font_paths) for char in all_chars}
 
@@ -133,6 +124,12 @@ def generate_image(
     for img in line_images:
         final_image.paste(img, (0, y), img)
         y += img.height
+
+    if scale > 1:
+        final_image = final_image.resize(
+            (final_image.width * scale, final_image.height * scale),
+            Image.Resampling.NEAREST
+        )
 
     width, height = final_image.size
 

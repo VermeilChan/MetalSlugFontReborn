@@ -1,46 +1,22 @@
-import sys
 import platform
+import sys
 from os import environ
 from pathlib import Path
 from time import time
 
-from PIL import Image as PILImage, ImageQt
+from PIL import Image as PILImage
 from PySide6.QtCore import QObject, Qt, QThread, QTimer, QUrl, Signal, Slot
-from PySide6.QtGui import (
-    QColor,
-    QDesktopServices,
-    QFont,
-    QIcon,
-    QKeySequence,
-    QLinearGradient,
-    QPainter,
-    QPaintEvent,
-    QPen,
-    QGradient,
-    QPixmap,
-    QShortcut,
-)
-from PySide6.QtWidgets import (
-    QApplication,
-    QCheckBox,
-    QComboBox,
-    QFileDialog,
-    QFormLayout,
-    QGroupBox,
-    QHBoxLayout,
-    QLabel,
-    QMainWindow,
-    QMessageBox,
-    QPlainTextEdit,
-    QPushButton,
-    QSlider,
-    QSpinBox,
-    QVBoxLayout,
-    QWidget,
-)
+from PySide6.QtGui import (QColor, QDesktopServices, QFont, QGradient, QIcon,
+                           QKeySequence, QLinearGradient, QPainter,
+                           QPaintEvent, QPen, QPixmap, QShortcut)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
+                               QFormLayout, QGroupBox, QHBoxLayout, QLabel,
+                               QMainWindow, QMessageBox, QPlainTextEdit,
+                               QPushButton, QSlider, QVBoxLayout, QWidget)
 
 from image_generation import generate_filename, generate_image, get_font_paths
-from qt_utils import about_section, load_config, save_config, set_theme
+from qt_utils import (ViewSupportedButton, about_section, load_config,
+                      save_config, set_theme)
 from utils import readable_size
 
 DEFAULT_COMPRESS_LEVEL = 6
@@ -66,11 +42,6 @@ COMPRESS_SLIDER_MIN = 0
 COMPRESS_SLIDER_MAX = 9
 COMPRESS_SLIDER_TICK_INTERVAL = 1
 COMPRESS_LEVEL_LABEL_WIDTH = 20
-
-MAX_WORDS_MIN = 1
-MAX_WORDS_MAX = 100
-MAX_WORDS_DEFAULT = 10
-MAX_WORDS_INPUT_WIDTH = 80
 
 TOOLTIP_DURATION = 5000
 
@@ -101,10 +72,10 @@ class ChromaWarningLabel(QWidget):
         self.text = text
         self.offset = 0
 
-        self.font = QFont()
-        self.font.setPointSize(10)
-        self.font.setItalic(True)
-        self.font.setBold(True)
+        self.warning_font = QFont()
+        self.warning_font.setPointSize(10)
+        self.warning_font.setItalic(True)
+        self.warning_font.setBold(True)
 
         self._gradient_width = 300
         self._gradient = QLinearGradient(0, 0, self._gradient_width, 0)
@@ -138,7 +109,7 @@ class ChromaWarningLabel(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.TextAntialiasing)
 
-        painter.setFont(self.font)
+        painter.setFont(self.warning_font)
         painter.setPen(self._pen)
 
         painter.translate(self.offset, 0)
@@ -158,7 +129,6 @@ class ImageWorker(QObject):
             start = time()
             filename = generate_filename(params["text"])
             font_paths = get_font_paths(params["font"], params["color"])
-
             compress_lvl = params["compress_level"]
 
             image_path, width, height, error = generate_image(
@@ -166,8 +136,9 @@ class ImageWorker(QObject):
                 filename,
                 font_paths,
                 params["save_path"],
-                params["max_words"],
                 compress_level=compress_lvl,
+                return_image=False,
+                scale=params.get("scale", 1),
             )
 
             if error:
@@ -179,7 +150,7 @@ class ImageWorker(QObject):
                 "Whoa, that's a massive image!\n\n"
                 "The text you entered is so long that the generated image exceeds the system's maximum pixel limit. "
                 "Computers have a hard cap on how wide or tall an image can be.\n\n"
-                "To fix this, try shortening your text or turning on 'Automatic line breaks' to stack the text vertically."
+                "To fix this, try shortening your text."
             )
         except Exception as e:
             self.failed.emit(str(e))
@@ -303,6 +274,9 @@ class MainWindow(QMainWindow):
         self.preview_label.setText("Loading preview...")
         style_layout.addRow(self.preview_label)
 
+        self.supported_btn = ViewSupportedButton(self)
+        style_layout.addRow(self.supported_btn)
+
         self.preview_timer = QTimer(self)
         self.preview_timer.setSingleShot(True)
         self.preview_timer.setInterval(PREVIEW_TIMER_INTERVAL)
@@ -317,6 +291,15 @@ class MainWindow(QMainWindow):
 
         options_group = QGroupBox("Options")
         options_layout = QVBoxLayout(options_group)
+
+        scale_layout = QHBoxLayout()
+        scale_layout.addWidget(QLabel("Output Scale:"))
+        self.scale_select = QComboBox()
+        self.scale_select.addItems(["1x (Native)", "2x", "3x", "4x"])
+        self.scale_select.currentIndexChanged.connect(self.schedule_preview_update)
+        scale_layout.addWidget(self.scale_select)
+        scale_layout.addStretch()
+        options_layout.addLayout(scale_layout)
 
         compress_layout = QVBoxLayout()
         self.compress_option = QCheckBox("Enable compression")
@@ -344,23 +327,6 @@ class MainWindow(QMainWindow):
         compress_layout.addLayout(self.level_layout)
         options_layout.addLayout(compress_layout)
 
-        line_break_layout = QHBoxLayout()
-        self.line_break_option = QCheckBox("Automatic line breaks")
-        self.line_break_option.toggled.connect(self.toggle_word_limit)
-
-        line_break_layout.addWidget(self.line_break_option)
-        line_break_layout.addStretch()
-
-        self.max_words_label = QLabel("Max words per line:")
-        self.max_words_input = QSpinBox()
-        self.max_words_input.setRange(MAX_WORDS_MIN, MAX_WORDS_MAX)
-        self.max_words_input.setValue(MAX_WORDS_DEFAULT)
-        self.max_words_input.setFixedWidth(MAX_WORDS_INPUT_WIDTH)
-
-        line_break_layout.addWidget(self.max_words_label)
-        line_break_layout.addWidget(self.max_words_input)
-        options_layout.addLayout(line_break_layout)
-
         main_layout.addWidget(options_group)
 
         button_layout = QHBoxLayout()
@@ -369,6 +335,7 @@ class MainWindow(QMainWindow):
 
         self.generate_btn = QPushButton("Generate Image")
         self.generate_btn.clicked.connect(self.generate_image)
+        self.generate_btn.setEnabled(False)
 
         button_layout.addWidget(self.browse_btn)
         button_layout.addWidget(self.generate_btn)
@@ -380,14 +347,12 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(self.save_location_label)
 
         self.update_colors()
-        self.toggle_word_limit(False)
         self.toggle_compression_options(True)
 
         self.text_input.textChanged.connect(self.schedule_preview_update)
+        self.text_input.textChanged.connect(self.update_generate_button_state)
         self.font_select.currentIndexChanged.connect(self.schedule_preview_update)
         self.color_select.currentTextChanged.connect(self.schedule_preview_update)
-        self.line_break_option.toggled.connect(self.schedule_preview_update)
-        self.max_words_input.valueChanged.connect(self.schedule_preview_update)
         self.schedule_preview_update()
 
         self.create_menubar()
@@ -400,8 +365,13 @@ class MainWindow(QMainWindow):
         numpad_enter_shortcut = QShortcut(QKeySequence(Qt.Key_Enter), self)
         numpad_enter_shortcut.activated.connect(self.generate_image)
 
+    def update_generate_button_state(self):
+        has_text = bool(self.text_input.toPlainText().strip())
+        self.generate_btn.setEnabled(has_text)
+
     def schedule_preview_update(self):
         self.preview_timer.start()
+        self.supported_btn.reset_to_normal()
 
     def schedule_char_count_update(self):
         self.char_count_timer.start()
@@ -425,10 +395,6 @@ class MainWindow(QMainWindow):
         if font == 5:
             text = text.upper()
 
-        max_words = (
-            self.max_words_input.value() if self.line_break_option.isChecked() else None
-        )
-
         try:
             font_paths = get_font_paths(font, color)
             pil_image, width, height, error = generate_image(
@@ -436,33 +402,45 @@ class MainWindow(QMainWindow):
                 "preview",
                 font_paths,
                 None,
-                max_words,
                 compress_level=PREVIEW_COMPRESS_LEVEL,
                 return_image=True,
             )
 
             if error or pil_image is None:
-                self._set_preview_error("Preview unavailable")
+                self._set_preview_error(error or "Preview unavailable")
+                if error:
+                    self.supported_btn.reveal()
                 return
+
+            scale = self.scale_select.currentIndex() + 1
+            width *= scale
+            height *= scale
 
             self.dimensions_label.setText(f"Resolution: {width} x {height}")
 
             if width > PREVIEW_MAX_DIMENSION or height > PREVIEW_MAX_DIMENSION:
                 self._set_preview_error(
                     "Preview is too large to display!\n"
-                    "The image is perfectly fine, but it exceeds the 32,000 pixel width limit for live previews.\n"
-                    "It will still generate successfully, but please be aware it may fail to open in some image viewers."
+                    "The image is perfectly fine, but it exceeds the 32,000 pixel limit for live previews.\n"
+                    "It will still generate successfully."
                 )
                 return
 
             target_size = self.preview_label.size()
 
             preview_image = pil_image.copy()
+            if scale > 1:
+                preview_image = preview_image.resize(
+                    (preview_image.width * scale, preview_image.height * scale),
+                    PILImage.Resampling.NEAREST
+                )
+
             preview_image.thumbnail(
                 (target_size.width(), target_size.height()),
                 PILImage.Resampling.NEAREST,
             )
 
+            from PIL import ImageQt
             qimage = ImageQt.ImageQt(preview_image)
             pixmap = QPixmap.fromImage(qimage)
             self.preview_label.setPixmap(pixmap)
@@ -477,6 +455,7 @@ class MainWindow(QMainWindow):
             self._set_preview_error(f"{e}\n\nPlease remove it to see the preview.")
         except Exception as e:
             self._set_preview_error(f"Preview unavailable.\n\nError: {str(e)}")
+            self.supported_btn.reveal()
 
     def update_character_count(self):
         text = self.text_input.toPlainText()
@@ -496,7 +475,7 @@ class MainWindow(QMainWindow):
         self.save_location_label.setToolTipDuration(TOOLTIP_DURATION)
 
     def prompt_save_location(self):
-        if load_config("skip_location_prompt", fallback="False") == "True":
+        if load_config("skip_location_prompt", fallback=False) is True:
             return
 
         msg_box = QMessageBox(self)
@@ -514,7 +493,7 @@ class MainWindow(QMainWindow):
         reply = msg_box.exec()
 
         if cb.isChecked():
-            save_config("skip_location_prompt", "True")
+            save_config("skip_location_prompt", True)
 
         if reply == QMessageBox.Yes:
             self.select_save_path()
@@ -543,10 +522,6 @@ class MainWindow(QMainWindow):
         for color_name in FONT_COLORS[font]:
             self.color_select.addItem(self._color_icons[color_name], color_name)
 
-    def toggle_word_limit(self, visible):
-        self.max_words_label.setVisible(visible)
-        self.max_words_input.setVisible(visible)
-
     def toggle_compression_options(self, checked):
         for i in range(self.level_layout.count()):
             widget = self.level_layout.itemAt(i).widget()
@@ -569,7 +544,6 @@ class MainWindow(QMainWindow):
     def generate_image(self):
         text = self.text_input.toPlainText().strip()
         if not text:
-            QMessageBox.critical(self, "Error", "Please enter some text to generate.")
             return
 
         font = int(self.font_select.currentText())
@@ -583,10 +557,6 @@ class MainWindow(QMainWindow):
             else DISABLE_COMPRESSION
         )
 
-        max_words = (
-            self.max_words_input.value() if self.line_break_option.isChecked() else None
-        )
-
         params = {
             "text": text,
             "font": font,
@@ -594,7 +564,7 @@ class MainWindow(QMainWindow):
             "save_path": str(self.save_path),
             "compress": compress_enabled,
             "compress_level": compress_level,
-            "max_words": max_words,
+            "scale": self.scale_select.currentIndex() + 1,
         }
 
         self.generate_btn.setEnabled(False)
@@ -610,8 +580,9 @@ class MainWindow(QMainWindow):
 
     @Slot(str, int, int, float)
     def on_generation_finished(self, image_path, width, height, start_time):
-        self.generate_btn.setEnabled(True)
         self.generate_btn.setText("Generate Image")
+        self.update_generate_button_state()
+        self.supported_btn.reset_to_normal()
 
         path = Path(image_path)
         try:
@@ -657,9 +628,10 @@ class MainWindow(QMainWindow):
 
     @Slot(str)
     def on_generation_failed(self, error_msg):
-        self.generate_btn.setEnabled(True)
         self.generate_btn.setText("Generate Image")
+        self.update_generate_button_state()
         QMessageBox.critical(self, "Error", error_msg)
+        self.supported_btn.reveal()
 
 
 if __name__ == "__main__":

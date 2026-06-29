@@ -20,7 +20,7 @@ platforms:
 |------------------|----------------------------------------------------------|--------------|
 | Windows          | 11, 10 (1809 or later)                                   | 64-Bit       |
 | GNU/Linux        | Debian 13, Ubuntu 26.04, Fedora 44, Arch Linux, OpenSUSE | 64-Bit       |
-| macOS            | 27, 26, 15, 14, 13                                       | ARM64        |
+| macOS            | 13 (Ventura) and later                                   | ARM64        |
 
 # Get the source code
 

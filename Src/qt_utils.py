@@ -1,26 +1,16 @@
-import tomllib
 from pathlib import Path
-
 from platform import python_version
 
+import tomlkit
 from PIL import __version__ as pillow_version
 from PyInstaller import __version__ as pyinstaller_version
 from PySide6 import __version__ as pyside6_version
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import (
-    QApplication,
-    QDialog,
-    QDialogButtonBox,
-    QGridLayout,
-    QGroupBox,
-    QHBoxLayout,
-    QLabel,
-    QPlainTextEdit,
-    QTabWidget,
-    QVBoxLayout,
-    QWidget,
-)
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QIcon, QPixmap
+from PySide6.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
+                               QGridLayout, QGroupBox, QHBoxLayout, QLabel,
+                               QPlainTextEdit, QPushButton, QTabWidget,
+                               QTextBrowser, QVBoxLayout, QWidget)
 
 from special_characters import LICENSE_TEXT
 from themes import dark_mode, light_mode, tokyo_night
@@ -46,56 +36,27 @@ MAX_FILE_SIZE_BYTES = 15 * 1024
 class Config:
     def __init__(self, path: Path = CONFIG_FILE):
         self._path = path
-        self._data: dict = {}
+        self._doc = tomlkit.document()
         self._load()
 
     def _load(self):
-        if self._path.exists():
-            if self._path.stat().st_size > MAX_FILE_SIZE_BYTES:
-                raise ValueError(
-                    f"Config file exceeds safety limit ({self._path.stat().st_size} bytes)."
-                )
-
-            with open(self._path, "rb") as f:
-                self._data = tomllib.load(f)
+        if not self._path.exists():
+            return
+        if self._path.stat().st_size > MAX_FILE_SIZE_BYTES:
+            raise ValueError(
+                f"Config file exceeds safety limit ({self._path.stat().st_size} bytes)."
+            )
+        self._doc = tomlkit.loads(self._path.read_text(encoding="utf-8"))
 
     def get(self, key: str, fallback=None):
-        return self._data.get(key, fallback)
+        return self._doc.get(key, fallback)
 
     def set(self, key: str, value):
-        if isinstance(value, str):
-            cleaned = value.strip().lower()
-            if cleaned == "true":
-                value = True
-            elif cleaned == "false":
-                value = False
-            elif cleaned.isdigit():
-                value = int(cleaned)
-
-        self._data[key] = value
+        self._doc[key] = value
         self._save()
 
     def _save(self):
-        def serialize(val):
-            if isinstance(val, bool):
-                return "true" if val else "false"
-            if isinstance(val, (int, float)):
-                return str(val)
-            if isinstance(val, str):
-                escaped = val.replace("\\", "\\\\").replace('"', '\\"')
-                return f'"{escaped}"'
-            if isinstance(val, list):
-                return f"[{', '.join(serialize(item) for item in val)}]"
-            if isinstance(val, dict):
-                pairs = ", ".join(
-                    f'"{k}" = {serialize(v)}' for k, v in val.items()
-                )
-                return f"{{ {pairs} }}"
-            return f'"{str(val)}"'
-
-        with open(self._path, "w", encoding="utf-8") as f:
-            for key, value in self._data.items():
-                f.write(f"{key} = {serialize(value)}\n")
+        self._path.write_text(tomlkit.dumps(self._doc), encoding="utf-8")
 
 
 config = Config()
@@ -232,3 +193,116 @@ def about_section(parent):
 
     dialog.setLayout(main_layout)
     dialog.exec()
+
+
+MARKDOWN_CONTENT = """\
+# MetalSlugFontReborn Character Support
+
+Here you can find which characters MetalSlugFontReborn supports.
+
+## Font 1 Support
+
+- **Letters:** Lowercase and Uppercase
+- **Numbers:** 0 to 9
+- **Symbols:** , * {} () ^ : $ = ! > - ∞ < # % . + & ? " ; / ~ _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ⋆ ★ ☞ ✖
+- **Colors:** Blue, Orange and Gold
+
+## Font 2 Support
+
+- **Letters:** Lowercase and Uppercase
+- **Numbers:** 0 to 9
+- **Symbols:** , = ︷ ! - . + & ? / ♪ ✖
+- **Colors:** Blue, Orange and Gold
+
+## Font 3 Support
+
+- **Letters:** Lowercase and Uppercase
+- **Numbers:** 0 to 9
+- **Symbols:** ' {} () : , = ! > - < . + ? " ; / _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ✖
+- **Colors:** Blue, Orange
+
+## Font 4 Support
+
+- **Letters:** Lowercase and Uppercase
+- **Numbers:** 0 to 9
+- **Symbols:** ' * {} () ^ : $ = ! > - < # % . + & ? " ; / ~ _ ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ | ✖
+- **Colors:** Blue, Orange and Yellow
+
+## Font 5 Support
+
+- **Letters:** Uppercase
+- **Numbers:** 1 to 9
+- **Symbols:** ! ?
+- **Colors:** Orange
+
+# Unsupported Characters (Unused)
+
+- **Symbols:** ȧ ä ā á à â ã í ü ū ú ė ë é ê ö ō ó ô Ⅰ Ⅱ Ⅲ Ⅳ Ⅴ
+"""
+
+
+class SupportedCharactersDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Supported Characters")
+        self.setMinimumSize(580, 640)
+        self.resize(620, 720)
+        try:
+            self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
+        except Exception:
+            pass
+
+        root = QVBoxLayout(self)
+        root.setContentsMargins(20, 20, 20, 20)
+        root.setSpacing(10)
+
+        header = QLabel("Character Support Reference")
+        header.setAlignment(Qt.AlignCenter)
+        font = header.font()
+        font.setPointSize(14)
+        font.setBold(True)
+        header.setFont(font)
+        root.addWidget(header)
+
+        sub = QLabel("Check below to see which characters your font can render.")
+        sub.setAlignment(Qt.AlignCenter)
+        root.addWidget(sub)
+
+        browser = QTextBrowser()
+        browser.setOpenExternalLinks(False)
+        browser.setMarkdown(MARKDOWN_CONTENT)
+        root.addWidget(browser, 1)
+
+        row = QHBoxLayout()
+        row.addStretch()
+        close_btn = QPushButton("Got it!")
+        close_btn.setCursor(Qt.PointingHandCursor)
+        close_btn.clicked.connect(self.accept)
+        row.addWidget(close_btn)
+        row.addStretch()
+        root.addLayout(row)
+
+
+def open_supported_characters(parent=None):
+    dlg = SupportedCharactersDialog(parent)
+    dlg.exec()
+
+
+class ViewSupportedButton(QPushButton):
+    clicked_open = Signal()
+
+    def __init__(self, parent=None):
+        super().__init__("View Supported Characters", parent)
+        self.setCursor(Qt.PointingHandCursor)
+        self.clicked.connect(self._on_click)
+
+    def reveal(self):
+        self.setText("Unsupported character! Click here to view supported")
+
+    def reset_to_normal(self):
+        self.setText("View Supported Characters")
+
+    def _on_click(self):
+        self.reset_to_normal()
+        self.clicked_open.emit()
+        open_supported_characters(self.window())

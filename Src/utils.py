@@ -67,7 +67,7 @@ def get_system_info():
         return f"macOS {mac_version or platform.release()} {arch}"
 
 
-msfr_version = f"3.0.0 (b97a32a)"
-build_date = "2026-06-20 (Saturday, June 20)"
+msfr_version = f"3.1.0 (27b5a6f)"
+build_date = "2026-06-29 (Monday, June 29)"
 
 system_info = get_system_info()

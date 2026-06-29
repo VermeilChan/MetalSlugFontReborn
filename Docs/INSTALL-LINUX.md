@@ -5,14 +5,12 @@
    ![Download MetalSlugFontReborn](Markdown/Docs/Download.png)
 
 **Extract and Run MetalSlugFontReborn:**
-   - Locate and extract `MetalSlugFontReborn-v2.x.x-Linux-x64.zip`.
+   - Locate and extract `MetalSlugFontReborn-v3.x.x-Linux-x64.zip`.
    - Go to the `MetalSlugFontReborn` folder.
    - Run `MetalSlugFontReborn`.
 
 3. **Select a Font:**
    - Upon opening MetalSlugFontReborn, choose your desired font and color, you can them [preview](EXAMPLES.md) here.
-
-  Qt Version:
 
  ![MetalSlugFontReborn](Markdown/Docs/Linux/MetalSlugFontReborn-Qt.png)
 
