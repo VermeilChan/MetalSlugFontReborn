@@ -16,11 +16,11 @@
 You should be able to compile MetalSlugFontReborn successfully on the following
 platforms:
 
-| Operating System | Supported Versions                                       | Architecture |
-|------------------|----------------------------------------------------------|--------------|
-| Windows          | 11, 10 (1809 or later)                                   | 64-Bit       |
-| GNU/Linux        | Debian 13, Ubuntu 26.04, Fedora 44, Arch Linux, OpenSUSE | 64-Bit       |
-| macOS            | 13 (Ventura) and later                                   | ARM64        |
+| Operating System | Supported Versions                             | Architecture |
+|------------------|------------------------------------------------|--------------|
+| Windows          | 11, 10 (1809 or later)                         | 64-Bit       |
+| GNU/Linux        | Debian 13, Ubuntu 26.04, Fedora 44, Arch Linux | 64-Bit       |
+| macOS            | 13 (Ventura) and later                         | ARM64        |
 
 # Get the source code
 
@@ -43,6 +43,7 @@ To compile MetalSlugFontReborn you will need the following:
 - [PyInstaller](https://pyinstaller.org/en/stable/) 6.21.0 or later
 - [PySide6-Essentials](https://pypi.org/project/PySide6/) 6.11.1 or later
 - [Pillow](https://pillow.readthedocs.io/en/stable/) 12.2.0 or later
+- [Tomlkit](https://pypi.org/project/tomlkit/) 0.15.0 or later
 
 # Compiling
 
@@ -76,10 +77,6 @@ sudo dnf install -y python3 python3-pip python3-virtualenv xcb-util-cursor
 On Arch:
 ```sh
 sudo pacman -Syu --noconfirm python-pip python-virtualenv xcb-util-cursor
-```
-On SUSE:
-```sh
-sudo zypper install -y python3 python3-pip python3-virtualenv libxcb-cursor0
 ```
 
 ## Linux and macOS details
