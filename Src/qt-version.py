@@ -381,23 +381,56 @@ class MainWindow(QMainWindow):
         self.preview_label.setText(message)
         self.dimensions_label.setText("Resolution: -")
 
+    def _display_preview_image(self, pil_image, scale):
+        width = pil_image.width * scale
+        height = pil_image.height * scale
+
+        self.dimensions_label.setText(f"Resolution: {width} x {height}")
+
+        if width > PREVIEW_MAX_DIMENSION or height > PREVIEW_MAX_DIMENSION:
+            self._set_preview_error(
+                "Preview is too large to display!\n"
+                "The image is perfectly fine, but it exceeds the 32,000 pixel limit for live previews.\n"
+                "It will still generate successfully."
+            )
+            return
+
+        target_size = self.preview_label.size()
+        preview_image = pil_image.copy()
+        
+        if scale > 1:
+            preview_image = preview_image.resize(
+                (width, height),
+                PILImage.Resampling.NEAREST
+            )
+
+        preview_image.thumbnail(
+            (target_size.width(), target_size.height()),
+            PILImage.Resampling.NEAREST,
+        )
+
+        from PIL import ImageQt
+        qimage = ImageQt.ImageQt(preview_image)
+        pixmap = QPixmap.fromImage(qimage)
+        self.preview_label.setPixmap(pixmap)
+
+        if pixmap.isNull():
+            self._set_preview_error("Preview unavailable")
+
     def update_preview(self):
         if not self.font_select.currentText() or not self.color_select.currentText():
             return
 
         font = int(self.font_select.currentText())
         color = self.color_select.currentText()
-        text = self.text_input.toPlainText().strip()
-
-        if not text:
-            text = "METAL SLUG IS PEAK!"
+        text = self.text_input.toPlainText().strip() or "METAL SLUG IS PEAK!"
 
         if font == 5:
             text = text.upper()
 
         try:
             font_paths = get_font_paths(font, color)
-            pil_image, width, height, error = generate_image(
+            pil_image, _, _, error = generate_image(
                 text,
                 "preview",
                 font_paths,
@@ -413,41 +446,7 @@ class MainWindow(QMainWindow):
                 return
 
             scale = self.scale_select.currentIndex() + 1
-            width *= scale
-            height *= scale
-
-            self.dimensions_label.setText(f"Resolution: {width} x {height}")
-
-            if width > PREVIEW_MAX_DIMENSION or height > PREVIEW_MAX_DIMENSION:
-                self._set_preview_error(
-                    "Preview is too large to display!\n"
-                    "The image is perfectly fine, but it exceeds the 32,000 pixel limit for live previews.\n"
-                    "It will still generate successfully."
-                )
-                return
-
-            target_size = self.preview_label.size()
-
-            preview_image = pil_image.copy()
-            if scale > 1:
-                preview_image = preview_image.resize(
-                    (preview_image.width * scale, preview_image.height * scale),
-                    PILImage.Resampling.NEAREST
-                )
-
-            preview_image.thumbnail(
-                (target_size.width(), target_size.height()),
-                PILImage.Resampling.NEAREST,
-            )
-
-            from PIL import ImageQt
-            qimage = ImageQt.ImageQt(preview_image)
-            pixmap = QPixmap.fromImage(qimage)
-            self.preview_label.setPixmap(pixmap)
-
-            if pixmap.isNull():
-                self._set_preview_error("Preview unavailable")
-                return
+            self._display_preview_image(pil_image, scale)
 
         except PILImage.DecompressionBombError:
             self._set_preview_error("Image is too large to generate!")
@@ -572,7 +571,8 @@ class MainWindow(QMainWindow):
 
         self.trigger_generation.emit(params)
 
-    def _set_env(self, key, value):
+    @staticmethod
+    def _set_env(key, value):
         if value is not None:
             environ[key] = value
         else:
@@ -589,11 +589,11 @@ class MainWindow(QMainWindow):
             size = readable_size(path.stat().st_size)
             message = (
                 "Successfully generated image!\n\n"
-                f"Image saved at: {path}\n"
-                f"Dimensions: {width} x {height} pixels\n"
-                f"File size: {size}\n"
-                f"Time taken: {time() - start_time:.3f} seconds"
-            )
+                "Image saved at: {}\n"
+                "Dimensions: {} x {} pixels\n"
+                "File size: {}\n"
+                "Time taken: {:.3f} seconds"
+            ).format(path, width, height, size, time() - start_time)
 
             msg_box = QMessageBox(self)
             msg_box.setWindowTitle("Success")
@@ -613,11 +613,11 @@ class MainWindow(QMainWindow):
 
             if platform.system() == "Linux":
                 current_ld = environ.get("LD_LIBRARY_PATH")
-                self._set_env("LD_LIBRARY_PATH", environ.get("LD_LIBRARY_PATH_ORIG"))
+                MainWindow._set_env("LD_LIBRARY_PATH", environ.get("LD_LIBRARY_PATH_ORIG"))
                 try:
                     QDesktopServices.openUrl(url)
                 finally:
-                    self._set_env("LD_LIBRARY_PATH", current_ld)
+                    MainWindow._set_env("LD_LIBRARY_PATH", current_ld)
             else:
                 QDesktopServices.openUrl(url)
 

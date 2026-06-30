@@ -50,7 +50,7 @@
 </p>
 
 > 💡 **Enjoy the project?** 
-> If you have a GitHub account and found this repository helpful, please consider giving it a ⭐! It helps others discover the tool and keeps me motivated.
+> If you have a GitHub account and found this repository helpful, please consider giving it a ⭐! It helps others discover the tool and it makes me happy!
 
 # Overview
 
@@ -84,17 +84,21 @@ MetalSlugFontReborn is a free, open-source desktop app built with PySide6 and Pi
 
 #### Operating Systems
 
-| Operating System | Supported Versions                                       | Architecture |
-|------------------|----------------------------------------------------------|--------------|
-| Windows          | 11, 10 (1809 or later)                                   | 64-Bit       |
-| GNU/Linux        | Debian 13, Ubuntu 26.04, Fedora 44, Arch Linux, OpenSUSE | 64-Bit       |
-| macOS            | 13 (Ventura) and later                                   | ARM64        |
+| Operating System | Supported Versions                             | Architecture | Tested |
+|------------------|------------------------------------------------|--------------|--------|
+| Windows          | 11, 10 (1809 or later)                         | 64-Bit       |   ✅   |
+| GNU/Linux        | Debian 13, Ubuntu 26.04, Fedora 44, Arch Linux | 64-Bit       |   ✅   |
+| macOS            | 13 (Ventura) and later                         | ARM64        |   ❌   |
+
+> **macOS:** Built for Apple Silicon. I don't own a Mac to verify, but it should work.
+
+> **Linux:** Tested on the distributions above with Wayland. If the app crashes when typing, switch your display server to Wayland that usually fixes it. You can also use the [web app](https://vermeil.pythonanywhere.com/) (same features, no install) or [build from source](Docs/BUILD.md) (it's easy, trust me!)
 
 ### Resource Footprint
-- **RAM Usage:** ~90MB (varies with OS)
-- **Disk Space:** ~270MB (varies with OS)
+- **RAM Usage:** ~35-110MB (varies with OS)
+- **Disk Space:** ~120-290MB (varies with OS)
 
-If your system does not meet the requirements, you can use the [web app version](https://vermeil.pythonanywhere.com/).
+> If your system doesn't meet these requirements, try the [web app](https://vermeil.pythonanywhere.com/) it runs in any modern browser.
 
 ## Installing MetalSlugFontReborn
 

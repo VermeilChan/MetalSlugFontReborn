@@ -16,11 +16,11 @@
 You should be able to compile MetalSlugFontReborn successfully on the following
 platforms:
 
-| Operating System | Supported Versions                                       | Architecture |
-|------------------|----------------------------------------------------------|--------------|
-| Windows          | 11, 10 (1809 or later)                                   | 64-Bit       |
-| GNU/Linux        | Debian 13, Ubuntu 26.04, Fedora 44, Arch Linux, OpenSUSE | 64-Bit       |
-| macOS            | 13 (Ventura) and later                                   | ARM64        |
+| Operating System | Supported Versions                             | Architecture |
+|------------------|------------------------------------------------|--------------|
+| Windows          | 11, 10 (1809 or later)                         | 64-Bit       |
+| GNU/Linux        | Debian 13, Ubuntu 26.04, Fedora 44, Arch Linux | 64-Bit       |
+| macOS            | 13 (Ventura) and later                         | ARM64        |
 
 # Get the source code
 
@@ -43,6 +43,7 @@ To compile MetalSlugFontReborn you will need the following:
 - [PyInstaller](https://pyinstaller.org/en/stable/) 6.21.0 or later
 - [PySide6-Essentials](https://pypi.org/project/PySide6/) 6.11.1 or later
 - [Pillow](https://pillow.readthedocs.io/en/stable/) 12.2.0 or later
+- [Tomlkit](https://pypi.org/project/tomlkit/) 0.15.0 or later
 
 # Compiling
 
@@ -57,9 +58,8 @@ py -m venv .venv
 pip install -r requirements.txt
 ```
 ```sh
-pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --optimize "2" --version-file "versionfile.txt" --add-data "Src/image_generation.py;." --add-data "Src/qt_utils.py;." --add-data "Src/special_characters.py;." --add-data "Src/themes.py;." --add-data "Src/utils.py;." --add-data "Docs/SUPPORTED.txt;." --add-data "Assets;Assets/"  "Src/qt-version.py"
+pyinstaller --noconfirm --onedir --windowed --icon "Assets/Icons/Raubtier.ico" --name "MetalSlugFontReborn" --clean --optimize "2" --version-file "versionfile.txt" --add-data "Src/image_generation.py;." --add-data "Src/qt_utils.py;." --add-data "Src/special_characters.py;." --add-data "Src/themes.py;." --add-data "Src/utils.py;." --add-data "Assets;Assets/"  "Src/qt-version.py"
 Move-Item -Path "dist\MetalSlugFontReborn\_internal\Assets" -Destination "dist\MetalSlugFontReborn"
-Move-Item -Path "dist\MetalSlugFontReborn\_internal\SUPPORTED.txt" -Destination "dist\MetalSlugFontReborn"
 ```
 
 ---
@@ -78,10 +78,6 @@ On Arch:
 ```sh
 sudo pacman -Syu --noconfirm python-pip python-virtualenv xcb-util-cursor
 ```
-On SUSE:
-```sh
-sudo zypper install -y python3 python3-pip python3-virtualenv libxcb-cursor0
-```
 
 ## Linux and macOS details
 
@@ -94,7 +90,6 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 ```sh
-pyinstaller --noconfirm --onedir --windowed --strip --name "MetalSlugFontReborn" --clean --optimize "2" --add-data "Src/image_generation.py:." --add-data "Src/qt_utils.py:." --add-data "Src/special_characters.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Docs/SUPPORTED.txt:." --add-data "Assets:Assets/"  "Src/qt-version.py"
+pyinstaller --noconfirm --onedir --windowed --strip --name "MetalSlugFontReborn" --clean --optimize "2" --add-data "Src/image_generation.py:." --add-data "Src/qt_utils.py:." --add-data "Src/special_characters.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Assets:Assets/"  "Src/qt-version.py"
 mv dist/MetalSlugFontReborn/_internal/Assets dist/MetalSlugFontReborn/
-mv dist/MetalSlugFontReborn/_internal/SUPPORTED.txt dist/MetalSlugFontReborn/
 ```

@@ -15,7 +15,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -40,16 +40,15 @@ jobs:
         run: source .venv/bin/activate
 
       - name: Install dependencies
-        run: pip install --upgrade PySide6-Essentials pyinstaller pillow
+        run: pip install --upgrade PySide6-Essentials pyinstaller pillow tomlkit
 
       - name: Build with PyInstaller
         run: |
-          pyinstaller --noconfirm --onedir --windowed --strip --name "MetalSlugFontReborn" --clean --optimize "2" --add-data "Src/image_generation.py:." --add-data "Src/qt_utils.py:." --add-data "Src/special_characters.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Docs/SUPPORTED.txt:." --add-data "Assets:Assets/"  "Src/qt-version.py"
+          pyinstaller --noconfirm --onedir --windowed --strip --name "MetalSlugFontReborn" --clean --optimize "2" --add-data "Src/image_generation.py:." --add-data "Src/qt_utils.py:." --add-data "Src/special_characters.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Assets:Assets/"  "Src/qt-version.py"
 
-      - name: Move Assets and SUPPORTED.txt
+      - name: Move Assets
         run: |
           mv dist/MetalSlugFontReborn/_internal/Assets dist/MetalSlugFontReborn/
-          mv dist/MetalSlugFontReborn/_internal/SUPPORTED.txt dist/MetalSlugFontReborn/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
