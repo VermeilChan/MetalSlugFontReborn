@@ -3,16 +3,18 @@ import sys
 from os import environ
 from pathlib import Path
 from time import time
+from string import ascii_letters, ascii_uppercase, digits
 
 from PIL import Image as PILImage
 from PySide6.QtCore import QObject, Qt, QThread, QTimer, QUrl, Signal, Slot
 from PySide6.QtGui import (QColor, QDesktopServices, QFont, QGradient, QIcon,
-                           QKeySequence, QLinearGradient, QPainter,
-                           QPaintEvent, QPen, QPixmap, QShortcut)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
+                           QLinearGradient, QPainter, QPaintEvent, QSyntaxHighlighter,
+                           QPen, QPixmap, QSyntaxHighlighter, QTextCharFormat)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDialog, QFileDialog,
                                QFormLayout, QGroupBox, QHBoxLayout, QLabel,
                                QMainWindow, QMessageBox, QPlainTextEdit,
-                               QPushButton, QSlider, QVBoxLayout, QWidget)
+                               QPushButton, QScrollArea, QSlider, QVBoxLayout,
+                               QWidget, QDialogButtonBox, QFrame, QGridLayout)
 
 from image_generation import generate_filename, generate_image, get_font_paths
 from qt_utils import (ViewSupportedButton, about_section, load_config,
@@ -50,6 +52,12 @@ COLOR_ICON_MARGIN = 1
 
 WARNING_LABEL_HEIGHT = 28
 
+ZOOM_MIN = 10
+ZOOM_MAX = 100
+ZOOM_DEFAULT = 100
+
+THREAD_WAIT_TIMEOUT_MS = 3000
+
 FONT_COLORS = {
     1: ["Blue", "Orange", "Gold"],
     2: ["Blue", "Orange", "Gold"],
@@ -63,6 +71,15 @@ COLORS = {
     "Orange": "#f89000",
     "Gold": "#f99010",
     "Yellow": "#f8f900",
+}
+
+ALPHANUMERIC = ascii_letters + ascii_uppercase + digits
+FONT_VALID_CHARS = {
+    1: frozenset(ALPHANUMERIC + " \n" + ",*{}()^:$=!>-∞<#%.+&?\";/~_|¥⛶©♥▲▼◀▶⋆★☞✖"),
+    2: frozenset(ALPHANUMERIC + " \n" + ",=︷!-.+&?/♪✖"),
+    3: frozenset(ALPHANUMERIC + " \n" + "'{}():,=!>-<.+?\";/_|¥⛶©♥▲▼◀▶✖"),
+    4: frozenset(ALPHANUMERIC + " \n" + "'*{}()^:$=!>-<#%.+&?\";/~_¥⛶©♥▲▼◀▶|✖"),
+    5: frozenset(ascii_uppercase + digits[1:] + " \n" + "!?"),
 }
 
 
@@ -119,6 +136,83 @@ class ChromaWarningLabel(QWidget):
         painter.end()
 
 
+class UnsupportedCharHighlighter(QSyntaxHighlighter):
+    def __init__(self, document, font_id=1):
+        super().__init__(document)
+        self._valid_chars = FONT_VALID_CHARS.get(font_id, set())
+        self._format = QTextCharFormat()
+        self._format.setUnderlineStyle(QTextCharFormat.SpellCheckUnderline)
+        self._format.setUnderlineColor(QColor(255, 0, 0))
+        self._format.setBackground(QColor(255, 0, 0, 40))
+
+    def set_font_id(self, font_id):
+        self._valid_chars = FONT_VALID_CHARS.get(font_id, set())
+        self.rehighlight()
+
+    def highlightBlock(self, text):
+        for i, char in enumerate(text):
+            if char not in self._valid_chars:
+                self.setFormat(i, 1, self._format)
+
+
+class PreviewScrollArea(QScrollArea):
+    zoom_changed = Signal(int)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWidgetResizable(True)
+        self.setAlignment(Qt.AlignCenter)
+        self._zoom = ZOOM_DEFAULT
+        self._panning = False
+        self._pan_start = None
+
+    def set_zoom(self, value):
+        self._zoom = max(ZOOM_MIN, min(ZOOM_MAX, value))
+        self.zoom_changed.emit(self._zoom)
+
+    def get_zoom(self):
+        return self._zoom
+
+    def wheelEvent(self, event):
+        if event.modifiers() & Qt.ControlModifier:
+            delta = event.angleDelta().y()
+            step = 10 if delta > 0 else -10
+            self.set_zoom(self._zoom + step)
+            event.accept()
+        else:
+            super().wheelEvent(event)
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self._panning = True
+            self._pan_start = event.position().toPoint()
+            self.setCursor(Qt.ClosedHandCursor)
+            event.accept()
+        else:
+            super().mousePressEvent(event)
+
+    def mouseMoveEvent(self, event):
+        if self._panning and self._pan_start:
+            delta = event.position().toPoint() - self._pan_start
+            self._pan_start = event.position().toPoint()
+            h_bar = self.horizontalScrollBar()
+            v_bar = self.verticalScrollBar()
+            h_bar.setValue(h_bar.value() - delta.x())
+            v_bar.setValue(v_bar.value() - delta.y())
+            event.accept()
+        else:
+            super().mouseMoveEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self._panning = False
+            self._pan_start = None
+            self.setCursor(Qt.ArrowCursor)
+            event.accept()
+        else:
+            super().mouseReleaseEvent(event)
+
+
 class ImageWorker(QObject):
     finished = Signal(str, int, int, float)
     failed = Signal(str)
@@ -131,7 +225,7 @@ class ImageWorker(QObject):
             font_paths = get_font_paths(params["font"], params["color"])
             compress_lvl = params["compress_level"]
 
-            image_path, width, height, error = generate_image(
+            image_path, width, height = generate_image(
                 params["text"],
                 filename,
                 font_paths,
@@ -140,9 +234,6 @@ class ImageWorker(QObject):
                 return_image=False,
                 scale=params.get("scale", 1),
             )
-
-            if error:
-                raise RuntimeError(error)
 
             self.finished.emit(image_path, width, height, start)
         except PILImage.DecompressionBombError:
@@ -163,7 +254,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Metal Slug Font Reborn")
+        self.setWindowTitle("MetalSlugFontReborn")
         self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
         self.setMinimumSize(WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT)
         self.save_path = Path.home() / "Desktop"
@@ -209,7 +300,9 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         self._thread.quit()
-        self._thread.wait()
+        if not self._thread.wait(THREAD_WAIT_TIMEOUT_MS):
+            self._thread.terminate()
+            self._thread.wait(1000)
         super().closeEvent(event)
 
     def setup_ui(self):
@@ -234,6 +327,10 @@ class MainWindow(QMainWindow):
         self.text_input.textChanged.connect(self.schedule_char_count_update)
         text_layout.addWidget(self.text_input)
 
+        self.highlighter = UnsupportedCharHighlighter(
+            self.text_input.document(), font_id=1
+        )
+
         self.text_info_layout = QHBoxLayout()
         self.char_count_label = QLabel("Characters: 0")
         self.char_count_label.setStyleSheet("color: #666; font-size: 10pt;")
@@ -255,6 +352,7 @@ class MainWindow(QMainWindow):
         self.font_select = QComboBox()
         self.font_select.addItems(map(str, sorted(FONT_COLORS)))
         self.font_select.currentIndexChanged.connect(self.update_colors)
+        self._populate_font_preview_icons()
 
         self.color_select = QComboBox()
 
@@ -268,11 +366,34 @@ class MainWindow(QMainWindow):
         self.font5_warning.setVisible(False)
         style_layout.addRow(self.font5_warning)
 
+        preview_container = QVBoxLayout()
+
+        zoom_layout = QHBoxLayout()
+        zoom_layout.addWidget(QLabel("Preview Zoom:"))
+        self.zoom_slider = QSlider(Qt.Horizontal)
+        self.zoom_slider.setRange(ZOOM_MIN, ZOOM_MAX)
+        self.zoom_slider.setValue(ZOOM_DEFAULT)
+        self.zoom_slider.setTickPosition(QSlider.TicksBelow)
+        self.zoom_slider.setTickInterval(10)
+        self.zoom_slider.valueChanged.connect(self._on_zoom_changed)
+        zoom_layout.addWidget(self.zoom_slider)
+        self.zoom_label = QLabel(f"{ZOOM_DEFAULT}%")
+        self.zoom_label.setFixedWidth(40)
+        zoom_layout.addWidget(self.zoom_label)
+        zoom_layout.addStretch()
+        preview_container.addLayout(zoom_layout)
+
+        self.preview_scroll = PreviewScrollArea()
+        self.preview_scroll.setMinimumHeight(PREVIEW_MIN_HEIGHT)
+        self.preview_scroll.zoom_changed.connect(self._on_zoom_changed_external)
+
         self.preview_label = QLabel()
         self.preview_label.setAlignment(Qt.AlignCenter)
-        self.preview_label.setMinimumHeight(PREVIEW_MIN_HEIGHT)
         self.preview_label.setText("Loading preview...")
-        style_layout.addRow(self.preview_label)
+        self.preview_scroll.setWidget(self.preview_label)
+
+        preview_container.addWidget(self.preview_scroll)
+        style_layout.addRow(preview_container)
 
         self.supported_btn = ViewSupportedButton(self)
         style_layout.addRow(self.supported_btn)
@@ -352,22 +473,64 @@ class MainWindow(QMainWindow):
         self.text_input.textChanged.connect(self.schedule_preview_update)
         self.text_input.textChanged.connect(self.update_generate_button_state)
         self.font_select.currentIndexChanged.connect(self.schedule_preview_update)
+        self.font_select.currentIndexChanged.connect(self._on_font_changed)
         self.color_select.currentTextChanged.connect(self.schedule_preview_update)
         self.schedule_preview_update()
 
         self.create_menubar()
-        self.setup_shortcuts()
 
-    def setup_shortcuts(self):
-        enter_shortcut = QShortcut(QKeySequence(Qt.Key_Return), self)
-        enter_shortcut.activated.connect(self.generate_image)
+    def _populate_font_preview_icons(self):
+        for font_id in sorted(FONT_COLORS):
+            try:
+                color = FONT_COLORS[font_id][0]
+                font_paths = get_font_paths(font_id, color)
+                pil_img, _, _ = generate_image(
+                    "ABC", "thumbnail", font_paths, None,
+                    compress_level=0, return_image=True, scale=1,
+                )
+                pil_img.thumbnail((48, 24), PILImage.Resampling.NEAREST)
+                from PIL import ImageQt
+                qimg = ImageQt.ImageQt(pil_img)
+                pixmap = QPixmap.fromImage(qimg)
+                self.font_select.setItemIcon(
+                    self.font_select.findText(str(font_id)), QIcon(pixmap)
+                )
+            except Exception:
+                pass
 
-        numpad_enter_shortcut = QShortcut(QKeySequence(Qt.Key_Enter), self)
-        numpad_enter_shortcut.activated.connect(self.generate_image)
+    def _on_font_changed(self, _):
+        font_id = int(self.font_select.currentText())
+        self.highlighter.set_font_id(font_id)
+
+    def _on_zoom_changed(self, value):
+        self.zoom_label.setText(f"{value}%")
+        self._apply_zoom_to_preview()
+
+    def _on_zoom_changed_external(self, value):
+        self.zoom_slider.blockSignals(True)
+        self.zoom_slider.setValue(value)
+        self.zoom_slider.blockSignals(False)
+        self.zoom_label.setText(f"{value}%")
+        self._apply_zoom_to_preview()
+
+    def _apply_zoom_to_preview(self):
+        self.update_preview()
+
+    def _get_preview_zoom_factor(self):
+        return self.zoom_slider.value() / 100.0
 
     def update_generate_button_state(self):
         has_text = bool(self.text_input.toPlainText().strip())
         self.generate_btn.setEnabled(has_text)
+        self._update_window_title()
+
+    def _update_window_title(self):
+        text = self.text_input.toPlainText().strip()
+        if text:
+            char_count = len(text)
+            self.setWindowTitle(f"Metal Slug Font Reborn - {char_count} chars")
+        else:
+            self.setWindowTitle("Metal Slug Font Reborn")
 
     def schedule_preview_update(self):
         self.preview_timer.start()
@@ -382,10 +545,13 @@ class MainWindow(QMainWindow):
         self.dimensions_label.setText("Resolution: -")
 
     def _display_preview_image(self, pil_image, scale):
-        width = pil_image.width * scale
-        height = pil_image.height * scale
+        zoom_factor = self._get_preview_zoom_factor()
+        width = int(pil_image.width * scale * zoom_factor)
+        height = int(pil_image.height * scale * zoom_factor)
 
-        self.dimensions_label.setText(f"Resolution: {width} x {height}")
+        self.dimensions_label.setText(
+            f"Resolution: {pil_image.width * scale} x {pil_image.height * scale}"
+        )
 
         if width > PREVIEW_MAX_DIMENSION or height > PREVIEW_MAX_DIMENSION:
             self._set_preview_error(
@@ -395,24 +561,20 @@ class MainWindow(QMainWindow):
             )
             return
 
-        target_size = self.preview_label.size()
         preview_image = pil_image.copy()
-        
-        if scale > 1:
-            preview_image = preview_image.resize(
-                (width, height),
-                PILImage.Resampling.NEAREST
-            )
 
-        preview_image.thumbnail(
-            (target_size.width(), target_size.height()),
-            PILImage.Resampling.NEAREST,
-        )
+        if scale > 1 or zoom_factor != 1.0:
+            new_w = int(pil_image.width * scale * zoom_factor)
+            new_h = int(pil_image.height * scale * zoom_factor)
+            preview_image = preview_image.resize(
+                (new_w, new_h), PILImage.Resampling.NEAREST
+            )
 
         from PIL import ImageQt
         qimage = ImageQt.ImageQt(preview_image)
         pixmap = QPixmap.fromImage(qimage)
         self.preview_label.setPixmap(pixmap)
+        self.preview_label.adjustSize()
 
         if pixmap.isNull():
             self._set_preview_error("Preview unavailable")
@@ -430,7 +592,7 @@ class MainWindow(QMainWindow):
 
         try:
             font_paths = get_font_paths(font, color)
-            pil_image, _, _, error = generate_image(
+            pil_image, _, _ = generate_image(
                 text,
                 "preview",
                 font_paths,
@@ -439,10 +601,8 @@ class MainWindow(QMainWindow):
                 return_image=True,
             )
 
-            if error or pil_image is None:
-                self._set_preview_error(error or "Preview unavailable")
-                if error:
-                    self.supported_btn.reveal()
+            if pil_image is None:
+                self._set_preview_error("Preview unavailable")
                 return
 
             scale = self.scale_select.currentIndex() + 1
@@ -452,6 +612,7 @@ class MainWindow(QMainWindow):
             self._set_preview_error("Image is too large to generate!")
         except FileNotFoundError as e:
             self._set_preview_error(f"{e}\n\nPlease remove it to see the preview.")
+            self.supported_btn.reveal()
         except Exception as e:
             self._set_preview_error(f"Preview unavailable.\n\nError: {str(e)}")
             self.supported_btn.reveal()
@@ -460,6 +621,7 @@ class MainWindow(QMainWindow):
         text = self.text_input.toPlainText()
         char_count = len(text)
         self.char_count_label.setText(f"Characters: {char_count}")
+        self._update_window_title()
 
     def update_save_location_display(self):
         folder_name = (
@@ -478,7 +640,7 @@ class MainWindow(QMainWindow):
             return
 
         msg_box = QMessageBox(self)
-        msg_box.setWindowTitle("Welcome to Metal Slug Font Reborn!")
+        msg_box.setWindowTitle("Welcome to MetalSlugFontReborn!")
         msg_box.setText(
             "Your images will be saved to your Desktop by default.\n\n"
             "Would you like to choose a different folder?"
@@ -505,12 +667,84 @@ class MainWindow(QMainWindow):
             lambda: about_section(self)
         )
         help_menu.addAction("About Qt").triggered.connect(QApplication.aboutQt)
+        help_menu.addSeparator()
+        help_menu.addAction("Keyboard Shortcuts").triggered.connect(
+            self._show_shortcuts_dialog
+        )
 
         theme_menu = menubar.addMenu("Themes")
         for theme in ["Light", "Dark", "Tokyo Night"]:
             theme_menu.addAction(f"{theme} Mode").triggered.connect(
                 lambda _, t=theme: set_theme(t)
             )
+
+    def _show_shortcuts_dialog(self):
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Keyboard Shortcuts")
+        dialog.setMinimumWidth(420)
+
+        layout = QVBoxLayout(dialog)
+        layout.setContentsMargins(24, 20, 24, 20)
+        layout.setSpacing(16)
+
+        title = QLabel("Keyboard Shortcuts")
+        title_font = title.font()
+        title_font.setPointSize(title_font.pointSize() + 3)
+        title_font.setBold(True)
+        title.setFont(title_font)
+        layout.addWidget(title)
+
+        shortcuts = [
+            ("Enter / Return", "Insert a new line in the text area"),
+            ("Ctrl + Mouse Wheel", "Zoom in/out on the preview"),
+            ("Mouse Drag", "Pan the image in the preview"),
+            ("Ctrl + Q", "Quit the application"),
+        ]
+
+        grid = QGridLayout()
+        grid.setHorizontalSpacing(20)
+        grid.setVerticalSpacing(10)
+        grid.setColumnStretch(1, 1)
+
+        for row, (keys, desc) in enumerate(shortcuts):
+            key_label = QLabel(keys)
+            key_font = key_label.font()
+            key_font.setBold(True)
+            key_label.setFont(key_font)
+            key_label.setStyleSheet(
+                "background-color: rgba(127, 127, 127, 0.15);"
+                "border-radius: 4px;"
+                "padding: 4px 8px;"
+            )
+            key_label.setAlignment(Qt.AlignCenter)
+
+            desc_label = QLabel(desc)
+            desc_label.setWordWrap(True)
+
+            grid.addWidget(key_label, row, 0)
+            grid.addWidget(desc_label, row, 1)
+
+        layout.addLayout(grid)
+
+        separator = QFrame()
+        separator.setFrameShape(QFrame.HLine)
+        separator.setFrameShadow(QFrame.Sunken)
+        layout.addWidget(separator)
+
+        note = QLabel(
+            "Note: Enter inserts a newline in the text field. "
+            "Use the \"Generate Image\" button to create your image."
+        )
+        note.setWordWrap(True)
+        note.setStyleSheet("color: palette(link); font-style: italic;")
+        layout.addWidget(note)
+
+        button_box = QDialogButtonBox(QDialogButtonBox.Ok)
+        button_box.accepted.connect(dialog.accept)
+        button_box.button(QDialogButtonBox.Ok).setDefault(True)
+        layout.addWidget(button_box)
+
+        dialog.exec()
 
     def update_colors(self):
         self.color_select.clear()
@@ -568,6 +802,7 @@ class MainWindow(QMainWindow):
 
         self.generate_btn.setEnabled(False)
         self.generate_btn.setText("Generating...")
+        self.setWindowTitle("Metal Slug Font Reborn - Generating...")
 
         self.trigger_generation.emit(params)
 
