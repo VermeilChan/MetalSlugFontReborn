@@ -5,7 +5,7 @@ import platform
 def readable_size(size_bytes):
     if size_bytes == 0:
         return "0 bytes"
-    units = ["bytes", "KB", "MB"]
+    units = ["bytes", "KB", "MB", "GB"]
     power = int(math.log(size_bytes, 1024))
     power = min(power, len(units) - 1)
     size = size_bytes / (1024**power)
