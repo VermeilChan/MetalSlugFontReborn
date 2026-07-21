@@ -5,11 +5,12 @@ from PIL import Image
 
 from special_characters import special_characters
 
-MAX_IMAGE_PIXELS = 220434240
+Image.MAX_IMAGE_PIXELS = 220434240
 
 SPACE_CHARACTER_WIDTH = 25
 SPACE_CHARACTER_HEIGHT = 1
 EMPTY_LINE_HEIGHT = 50
+LINE_SPACING = 15
 
 TRANSPARENT_COLOR = (0, 0, 0, 0)
 
@@ -19,8 +20,6 @@ IMAGE_MODE = "RGBA"
 IMAGE_EXTENSION = ".png"
 
 FONTS_BASE_DIR = Path("Assets/Fonts")
-
-Image.MAX_IMAGE_PIXELS = MAX_IMAGE_PIXELS
 
 
 def generate_filename(_=None):
@@ -72,13 +71,7 @@ def create_character_image(character, font_paths):
 
 
 def split_into_lines(text):
-    lines = []
-    for paragraph in text.split("\n"):
-        if not paragraph.split():
-            lines.append("\n")
-        else:
-            lines.append(paragraph)
-    return lines
+    return text.split("\n")
 
 
 def generate_image(
@@ -91,22 +84,24 @@ def generate_image(
     scale=1,
 ):
     lines = split_into_lines(text)
-    all_chars = {c for line in lines for c in line if c != "\n"}
+    all_chars = {c for line in lines for c in line}
     char_images = {char: create_character_image(char, font_paths) for char in all_chars}
 
     line_images = []
     max_width = total_height = 0
 
-    for line in lines:
-        if line == "\n":
+    for i, line in enumerate(lines):
+        if not line:
             line_height = EMPTY_LINE_HEIGHT
             line_img = Image.new(IMAGE_MODE, (1, line_height), TRANSPARENT_COLOR)
             line_images.append(line_img)
             total_height += line_height
+            if i < len(lines) - 1:
+                total_height += LINE_SPACING
             continue
 
         line_width = sum(char_images[c].width for c in line)
-        line_height = max(char_images[c].height for c in line) if line else 0
+        line_height = max(char_images[c].height for c in line)
         line_img = Image.new(IMAGE_MODE, (line_width, line_height), TRANSPARENT_COLOR)
 
         x = 0
@@ -118,24 +113,29 @@ def generate_image(
         line_images.append(line_img)
         max_width = max(max_width, line_width)
         total_height += line_height
+        
+        if i < len(lines) - 1:
+            total_height += LINE_SPACING
 
     final_image = Image.new(IMAGE_MODE, (max_width, total_height), TRANSPARENT_COLOR)
     y = 0
-    for img in line_images:
+    for i, img in enumerate(line_images):
         final_image.paste(img, (0, y), img)
         y += img.height
+        if i < len(line_images) - 1:
+            y += LINE_SPACING
 
     if scale > 1:
         final_image = final_image.resize(
             (final_image.width * scale, final_image.height * scale),
-            Image.Resampling.NEAREST
+            Image.Resampling.NEAREST,
         )
 
     width, height = final_image.size
 
     if return_image:
-        return final_image, width, height, None
+        return final_image, width, height
 
     save_path = Path(save_dir) / filename
     final_image.save(save_path, compress_level=compress_level)
-    return str(save_path), width, height, None
+    return str(save_path), width, height
