@@ -219,7 +219,7 @@ Here you can find which characters MetalSlugFontReborn supports.
 - **Letters:** Lowercase and Uppercase
 - **Numbers:** 0 to 9
 - **Symbols:** ' {} () : , = ! > - < . + ? " ; / _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ✖
-- **Colors:** Blue, Orange
+- **Colors:** Blue and Orange
 
 ## Font 4 Support
 
@@ -247,10 +247,7 @@ class SupportedCharactersDialog(QDialog):
         self.setWindowTitle("Supported Characters")
         self.setMinimumSize(580, 640)
         self.resize(620, 720)
-        try:
-            self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
-        except Exception:
-            pass
+        self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
 
         root = QVBoxLayout(self)
         root.setContentsMargins(20, 20, 20, 20)

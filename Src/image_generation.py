@@ -62,7 +62,7 @@ def create_character_image(character, font_paths):
         )
 
     path = get_character_path(character, font_paths)
-    if path and path.is_file():
+    if path.is_file():
         return Image.open(path)
 
     raise FileNotFoundError(
@@ -113,7 +113,7 @@ def generate_image(
         line_images.append(line_img)
         max_width = max(max_width, line_width)
         total_height += line_height
-        
+
         if i < len(lines) - 1:
             total_height += LINE_SPACING
 

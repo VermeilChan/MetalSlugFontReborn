@@ -481,22 +481,19 @@ class MainWindow(QMainWindow):
 
     def _populate_font_preview_icons(self):
         for font_id in sorted(FONT_COLORS):
-            try:
-                color = FONT_COLORS[font_id][0]
-                font_paths = get_font_paths(font_id, color)
-                pil_img, _, _ = generate_image(
-                    "ABC", "thumbnail", font_paths, None,
-                    compress_level=0, return_image=True, scale=1,
-                )
-                pil_img.thumbnail((48, 24), PILImage.Resampling.NEAREST)
-                from PIL import ImageQt
-                qimg = ImageQt.ImageQt(pil_img)
-                pixmap = QPixmap.fromImage(qimg)
-                self.font_select.setItemIcon(
-                    self.font_select.findText(str(font_id)), QIcon(pixmap)
-                )
-            except Exception:
-                pass
+            color = FONT_COLORS[font_id][0]
+            font_paths = get_font_paths(font_id, color)
+            pil_img, _, _ = generate_image(
+                "ABC", "thumbnail", font_paths, None,
+                compress_level=0, return_image=True, scale=1,
+            )
+            pil_img.thumbnail((48, 24), PILImage.Resampling.NEAREST)
+            from PIL import ImageQt
+            qimg = ImageQt.ImageQt(pil_img)
+            pixmap = QPixmap.fromImage(qimg)
+            self.font_select.setItemIcon(
+                self.font_select.findText(str(font_id)), QIcon(pixmap)
+            )
 
     def _on_font_changed(self, _):
         font_id = int(self.font_select.currentText())
@@ -580,9 +577,6 @@ class MainWindow(QMainWindow):
             self._set_preview_error("Preview unavailable")
 
     def update_preview(self):
-        if not self.font_select.currentText() or not self.color_select.currentText():
-            return
-
         font = int(self.font_select.currentText())
         color = self.color_select.currentText()
         text = self.text_input.toPlainText().strip() or "METAL SLUG IS PEAK!"
@@ -624,9 +618,7 @@ class MainWindow(QMainWindow):
         self._update_window_title()
 
     def update_save_location_display(self):
-        folder_name = (
-            self.save_path.name if self.save_path.name else str(self.save_path)
-        )
+        folder_name = self.save_path.name
         display_text = f"Save location: {folder_name}"
         if self.save_path == Path.home() / "Desktop":
             display_text += " (default)"
@@ -636,7 +628,7 @@ class MainWindow(QMainWindow):
         self.save_location_label.setToolTipDuration(TOOLTIP_DURATION)
 
     def prompt_save_location(self):
-        if load_config("skip_location_prompt", fallback=False) is True:
+        if load_config("skip_location_prompt", fallback=False):
             return
 
         msg_box = QMessageBox(self)
@@ -856,7 +848,7 @@ class MainWindow(QMainWindow):
             else:
                 QDesktopServices.openUrl(url)
 
-        except Exception as e:
+        except OSError as e:
             QMessageBox.critical(
                 self, "Error", f"Failed to read generated image metadata:\n{str(e)}"
             )

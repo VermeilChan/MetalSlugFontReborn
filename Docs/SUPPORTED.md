@@ -21,7 +21,7 @@ Here you can find which characters MetalSlugFontReborn supports.
 - **Letters:** Lowercase and Uppercase
 - **Numbers:** 0 to 9
 - **Symbols:** ' {} () : , = ! > - < . + ? " ; / _ | ¥ ⛶ © ♥ ▲ ▼ ◀ ▶ ✖
-- **Colors:** Blue, Orange
+- **Colors:** Blue and Orange
 
 ## Font 4 Support
 

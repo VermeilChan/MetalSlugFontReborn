@@ -34,7 +34,7 @@ def get_windows_feature_update():
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path) as key:
             display_version, _ = winreg.QueryValueEx(key, "DisplayVersion")
             return display_version
-    except Exception:
+    except OSError:
         return None
 
 
