@@ -82,6 +82,7 @@ FONT_VALID_CHARS = {
     5: frozenset(ascii_uppercase + digits[1:] + " \n" + "!?"),
 }
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 class ChromaWarningLabel(QWidget):
     def __init__(self, text, parent=None):
@@ -255,7 +256,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("MetalSlugFontReborn")
-        self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
+        self.setWindowIcon(QIcon(str(PROJECT_ROOT / "Assets" / "Icons" / "Raubtier.ico")))
         self.setMinimumSize(WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT)
         self.save_path = Path.home() / "Desktop"
 
@@ -654,6 +655,15 @@ class MainWindow(QMainWindow):
     def create_menubar(self):
         menubar = self.menuBar()
 
+        file_menu = menubar.addMenu("File")
+        file_menu.addAction("Exit").triggered.connect(self.close)
+
+        theme_menu = menubar.addMenu("Themes")
+        for theme in ["Light", "Dark", "Tokyo Night"]:
+            theme_menu.addAction(f"{theme} Mode").triggered.connect(
+                lambda _, t=theme: set_theme(t)
+            )
+
         help_menu = menubar.addMenu("Help")
         help_menu.addAction("About MetalSlugFontReborn").triggered.connect(
             lambda: about_section(self)
@@ -663,12 +673,6 @@ class MainWindow(QMainWindow):
         help_menu.addAction("Keyboard Shortcuts").triggered.connect(
             self._show_shortcuts_dialog
         )
-
-        theme_menu = menubar.addMenu("Themes")
-        for theme in ["Light", "Dark", "Tokyo Night"]:
-            theme_menu.addAction(f"{theme} Mode").triggered.connect(
-                lambda _, t=theme: set_theme(t)
-            )
 
     def _show_shortcuts_dialog(self):
         dialog = QDialog(self)
@@ -690,7 +694,6 @@ class MainWindow(QMainWindow):
             ("Enter / Return", "Insert a new line in the text area"),
             ("Ctrl + Mouse Wheel", "Zoom in/out on the preview"),
             ("Mouse Drag", "Pan the image in the preview"),
-            ("Ctrl + Q", "Quit the application"),
         ]
 
         grid = QGridLayout()

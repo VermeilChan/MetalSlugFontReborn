@@ -19,7 +19,8 @@ DEFAULT_COMPRESS_LEVEL = 6
 IMAGE_MODE = "RGBA"
 IMAGE_EXTENSION = ".png"
 
-FONTS_BASE_DIR = Path("Assets/Fonts")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+FONTS_BASE_DIR = PROJECT_ROOT / "Assets" / "Fonts"
 
 
 def generate_filename(_=None):

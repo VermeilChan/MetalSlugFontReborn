@@ -32,6 +32,7 @@ theme_list = {
 CONFIG_FILE = Path("config.toml")
 MAX_FILE_SIZE_BYTES = 15 * 1024
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 class Config:
     def __init__(self, path: Path = CONFIG_FILE):
@@ -247,7 +248,7 @@ class SupportedCharactersDialog(QDialog):
         self.setWindowTitle("Supported Characters")
         self.setMinimumSize(580, 640)
         self.resize(620, 720)
-        self.setWindowIcon(QIcon("Assets/Icons/Raubtier.ico"))
+        self.setWindowIcon(QIcon(str(PROJECT_ROOT / "Assets" / "Icons" / "Raubtier.ico")))
 
         root = QVBoxLayout(self)
         root.setContentsMargins(20, 20, 20, 20)
