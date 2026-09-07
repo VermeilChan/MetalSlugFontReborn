@@ -7,7 +7,7 @@ from uuid import uuid4
 def readable_size(size_bytes):
     if size_bytes == 0:
         return "0 bytes"
-    units = ["bytes", "KB", "MB"]
+    units = ["bytes", "KB", "MB", "GB"]
     power = int(math.log(size_bytes, 1024))
     power = min(power, len(units) - 1)
     size = size_bytes / (1024**power)
@@ -36,7 +36,7 @@ def get_windows_feature_update():
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path) as key:
             display_version, _ = winreg.QueryValueEx(key, "DisplayVersion")
             return display_version
-    except Exception:
+    except OSError:
         return None
 
 
