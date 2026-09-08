@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
 
       - name: Set up Python
-        uses: actions/setup-python@v751276eafca55f10f252026015f43c488f2322ba
+        uses: actions/setup-python@751276eafca55f10f252026015f43c488f2322ba
         with:
           python-version: '3.14.7'
           architecture: 'x64'
