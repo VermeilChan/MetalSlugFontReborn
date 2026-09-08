@@ -1,0 +1,1110 @@
+from pathlib import Path
+from time import time
+
+from PIL import Image, ImageQt
+from PySide6.QtCore import QPointF, QRectF, Qt, Signal
+from PySide6.QtGui import (QColor, QIcon, QKeySequence, QPalette, QPen,
+                           QPixmap, QShortcut)
+from PySide6.QtWidgets import (QCheckBox, QComboBox, QDialog, QFormLayout,
+                               QGraphicsItem, QGraphicsLineItem,
+                               QGraphicsPixmapItem, QGraphicsRectItem,
+                               QGraphicsScene, QGraphicsView, QGroupBox,
+                               QHBoxLayout, QInputDialog, QLabel, QMenu,
+                               QMessageBox, QPushButton, QScrollArea, QSlider,
+                               QSpinBox, QSplitter, QVBoxLayout, QWidget)
+
+from image_generation import (create_character_image, generate_filename,
+                              get_font_paths, layout_characters)
+from qt_utils import load_config, save_config
+from utils import readable_size
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+EDITOR_DEFAULT_WIDTH = 1100
+EDITOR_DEFAULT_HEIGHT = 700
+CANVAS_SPLIT_PERCENT = 70
+PANEL_WIDTH = 330
+SCENE_PADDING = 60
+
+ZOOM_STEP = 1.15
+ZOOM_MIN_FACTOR = 0.1
+ZOOM_MAX_FACTOR = 8.0
+
+CHAR_SCALE_MIN = 50
+CHAR_SCALE_MAX = 200
+CHAR_SCALE_DEFAULT = 100
+
+ROTATION_MIN = -180
+ROTATION_MAX = 180
+
+LETTER_SPACING_DEFAULT = 0
+LETTER_SPACING_MAX = 100
+LINE_SPACING_DEFAULT = 15
+LINE_SPACING_MAX = 200
+SNAP_GRID_DEFAULT = 10
+SNAP_GRID_MAX = 100
+SNAP_THRESHOLD_PX = 8
+SNAP_GUIDE_COLOR = "#ff00ae"
+
+BASELINES = ["Bottom", "Center", "Top"]
+ALIGNMENTS = ["Left", "Center", "Right"]
+UNDO_MAX_STEPS = 30
+
+
+def render_character(sprite, scale_pct=CHAR_SCALE_DEFAULT, rotation=0):
+    img = sprite
+    if scale_pct != CHAR_SCALE_DEFAULT:
+        img = img.resize(
+            (
+                max(1, int(img.width * scale_pct / 100)),
+                max(1, int(img.height * scale_pct / 100)),
+            ),
+            Image.Resampling.NEAREST,
+        )
+    if rotation:
+        img = img.rotate(-rotation, expand=True, resample=Image.Resampling.NEAREST)
+    return img
+
+
+class CharItem(QGraphicsPixmapItem):
+    def __init__(self, char, sprite, base_x, base_y, sprite_provider):
+        super().__init__()
+        self.char = char
+        self.sprite = sprite.convert("RGBA")
+        self._sprite_provider = sprite_provider
+        self.layout_anchored = True
+        self.base_x = base_x
+        self.base_y = base_y
+        self.dx = 0
+        self.dy = 0
+        self.scale_pct = CHAR_SCALE_DEFAULT
+        self.rotation = 0
+        self._pix_cache = {}
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemSendsGeometryChanges)
+        self.setAcceptHoverEvents(True)
+
+    def capture_state(self):
+        return (
+            self.dx,
+            self.dy,
+            self.scale_pct,
+            self.rotation,
+            self.base_x,
+            self.base_y,
+            self.isVisible(),
+            self.char,
+        )
+
+    def apply_state(self, state):
+        (
+            self.dx,
+            self.dy,
+            self.scale_pct,
+            self.rotation,
+            self.base_x,
+            self.base_y,
+            visible,
+            char,
+        ) = state
+        if char != self.char:
+            self.set_character(char)
+        self.setVisible(visible)
+        self.update_pixmap()
+
+    def set_character(self, char):
+        self.char = char
+        self.sprite = self._sprite_provider(char).convert("RGBA")
+        self._pix_cache.clear()
+
+    def _cache_key(self):
+        return (self.scale_pct, self.rotation)
+
+    def itemChange(self, change, value):
+        scene = self.scene()
+        if (
+            change == QGraphicsItem.GraphicsItemChange.ItemPositionChange
+            and scene is not None
+            and scene.snap_size > 0
+            and not scene.suppress_grid
+            and isinstance(value, QPointF)
+        ):
+            snap = scene.snap_size
+            value = QPointF(
+                round(value.x() / snap) * snap, round(value.y() / snap) * snap
+            )
+        return super().itemChange(change, value)
+
+    def update_pixmap(self):
+        key = self._cache_key()
+        rendered = self._pix_cache.get(key)
+        if rendered is None:
+            rendered = render_character(self.sprite, self.scale_pct, self.rotation)
+            self._pix_cache[key] = rendered
+        qimage = ImageQt.ImageQt(rendered)
+        self.setPixmap(QPixmap.fromImage(qimage))
+        self._place()
+
+    def _place(self):
+        self.setPos(self.base_x + self.dx, self.base_y + self.dy)
+
+    def set_base(self, x, y):
+        self.base_x = x
+        self.base_y = y
+        self._place()
+
+    def hoverEnterEvent(self, event):
+        self.setCursor(Qt.PointingHandCursor)
+        super().hoverEnterEvent(event)
+
+    def hoverLeaveEvent(self, event):
+        self.unsetCursor()
+        super().hoverLeaveEvent(event)
+
+
+class EditorScene(QGraphicsScene):
+    drag_started = Signal()
+    drag_finished = Signal()
+    snap_size = 0
+    suppress_grid = False
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.drag_started.emit()
+        super().mousePressEvent(event)
+
+    def mouseMoveEvent(self, event):
+        super().mouseMoveEvent(event)
+        self._apply_object_snap()
+
+    def mouseReleaseEvent(self, event):
+        super().mouseReleaseEvent(event)
+        if event.button() == Qt.LeftButton:
+            self.drag_finished.emit()
+
+    def begin_snap(self):
+        self._snap_targets = None
+        self._hide_guides()
+
+    def end_snap(self):
+        self._snap_targets = None
+        self._hide_guides()
+
+    def _guide_items(self):
+        if not hasattr(self, "_guide_v"):
+            pen = QPen(QColor(SNAP_GUIDE_COLOR))
+            pen.setWidthF(0)
+            self._guide_v = QGraphicsLineItem()
+            self._guide_h = QGraphicsLineItem()
+            for item in (self._guide_v, self._guide_h):
+                item.setPen(pen)
+                item.setZValue(1000)
+                item.hide()
+                self.addItem(item)
+        return self._guide_v, self._guide_h
+
+    def _hide_guides(self):
+        if hasattr(self, "_guide_v"):
+            self._guide_v.hide()
+            self._guide_h.hide()
+
+    def _sprite_scene_rect(self, item):
+        r = QRectF(0, 0, item.sprite.width, item.sprite.height)
+        return item.mapRectToScene(r)
+
+    def _moving_rect(self, movers):
+        rect = None
+        for item, _start in movers:
+            r = self._sprite_scene_rect(item)
+            rect = r if rect is None else rect.united(r)
+        return rect
+
+    def _best_snap(self, edges, targets):
+        best_delta = 0.0
+        best_guide = None
+        for edge in edges:
+            for target in targets:
+                delta = target - edge
+                if abs(delta) <= self._snap_threshold and (
+                    best_guide is None or abs(delta) < abs(best_delta)
+                ):
+                    best_delta = delta
+                    best_guide = target
+        return best_delta, best_guide
+
+    def _compute_snap_targets(self, movers):
+        moving = {id(item) for item, _start in movers}
+        xs = []
+        ys = []
+        canvas_w, canvas_h = self.parent_dialog.canvas_size
+        xs += [0, canvas_w / 2, canvas_w]
+        ys += [0, canvas_h / 2, canvas_h]
+        for item in self.parent_dialog.items:
+            if not item.isVisible() or id(item) in moving:
+                continue
+            r = self._sprite_scene_rect(item)
+            xs += [r.left(), r.center().x(), r.right()]
+            ys += [r.top(), r.center().y(), r.bottom()]
+            if item.layout_anchored:
+                xs += [
+                    item.base_x,
+                    item.base_x + item.sprite.width / 2,
+                    item.base_x + item.sprite.width,
+                ]
+                ys += [
+                    item.base_y,
+                    item.base_y + item.sprite.height / 2,
+                    item.base_y + item.sprite.height,
+                ]
+        self._snap_targets = (xs, ys)
+
+    def _apply_object_snap(self):
+        if self.snap_size <= 0 or not hasattr(self, "_snap_start"):
+            self._hide_guides()
+            return
+        movers = [
+            (item, start)
+            for item, start in self._snap_start.items()
+            if item.pos() != start
+        ]
+        if not movers:
+            self._hide_guides()
+            return
+        if self._snap_targets is None:
+            self._compute_snap_targets(movers)
+
+        first, first_start = movers[0]
+        translation = first.pos() - first_start
+        box = self._moving_rect(movers)
+
+        view = self.views()[0]
+        zoom = max(0.05, abs(view.transform().m11()))
+        self._snap_threshold = SNAP_THRESHOLD_PX / zoom
+
+        sx, guide_x = self._best_snap(
+            (box.left(), box.center().x(), box.right()), self._snap_targets[0]
+        )
+        sy, guide_y = self._best_snap(
+            (box.top(), box.center().y(), box.bottom()), self._snap_targets[1]
+        )
+
+        if sx == 0 and sy == 0:
+            self._hide_guides()
+            return
+
+        self.suppress_grid = True
+        for item, start in movers:
+            item.setPos(start + translation + QPointF(sx, sy))
+        self.suppress_grid = False
+
+        guide_v, guide_h = self._guide_items()
+        scene_rect = self.sceneRect()
+        if guide_x is not None:
+            guide_v.setLine(guide_x, scene_rect.top(), guide_x, scene_rect.bottom())
+            guide_v.show()
+        else:
+            guide_v.hide()
+        if guide_y is not None:
+            guide_h.setLine(scene_rect.left(), guide_y, scene_rect.right(), guide_y)
+            guide_h.show()
+        else:
+            guide_h.hide()
+
+    def mouseDoubleClickEvent(self, event):
+        item = self.itemAt(event.scenePos(), self.views()[0].transform())
+        if isinstance(item, CharItem) and item.isVisible():
+            self.parent_dialog._edit_character(item)
+            event.accept()
+            return
+        super().mouseDoubleClickEvent(event)
+
+    def contextMenuEvent(self, event):
+        item = self.itemAt(event.scenePos(), self.views()[0].transform())
+        if not isinstance(item, CharItem) or not item.isVisible():
+            return
+        item.setSelected(True)
+        dialog = self.parent_dialog
+        menu = QMenu()
+        menu.addAction("Reset Scale", lambda: dialog._reset_item(item, "scale_pct"))
+        menu.addAction("Reset Rotation", lambda: dialog._reset_item(item, "rotation"))
+        menu.addAction("Delete Character", lambda: dialog._delete_items([item]))
+        menu.exec(event.screenPos())
+
+
+class EditorView(QGraphicsView):
+    zoom_changed = Signal(float)
+
+    def __init__(self, scene, parent=None):
+        super().__init__(scene, parent)
+        self.setDragMode(QGraphicsView.DragMode.RubberBandDrag)
+        self.setTransformationAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
+        self._pan_start = None
+
+    def wheelEvent(self, event):
+        if event.modifiers() & Qt.ControlModifier:
+            factor = ZOOM_STEP if event.angleDelta().y() > 0 else 1 / ZOOM_STEP
+            current = self.transform().m11()
+            if current * factor < ZOOM_MIN_FACTOR:
+                factor = ZOOM_MIN_FACTOR / current
+            elif current * factor > ZOOM_MAX_FACTOR:
+                factor = ZOOM_MAX_FACTOR / current
+            self.setTransform(self.transform().scale(factor, factor))
+            self.zoom_changed.emit(self.transform().m11())
+            event.accept()
+        else:
+            super().wheelEvent(event)
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MiddleButton:
+            self._pan_start = event.position()
+            self.setCursor(Qt.ClosedHandCursor)
+            event.accept()
+        else:
+            super().mousePressEvent(event)
+
+    def mouseMoveEvent(self, event):
+        if self._pan_start is not None:
+            delta = event.position() - self._pan_start
+            self._pan_start = event.position()
+            self.horizontalScrollBar().setValue(
+                self.horizontalScrollBar().value() - int(delta.x())
+            )
+            self.verticalScrollBar().setValue(
+                self.verticalScrollBar().value() - int(delta.y())
+            )
+            event.accept()
+        else:
+            super().mouseMoveEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.MiddleButton:
+            self._pan_start = None
+            self.setCursor(Qt.ArrowCursor)
+            event.accept()
+        else:
+            super().mouseReleaseEvent(event)
+
+
+class UndoStack:
+    def __init__(self, max_steps=UNDO_MAX_STEPS):
+        self._max = max_steps
+        self._undo = []
+        self._redo = []
+
+    def push(self, before, after):
+        self._undo.append((before, after))
+        self._redo.clear()
+        if len(self._undo) > self._max:
+            self._undo.pop(0)
+
+    def can_undo(self):
+        return bool(self._undo)
+
+    def can_redo(self):
+        return bool(self._redo)
+
+    def undo(self, apply):
+        if not self._undo:
+            return False
+        before, _ = self._undo.pop()
+        self._redo.append((before, _))
+        apply(before)
+        return True
+
+    def redo(self, apply):
+        if not self._redo:
+            return False
+        before, after = self._redo.pop()
+        self._undo.append((before, after))
+        apply(after)
+        return True
+
+
+class AdvancedEditorDialog(QDialog):
+    def __init__(self, parent, params, valid_chars=None):
+        super().__init__(parent)
+        self.params = params
+        self.valid_chars = valid_chars
+        self.font_paths = get_font_paths(params["font"], params["color"])
+
+        self.letter_spacing = LETTER_SPACING_DEFAULT
+        self.line_spacing = LINE_SPACING_DEFAULT
+        self.baseline = "bottom"
+        self.align = "left"
+        self.snap_grid = SNAP_GRID_DEFAULT
+
+        self.undo_stack = UndoStack()
+        self._char_cache = {}
+        self._dirty = False
+        self._sprite_provider = self._sprite_for
+        self._build_scene()
+        self._build_ui()
+        self._connect_selection()
+        self._install_shortcuts()
+
+        self.setWindowTitle("MetalSlugFontReborn - Advanced Editor (Beta)")
+        self.setWindowIcon(
+            QIcon(str(PROJECT_ROOT / "Assets" / "Icons" / "Raubtier.ico"))
+        )
+        self.resize(EDITOR_DEFAULT_WIDTH, EDITOR_DEFAULT_HEIGHT)
+
+    def _build_scene(self):
+        self.scene = EditorScene(self)
+        self.scene.parent_dialog = self
+        self.scene.snap_size = SNAP_GRID_DEFAULT
+        self.view = EditorView(self.scene)
+        self.view.setToolTip(
+            "Drag characters to move them (Ctrl+click or drag a box to "
+            "select several). Double-click a character to replace it. "
+            "Ctrl + mouse wheel to zoom, drag with the middle button to "
+            "pan. While snapping is on, characters click onto other "
+            "characters' edges, centres and baselines."
+        )
+
+        placements, (canvas_w, canvas_h) = layout_characters(
+            self.params["text"],
+            self.font_paths,
+            char_images=self._char_cache,
+            letter_spacing=self.letter_spacing,
+            line_spacing=self.line_spacing,
+            baseline=self.baseline,
+            align=self.align,
+        )
+        self.canvas_size = (canvas_w, canvas_h)
+
+        self.canvas_rect = QGraphicsRectItem(0, 0, canvas_w, canvas_h)
+        pen = self.canvas_rect.pen()
+        pen.setColor(self.palette().color(QPalette.ColorRole.Mid))
+        self.canvas_rect.setPen(pen)
+        self.canvas_rect.setZValue(-1)
+        self.scene.addItem(self.canvas_rect)
+
+        self.items = []
+        for char, sprite, x, y in placements:
+            item = CharItem(char, sprite, x, y, self._sprite_provider)
+            item.update_pixmap()
+            self.scene.addItem(item)
+            self.items.append(item)
+
+        self._update_scene_rect()
+
+    def _update_scene_rect(self):
+        canvas_w, canvas_h = self.canvas_size
+        self.scene.setSceneRect(
+            -SCENE_PADDING,
+            -SCENE_PADDING,
+            canvas_w + 2 * SCENE_PADDING,
+            canvas_h + 2 * SCENE_PADDING,
+        )
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.view.fitInView(self.scene.sceneRect(), Qt.KeepAspectRatio)
+        self.status_zoom_label.setText(self._zoom_text())
+        self.view.setFocus()
+
+    def _build_ui(self):
+        outer = QVBoxLayout(self)
+        splitter = QSplitter(Qt.Horizontal, self)
+        outer.addWidget(splitter, 1)
+        outer.addWidget(self._build_status_bar())
+
+        panel_scroll = QScrollArea()
+        panel_scroll.setWidgetResizable(True)
+        panel_scroll.setMinimumWidth(PANEL_WIDTH)
+        panel = QWidget()
+        panel_layout = QVBoxLayout(panel)
+        panel_scroll.setWidget(panel)
+        splitter.addWidget(self.view)
+        splitter.addWidget(panel_scroll)
+        canvas_share = EDITOR_DEFAULT_WIDTH * CANVAS_SPLIT_PERCENT // 100
+        splitter.setSizes([canvas_share, EDITOR_DEFAULT_WIDTH - canvas_share])
+        splitter.setStretchFactor(0, 1)
+
+        panel_layout.addWidget(self._build_character_group())
+        panel_layout.addWidget(self._build_global_group())
+
+        self.export_btn = QPushButton("Save Image")
+        self.export_btn.setToolTip(
+            "Render the edited composition and save it with the main "
+            "window's compression and scale settings."
+        )
+        self.export_btn.clicked.connect(self.export_image)
+        panel_layout.addWidget(self.export_btn)
+
+        cancel_btn = QPushButton("Cancel")
+        cancel_btn.setToolTip("Discard all changes and close the editor.")
+        cancel_btn.clicked.connect(self.reject)
+        panel_layout.addWidget(cancel_btn)
+        panel_layout.addStretch()
+
+        for first, second in (
+            (self.offset_x_spin, self.offset_y_spin),
+            (self.offset_y_spin, self.scale_slider),
+            (self.scale_slider, self.rotation_spin),
+            (self.rotation_spin, self.letter_spacing_spin),
+            (self.letter_spacing_spin, self.line_spacing_spin),
+            (self.line_spacing_spin, self.baseline_combo),
+            (self.baseline_combo, self.align_combo),
+            (self.align_combo, self.export_btn),
+            (self.export_btn, cancel_btn),
+        ):
+            self.setTabOrder(first, second)
+
+    def _build_status_bar(self):
+        bar = QWidget()
+        layout = QHBoxLayout(bar)
+        layout.setContentsMargins(8, 2, 8, 2)
+        self.status_chars_label = QLabel()
+        self.status_selection_label = QLabel()
+        self.status_zoom_label = QLabel()
+        self.status_dirty_label = QLabel()
+        for label in (
+            self.status_chars_label,
+            self.status_selection_label,
+            self.status_zoom_label,
+            self.status_dirty_label,
+        ):
+            layout.addWidget(label)
+        layout.addStretch()
+
+        self.undo_btn = QPushButton("Undo")
+        self.undo_btn.setToolTip("Undo the last edit (Ctrl+Z).")
+        self.undo_btn.clicked.connect(self._undo)
+        layout.addWidget(self.undo_btn)
+
+        self.redo_btn = QPushButton("Redo")
+        self.redo_btn.setToolTip("Re-apply the last undone edit (Ctrl+Y).")
+        self.redo_btn.clicked.connect(self._redo)
+        layout.addWidget(self.redo_btn)
+
+        self.fit_btn = QPushButton("Fit")
+        self.fit_btn.setToolTip("Zoom so the whole image is visible.")
+        self.fit_btn.clicked.connect(self._fit_view)
+        layout.addWidget(self.fit_btn)
+
+        self._update_status_counts()
+        return bar
+
+    def _fit_view(self):
+        self.view.fitInView(self.scene.sceneRect(), Qt.KeepAspectRatio)
+        self.status_zoom_label.setText(self._zoom_text())
+
+    def _zoom_text(self):
+        return f"Zoom: {self.view.transform().m11() * 100:.0f}%"
+
+    def _update_status_counts(self):
+        visible = sum(1 for it in self.items if it.isVisible())
+        self.status_chars_label.setText(f"Characters: {visible}")
+        selected = len(self._selected())
+        self.status_selection_label.setText(
+            f"Selected: {selected}" if selected else "No selection"
+        )
+        self.status_zoom_label.setText(self._zoom_text())
+        self.status_dirty_label.setText("Unsaved edits" if self._dirty else "")
+        self.undo_btn.setEnabled(self.undo_stack.can_undo())
+        self.redo_btn.setEnabled(self.undo_stack.can_redo())
+
+    def _make_collapsible(self, group):
+        group.setCheckable(True)
+        group.setChecked(True)
+
+        def toggle(checked):
+            for child in group.findChildren(QWidget):
+                child.setVisible(checked)
+
+        group.toggled.connect(toggle)
+        return group
+
+    def _build_character_group(self):
+        group = self._make_collapsible(QGroupBox("Character Controls"))
+        form = QFormLayout(group)
+
+        self.selection_label = QLabel("Nothing selected")
+        self.selection_label.setWordWrap(True)
+        form.addRow(self.selection_label)
+
+        self.offset_x_spin = QSpinBox()
+        self.offset_x_spin.setRange(-5000, 5000)
+        self.offset_x_spin.setToolTip(
+            "Horizontal position of the selected character(s)."
+        )
+        self.offset_x_spin.valueChanged.connect(
+            lambda value: self._apply_offset(dx=value)
+        )
+        form.addRow("Offset X:", self.offset_x_spin)
+
+        self.offset_y_spin = QSpinBox()
+        self.offset_y_spin.setRange(-5000, 5000)
+        self.offset_y_spin.setToolTip("Vertical position of the selected character(s).")
+        self.offset_y_spin.valueChanged.connect(
+            lambda value: self._apply_offset(dy=value)
+        )
+        form.addRow("Offset Y:", self.offset_y_spin)
+
+        self.scale_slider = QSlider(Qt.Horizontal)
+        self.scale_slider.setRange(CHAR_SCALE_MIN, CHAR_SCALE_MAX)
+        self.scale_slider.setValue(CHAR_SCALE_DEFAULT)
+        self.scale_slider.setToolTip(
+            "Character size as a percentage of the original sprite."
+        )
+        self.scale_slider.valueChanged.connect(
+            lambda value: self._apply_char_property("scale_pct", value)
+        )
+        scale_row = QHBoxLayout()
+        scale_row.addWidget(self.scale_slider)
+        self.scale_value_label = QLabel(f"{CHAR_SCALE_DEFAULT}%")
+        self.scale_value_label.setFixedWidth(40)
+        scale_row.addWidget(self.scale_value_label)
+        form.addRow("Scale %:", scale_row)
+
+        self.rotation_spin = QSpinBox()
+        self.rotation_spin.setRange(ROTATION_MIN, ROTATION_MAX)
+        self.rotation_spin.setSuffix("°")
+        self.rotation_spin.setToolTip(
+            "Clockwise rotation of the selected character(s)."
+        )
+        self.rotation_spin.valueChanged.connect(
+            lambda value: self._apply_char_property("rotation", value)
+        )
+        form.addRow("Rotation:", self.rotation_spin)
+
+        return group
+
+    def _build_global_group(self):
+        group = self._make_collapsible(QGroupBox("Spacing & Alignment"))
+        form = QFormLayout(group)
+
+        self.letter_spacing_spin = QSpinBox()
+        self.letter_spacing_spin.setRange(0, LETTER_SPACING_MAX)
+        self.letter_spacing_spin.setValue(self.letter_spacing)
+        self.letter_spacing_spin.setToolTip(
+            "Extra gap between characters within each line (pixels)."
+        )
+        self.letter_spacing_spin.valueChanged.connect(self._on_layout_changed)
+        form.addRow("Letter spacing:", self.letter_spacing_spin)
+
+        self.line_spacing_spin = QSpinBox()
+        self.line_spacing_spin.setRange(0, LINE_SPACING_MAX)
+        self.line_spacing_spin.setValue(self.line_spacing)
+        self.line_spacing_spin.setToolTip("Gap between lines (pixels).")
+        self.line_spacing_spin.valueChanged.connect(self._on_layout_changed)
+        form.addRow("Line spacing:", self.line_spacing_spin)
+
+        self.baseline_combo = QComboBox()
+        self.baseline_combo.addItems(BASELINES)
+        self.baseline_combo.setToolTip(
+            "How characters sit vertically inside each line."
+        )
+        self.baseline_combo.currentTextChanged.connect(self._on_layout_changed)
+        form.addRow("Vertical align:", self.baseline_combo)
+
+        self.align_combo = QComboBox()
+        self.align_combo.addItems(ALIGNMENTS)
+        self.align_combo.setToolTip("Where each line sits horizontally on the canvas.")
+        self.align_combo.currentTextChanged.connect(self._on_layout_changed)
+        form.addRow("Line align:", self.align_combo)
+
+        self.snap_spin = QSpinBox()
+        self.snap_spin.setRange(0, SNAP_GRID_MAX)
+        self.snap_spin.setValue(SNAP_GRID_DEFAULT)
+        self.snap_spin.setSpecialValueText("Off")
+        self.snap_spin.setToolTip(
+            "While dragging, characters snap to other characters' "
+            "edges, centres and baselines (magenta guides), and to a "
+            "grid of this many pixels otherwise. 0 disables snapping."
+        )
+        self.snap_spin.valueChanged.connect(self._on_snap_changed)
+        form.addRow("Snap to grid:", self.snap_spin)
+
+        return group
+
+    def _install_shortcuts(self):
+        undo_sc = QShortcut(QKeySequence.StandardKey.Undo, self)
+        undo_sc.activated.connect(self._undo)
+        redo_sc = QShortcut(QKeySequence.StandardKey.Redo, self)
+        redo_sc.activated.connect(self._redo)
+        del_sc = QShortcut(QKeySequence.StandardKey.Delete, self.view)
+        del_sc.setContext(Qt.ShortcutContext.WidgetShortcut)
+        del_sc.activated.connect(self._delete_selected)
+
+    def _delete_selected(self):
+        selected = self._selected()
+        if selected:
+            self._delete_items(selected)
+
+    def _undo(self):
+        if not self.undo_stack.undo(self._apply_all):
+            return
+        self._sync_panel()
+        self._update_status_counts()
+
+    def _redo(self):
+        if not self.undo_stack.redo(self._apply_all):
+            return
+        self._sync_panel()
+        self._update_status_counts()
+
+    def _connect_selection(self):
+        self.scene.selectionChanged.connect(self._sync_panel)
+        self._drag_before = None
+        self._drag_start_pos = {}
+        self.scene.drag_started.connect(self._on_drag_started)
+        self.scene.drag_finished.connect(self._on_drag_finished)
+        self.view.zoom_changed.connect(
+            lambda _: self.status_zoom_label.setText(self._zoom_text())
+        )
+
+    def _selected(self):
+        return self.scene.selectedItems()
+
+    def _snapshot_selected(self):
+        return {item: item.capture_state() for item in self._selected()}
+
+    def _on_drag_started(self):
+        self._drag_before = self._capture_all()
+        self._drag_start_pos = {item: item.pos() for item in self.items}
+        self.scene._snap_start = dict(self._drag_start_pos)
+        self.scene.begin_snap()
+
+    def _on_drag_finished(self):
+        if self._drag_before is not None:
+            for item, start in self._drag_start_pos.items():
+                delta_x = int(round(item.pos().x() - start.x()))
+                delta_y = int(round(item.pos().y() - start.y()))
+                if delta_x or delta_y:
+                    item.dx += delta_x
+                    item.dy += delta_y
+                    item._place()
+            after = self._capture_all()
+            changed = {
+                item: self._drag_before[item]
+                for item in after
+                if after[item] != self._drag_before[item]
+            }
+            if changed:
+                self.undo_stack.push(changed, {item: after[item] for item in changed})
+                self._dirty = True
+                self._update_status_counts()
+            self._drag_before = None
+            self._drag_start_pos = None
+            self.scene.end_snap()
+        self._sync_panel()
+
+    def _sync_panel(self):
+        selected = self._selected()
+        if selected:
+            names = ", ".join(repr(item.char) for item in selected[:20])
+            if len(selected) > 20:
+                names += f" … (+{len(selected) - 20} more)"
+            self.selection_label.setText(names)
+        else:
+            self.selection_label.setText("Nothing selected")
+
+        for widget in (
+            self.offset_x_spin,
+            self.offset_y_spin,
+            self.scale_slider,
+            self.rotation_spin,
+        ):
+            widget.blockSignals(True)
+        try:
+            self.scale_value_label.setText(
+                f"{selected[0].scale_pct}%" if selected else "-"
+            )
+            if selected:
+                first = selected[0]
+                self.offset_x_spin.setValue(first.dx)
+                self.offset_y_spin.setValue(first.dy)
+                self.scale_slider.setValue(first.scale_pct)
+                self.rotation_spin.setValue(first.rotation)
+        finally:
+            for widget in (
+                self.offset_x_spin,
+                self.offset_y_spin,
+                self.scale_slider,
+                self.rotation_spin,
+            ):
+                widget.blockSignals(False)
+
+        self._update_status_counts()
+
+    def _apply_char_property(self, attr, value):
+        selected = self._selected()
+        if not selected:
+            return
+        before = self._snapshot_selected()
+        for item in selected:
+            setattr(item, attr, value)
+            item.update_pixmap()
+        self._push(before)
+        self._sync_panel()
+
+    def _apply_offset(self, dx=None, dy=None):
+        selected = self._selected()
+        if not selected:
+            return
+        before = self._snapshot_selected()
+        for item in selected:
+            if dx is not None:
+                item.dx = dx
+            if dy is not None:
+                item.dy = dy
+            item._place()
+        self._push(before)
+        self._sync_panel()
+
+    def _sprite_for(self, char):
+        if char not in self._char_cache:
+            self._char_cache[char] = create_character_image(char, self.font_paths)
+        return self._char_cache[char]
+
+    def _edit_character(self, item):
+        new_text, ok = QInputDialog.getText(
+            self, "Edit Character", f"Replace '{item.char}' with:", text=item.char
+        )
+        if not ok:
+            return
+        new_text = new_text.strip()
+        if not new_text or new_text == item.char:
+            return
+
+        chars = []
+        for ch in new_text:
+            if not ch.isspace() and self.valid_chars and ch not in self.valid_chars:
+                upper = ch.upper()
+                if upper in self.valid_chars:
+                    ch = upper
+                else:
+                    QMessageBox.warning(
+                        self,
+                        "Unsupported Character",
+                        f"'{ch}' is not supported by this font. "
+                        "Check the supported characters list for options.",
+                    )
+                    return
+            chars.append(ch)
+
+        if not self._confirm_replace(item.char, "".join(chars)):
+            return
+        try:
+            if len(chars) == 1:
+                before = {item: item.capture_state()}
+                item.set_character(chars[0])
+                item.update_pixmap()
+            else:
+                before = self._replace_with_string(item, chars)
+        except FileNotFoundError as e:
+            QMessageBox.warning(self, "Missing Asset", str(e))
+            return
+        self._push(before)
+        self._sync_panel()
+
+    def _replace_with_string(self, item, chars):
+        sprites = [self._sprite_for(c) for c in chars]
+        before = {item: item.capture_state()}
+        x = item.base_x + item.dx
+        bottom = item.base_y + item.dy + item.sprite.height
+        for ch, sprite in zip(chars, sprites):
+            if ch.isspace():
+                x += sprite.width + self.letter_spacing
+                continue
+            ni = CharItem(ch, sprite, x, bottom - sprite.height, self._sprite_provider)
+            ni.layout_anchored = False
+            ni.scale_pct = item.scale_pct
+            ni.rotation = item.rotation
+            self.scene.addItem(ni)
+            self.items.append(ni)
+            ni.setVisible(False)
+            before[ni] = ni.capture_state()
+            ni.setVisible(True)
+            ni.update_pixmap()
+            x += sprite.width + self.letter_spacing
+        item.setVisible(False)
+        item.setSelected(False)
+        return before
+
+    def _confirm_replace(self, old, new):
+        if load_config("skip_char_replace_confirm", fallback=False):
+            return True
+        box = QMessageBox(self)
+        box.setWindowTitle("Replace Character")
+        box.setText(f"Replace '{old}' with '{new}'?")
+        box.setStandardButtons(
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+        box.setDefaultButton(QMessageBox.StandardButton.Yes)
+        cb = QCheckBox("Don't ask me again")
+        box.setCheckBox(cb)
+        if box.exec() != QMessageBox.StandardButton.Yes:
+            return False
+        if cb.isChecked():
+            save_config("skip_char_replace_confirm", True)
+        return True
+
+    def _reset_item(self, item, attr):
+        default = CHAR_SCALE_DEFAULT if attr == "scale_pct" else 0
+        before = {item: item.capture_state()}
+        setattr(item, attr, default)
+        item.update_pixmap()
+        self._push(before)
+        self._sync_panel()
+
+    def _delete_items(self, items):
+        before = {item: item.capture_state() for item in items}
+        for item in items:
+            item.setVisible(False)
+            item.setSelected(False)
+        self._push(before)
+        self._sync_panel()
+
+    def _push(self, before):
+        after = {item: item.capture_state() for item in before}
+        if any(after[item] != state for item, state in before.items()):
+            self.undo_stack.push(before, after)
+            self._dirty = True
+            self._update_status_counts()
+
+    def _apply_all(self, snapshot):
+        for item, state in snapshot.items():
+            item.apply_state(state)
+
+    def _has_unsaved_edits(self):
+        return self._dirty
+
+    def _confirm_discard(self):
+        if not self._dirty:
+            return True
+        box = QMessageBox(self)
+        box.setWindowTitle("Unsaved Edits")
+        box.setText("You have unsaved edits. What would you like to do?")
+        save_btn = box.addButton("Save Image", QMessageBox.ButtonRole.AcceptRole)
+        discard_btn = box.addButton(
+            "Discard Edits", QMessageBox.ButtonRole.DestructiveRole
+        )
+        keep_btn = box.addButton("Keep Editing", QMessageBox.ButtonRole.RejectRole)
+        box.setDefaultButton(keep_btn)
+        box.exec()
+        if box.clickedButton() is save_btn:
+            return self.export_image()
+        if box.clickedButton() is discard_btn:
+            self._dirty = False
+            self.status_dirty_label.setText("")
+            return True
+        return False
+
+    def reject(self):
+        if self._confirm_discard():
+            super().reject()
+
+    def closeEvent(self, event):
+        if self._confirm_discard():
+            super().closeEvent(event)
+        else:
+            event.ignore()
+
+    def _capture_all(self):
+        return {item: item.capture_state() for item in self.items}
+
+    def _on_layout_changed(self, _=None):
+        self.letter_spacing = self.letter_spacing_spin.value()
+        self.line_spacing = self.line_spacing_spin.value()
+        self.baseline = self.baseline_combo.currentText().lower()
+        self.align = self.align_combo.currentText().lower()
+
+        before = self._capture_all()
+        placements, (canvas_w, canvas_h) = layout_characters(
+            self.params["text"],
+            self.font_paths,
+            char_images=self._char_cache,
+            letter_spacing=self.letter_spacing,
+            line_spacing=self.line_spacing,
+            baseline=self.baseline,
+            align=self.align,
+        )
+        self.canvas_size = (canvas_w, canvas_h)
+        self.canvas_rect.setRect(0, 0, canvas_w, canvas_h)
+        layout_items = [it for it in self.items if it.layout_anchored]
+        for item, (_char, _sprite, x, y) in zip(layout_items, placements):
+            item.set_base(x, y)
+        self._update_scene_rect()
+        self._push(before)
+
+    def _on_snap_changed(self, value):
+        self.snap_grid = value
+        self.scene.snap_size = value
+
+    def export_image(self):
+        try:
+            self._export_image()
+        except OSError as e:
+            QMessageBox.critical(
+                self,
+                "Export Failed",
+                f"The image could not be saved:\n{e}\n\n"
+                "Check that the save location exists and is writable.",
+            )
+            return False
+        self._dirty = False
+        self.status_dirty_label.setText("")
+        return True
+
+    def _export_image(self):
+        start = time()
+        filename = generate_filename(self.params["text"])
+
+        placed = []
+        min_x = min_y = None
+        max_x = max_y = None
+        for item in self.items:
+            if not item.isVisible():
+                continue
+            key = item._cache_key()
+            rendered = item._pix_cache.get(key)
+            if rendered is None:
+                rendered = render_character(item.sprite, item.scale_pct, item.rotation)
+                item._pix_cache[key] = rendered
+            x = int(item.base_x + item.dx)
+            y = int(item.base_y + item.dy)
+            placed.append((rendered, x, y))
+            if min_x is None or x < min_x:
+                min_x = x
+            if min_y is None or y < min_y:
+                min_y = y
+            if max_x is None or x + rendered.width > max_x:
+                max_x = x + rendered.width
+            if max_y is None or y + rendered.height > max_y:
+                max_y = y + rendered.height
+
+        if not placed:
+            canvas = Image.new("RGBA", (1, 1), (0, 0, 0, 0))
+        else:
+            canvas = Image.new("RGBA", (max_x - min_x, max_y - min_y), (0, 0, 0, 0))
+            for pil_img, x, y in placed:
+                canvas.alpha_composite(pil_img, (x - min_x, y - min_y))
+            bbox = canvas.getbbox()
+            if bbox:
+                canvas = canvas.crop(bbox)
+
+        scale = self.params.get("scale", 100)
+        if scale and scale != 100:
+            canvas = canvas.resize(
+                (
+                    max(1, int(canvas.width * scale / 100)),
+                    max(1, int(canvas.height * scale / 100)),
+                ),
+                Image.Resampling.NEAREST,
+            )
+
+        out_path = Path(self.params["save_path"]) / filename
+        canvas.save(out_path, compress_level=self.params.get("compress_level", 6))
+
+        elapsed = time() - start
+        size = readable_size(out_path.stat().st_size)
+        QMessageBox.information(
+            self,
+            "Image Saved",
+            f"Saved {out_path}\n{canvas.width} x {canvas.height} px, "
+            f"{size}, {elapsed:.2f}s",
+        )

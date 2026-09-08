@@ -22,6 +22,7 @@ IMAGE_EXTENSION = ".png"
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 FONTS_BASE_DIR = PROJECT_ROOT / "Assets" / "Fonts"
 
+_CHAR_IMAGE_CACHE = {}
 
 def generate_filename(_=None):
     return f"{uuid4().hex}{IMAGE_EXTENSION}"
@@ -39,19 +40,28 @@ def get_font_paths(font, color):
 def get_character_path(character, font_paths):
     if character.isspace():
         return None
-    elif character.islower():
-        return font_paths["letters"] / "Lower-Case" / f"{character}.png"
-    elif character.isupper():
-        return font_paths["letters"] / "Upper-Case" / f"{character}.png"
-    elif character.isdigit():
-        return font_paths["numbers"] / f"{character}.png"
 
-    if character not in special_characters:
+    if character.islower():
+        path = font_paths["letters"] / "Lower-Case" / f"{character}.png"
+    elif character.isupper():
+        path = font_paths["letters"] / "Upper-Case" / f"{character}.png"
+    elif character.isdigit():
+        path = font_paths["numbers"] / f"{character}.png"
+    elif character in special_characters:
+        path = font_paths["symbols"] / f"{special_characters[character]}.png"
+    else:
         raise FileNotFoundError(
-            f"Character '{character}' is not supported. Click on the view supported characters button for the list of allowed characters"
+            f"Character '{character}' is not supported. "
+            "Click on the view supported characters button for the list of allowed characters"
         )
 
-    return font_paths["symbols"] / f"{special_characters[character]}.png"
+    if not path.is_file():
+        raise FileNotFoundError(
+            f"Character '{character}' is supported but its asset file is missing: {path}\n"
+            "Check the font sprite directories."
+        )
+
+    return path
 
 
 def create_character_image(character, font_paths):
@@ -63,12 +73,75 @@ def create_character_image(character, font_paths):
         )
 
     path = get_character_path(character, font_paths)
-    if path.is_file():
-        return Image.open(path)
+    cached = _CHAR_IMAGE_CACHE.get(path)
+    if cached is not None:
+        return cached
 
-    raise FileNotFoundError(
-        f"Character '{character}' is not supported. Click on the view supported characters button for the list of allowed characters"
-    )
+    image = Image.open(path)
+    _CHAR_IMAGE_CACHE[path] = image
+    return image
+
+
+def layout_characters(
+    text,
+    font_paths,
+    char_images=None,
+    letter_spacing=0,
+    line_spacing=LINE_SPACING,
+    baseline="bottom",
+    align="left",
+):
+    if char_images is None:
+        char_images = {}
+
+    def sprite_for(char):
+        if char not in char_images:
+            char_images[char] = create_character_image(char, font_paths)
+        return char_images[char]
+
+    lines = split_into_lines(text)
+    line_layouts = []
+    max_width = 0
+
+    for line in lines:
+        sprites = [sprite_for(char) for char in line]
+        line_width = sum(img.width for img in sprites)
+        if sprites:
+            line_width += letter_spacing * (len(sprites) - 1)
+        line_height = max((img.height for img in sprites), default=0)
+        if not line:
+            line_height = EMPTY_LINE_HEIGHT
+        line_layouts.append((line, sprites, line_width, line_height))
+        max_width = max(max_width, line_width)
+
+    canvas_width = max(max_width, 1)
+    placements = []
+    y = 0
+
+    for i, (line, sprites, line_width, line_height) in enumerate(line_layouts):
+        if align == "center":
+            x = (canvas_width - line_width) // 2
+        elif align == "right":
+            x = canvas_width - line_width
+        else:
+            x = 0
+
+        for char, img in zip(line, sprites):
+            if baseline == "top":
+                char_y = y
+            elif baseline == "center":
+                char_y = y + (line_height - img.height) // 2
+            else:
+                char_y = y + line_height - img.height
+            if not char.isspace():
+                placements.append((char, img, x, char_y))
+            x += img.width + letter_spacing
+
+        y += line_height
+        if i < len(line_layouts) - 1:
+            y += line_spacing
+
+    return placements, (canvas_width, y)
 
 
 def split_into_lines(text):

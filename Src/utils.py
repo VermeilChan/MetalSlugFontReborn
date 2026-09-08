@@ -71,5 +71,3 @@ def get_system_info():
 
 msfr_version = f"3.1.0 ({uuid4().hex[:7]})"
 build_date = datetime.now().strftime("%Y-%m-%d (%A, %B %d)")
-
-system_info = get_system_info()

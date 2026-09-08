@@ -15,16 +15,16 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v751276eafca55f10f252026015f43c488f2322ba
         with:
-          python-version: '3.14.6'
+          python-version: '3.14.7'
           architecture: 'arm64'
           cache: 'pip'
 
@@ -44,14 +44,14 @@ jobs:
 
       - name: Build with PyInstaller
         run: |
-          pyinstaller --noconfirm --onedir --windowed --strip --name "MetalSlugFontReborn" --clean --optimize "2" --add-data "Src/image_generation.py:." --add-data "Src/qt_utils.py:." --add-data "Src/special_characters.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Assets:Assets/"  "Src/qt-version.py"
+          pyinstaller --noconfirm --onedir --windowed --strip --name "MetalSlugFontReborn" --clean --optimize "2" --add-data "Src/image_generation.py:." --add-data "Src/qt_utils.py:." --add-data "Src/special_characters.py:." --add-data "Src/themes.py:." --add-data "Src/utils.py:." --add-data "Src/advanced_editor:." --add-data "Assets:Assets/"  "Src/qt-version.py"
 
       - name: Move Assets
         run: |
           mv dist/MetalSlugFontReborn/_internal/Assets dist/MetalSlugFontReborn/
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: MetalSlugFontReborn-${{ steps.sha.outputs.short_sha }}-macOS-ARM64
           path: dist/MetalSlugFontReborn
